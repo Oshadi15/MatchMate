@@ -1,19 +1,28 @@
-//dbpsswrd = aHYSiQQ29jiOI9IW
-//mongodb+srv://admin:<db_password>@cluster0.jd1telg.mongodb.net/
-//set uo express and mongoose
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
 
-const app= express();
+const helpRoutes = require("./routes/helpRequest.route");
 
-//Middleware 
-app.use("/",(req, res, next) => {
-    res.send("It Is Working");
-})
+const app = express();
 
-mongoose.connect("mongodb+srv://admin:aHYSiQQ29jiOI9IW@cluster0.jd1telg.mongodb.net/")
-.then(()=> console.log("Connected to MongoDB"))
-.then(()=> {
-    app.listen(5000);
-})
-.catch((err)=> console.log((err)));
+app.use(cors());
+app.use(express.json());
+
+// Test route
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
+});
+
+// ✅ Help board API
+app.use("/api/help", helpRoutes);
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log("Server running on " + PORT));
+  })
+  .catch((err) => console.log(err));
