@@ -4,6 +4,10 @@ import './App.css';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
+import FoundForm from './components/Lost-Found_MS/FoundForm';
+import LostForm from './components/Lost-Found_MS/LostForm';
+import ReportSelection from './components/Lost-Found_MS/Report';
+
 
 function App() {
   return (
@@ -16,6 +20,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HelpBoard />} />
         <Route path="/create" element={<CreateHelpRequest />} />
+        <Route path='/found' element={<FoundForm/>} />
+         <Route path='/lost' element={<LostForm/>} />
+         <Route path='/report' element={<ReportSelection/>} />
+
       </Routes>
     </BrowserRouter>
   );
