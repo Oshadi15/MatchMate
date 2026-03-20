@@ -2,9 +2,11 @@ const mongoose = require("mongoose");
 
 const helpRequestSchema = new mongoose.Schema(
   {
-    // Student Support info
-    title: { type: String, required: true, trim: true, minlength: 5 },
-
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     supportType: {
       type: String,
       required: true,
@@ -18,35 +20,44 @@ const helpRequestSchema = new mongoose.Schema(
         "OTHER",
       ],
     },
-
     priority: {
       type: String,
       enum: ["LOW", "MEDIUM", "HIGH"],
       default: "MEDIUM",
     },
-
-    description: { type: String, required: true, minlength: 10 },
-
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     preferredContact: {
       type: String,
-      enum: ["EMAIL", "PHONE", "IN_APP"],
+      enum: ["IN_APP", "EMAIL", "PHONE"],
       default: "IN_APP",
     },
-
-    contactEmail: { type: String, trim: true },
-    contactPhone: { type: String, trim: true },
-
-    isAnonymous: { type: Boolean, default: false },
-
-    // Workflow
+    contactEmail: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    contactPhone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    isAnonymous: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       enum: ["OPEN", "IN_PROGRESS", "RESOLVED"],
       default: "OPEN",
     },
-
-    // later connect real userId when auth exists
-    createdBy: { type: String, default: "anonymous" },
+    requesterKey: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
