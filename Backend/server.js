@@ -3,21 +3,19 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-// Existing routes
-const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
-
-// ✅ New Feedback routes
-const feedbackRoutes = require("./routes/FeedbackRoutes");
-
-const app = express();
-
-// Middleware
 const app = express();
 
 /* ==============================
    ROUTE IMPORTS
 ============================== */
+
+// Campus Assistant
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
+
+// Feedback
+const feedbackRoutes = require("./routes/FeedbackRoutes");
+
+// Lost & Found
 const lostRoutes = require("./routes/Lost-Found_MS/lostRoutes");
 const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 
@@ -27,7 +25,7 @@ const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 app.use(cors());
 app.use(express.json());
 
-// ✅ Access uploaded images
+// Access uploaded images
 app.use("/uploads", express.static("uploads"));
 
 /* ==============================
@@ -37,13 +35,6 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-// Routes
-app.use("/api/help", helpRoutes);
-
-// ✅ Feedback API route
-app.use("/api/feedback", feedbackRoutes);
-
-// MongoDB connection
 /* ==============================
    API ROUTES
 ============================== */
@@ -51,12 +42,14 @@ app.use("/api/feedback", feedbackRoutes);
 // Campus Assistant Help Board
 app.use("/api/help", helpRoutes);
 
+// Feedback
+app.use("/api/feedback", feedbackRoutes);
+
 // Lost Item Management
 app.use("/api/lost", lostRoutes);
 
 // Found Item Management
 app.use("/api/found", foundRoutes);
-
 
 /* ==============================
    DATABASE CONNECTION
