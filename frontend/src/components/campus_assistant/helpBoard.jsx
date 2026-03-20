@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import React, { useEffect, useState } from "react";
 import { getHelpRequests, deleteHelpRequest } from "../../services/helpApi";
+
+
 
 export default function HelpBoard() {
   const [items, setItems] = useState([]);
