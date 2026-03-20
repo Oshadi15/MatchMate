@@ -1,9 +1,9 @@
-import logo from './logo.svg';
+
 import './App.css';
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import HelpBoard from "./pages/helpBoard";
-import CreateHelpRequest from "./pages/createHelpRequest";
+import HelpBoard from "./components/campus_assistant/helpBoard";
+import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
 
 function App() {
   return (

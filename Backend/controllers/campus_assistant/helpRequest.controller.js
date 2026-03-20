@@ -1,4 +1,4 @@
-const HelpRequest = require("../models/helpRequest.model");
+const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
 // POST /api/help
 exports.createHelpRequest = async (req, res) => {
