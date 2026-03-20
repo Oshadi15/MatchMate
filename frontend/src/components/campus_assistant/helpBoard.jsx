@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { getHelpRequests, deleteHelpRequest } from "../../services/helpApi";
 
-
-
 export default function HelpBoard() {
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("");
@@ -11,7 +9,6 @@ export default function HelpBoard() {
   const [loading, setLoading] = useState(false);
 
   const load = useCallback(async () => {
-  const load = async () => {
     setLoading(true);
 
     try {
@@ -28,11 +25,6 @@ export default function HelpBoard() {
   useEffect(() => {
     load();
   }, [load]);
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Delete this request?");
