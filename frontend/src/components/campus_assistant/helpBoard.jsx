@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getHelpRequests, deleteHelpRequest } from "../services/helpApi";
+import { getHelpRequests, deleteHelpRequest } from "../../services/helpApi";
 
 export default function HelpBoard() {
   const [items, setItems] = useState([]);
@@ -10,11 +10,12 @@ export default function HelpBoard() {
 
   const load = async () => {
     setLoading(true);
+
     try {
-      // backend supports q + status, and we also pass supportType (works if you add filtering later)
       const res = await getHelpRequests({ status, supportType, q });
       setItems(res.data);
     } catch (err) {
+      console.error("Failed to load support requests:", err);
       alert("Failed to load support requests");
     } finally {
       setLoading(false);
@@ -23,15 +24,17 @@ export default function HelpBoard() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this request?")) return;
+    const confirmed = window.confirm("Delete this request?");
+    if (!confirmed) return;
+
     try {
       await deleteHelpRequest(id);
       load();
     } catch (err) {
+      console.error("Delete failed:", err);
       alert("Delete failed");
     }
   };
@@ -40,8 +43,20 @@ export default function HelpBoard() {
     <div style={{ padding: 20 }}>
       <h2>Student Support Board</h2>
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 15, flexWrap: "wrap" }}>
-        <input placeholder="Search..." value={q} onChange={(e) => setQ(e.target.value)} />
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 15,
+          flexWrap: "wrap",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Search..."
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
 
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">All Status</option>
@@ -50,7 +65,10 @@ export default function HelpBoard() {
           <option value="RESOLVED">RESOLVED</option>
         </select>
 
-        <select value={supportType} onChange={(e) => setSupportType(e.target.value)}>
+        <select
+          value={supportType}
+          onChange={(e) => setSupportType(e.target.value)}
+        >
           <option value="">All Types</option>
           <option value="ACADEMIC">ACADEMIC</option>
           <option value="REGISTRATION">REGISTRATION</option>
@@ -91,9 +109,13 @@ export default function HelpBoard() {
               <p style={{ margin: "6px 0" }}>{x.description}</p>
 
               <div style={{ fontSize: 12, color: "#555" }}>
-                <b>Preferred:</b> {x.preferredContact}{" "}
-                {x.preferredContact === "EMAIL" && x.contactEmail ? ` | ${x.contactEmail}` : ""}
-                {x.preferredContact === "PHONE" && x.contactPhone ? ` | ${x.contactPhone}` : ""}
+                <b>Preferred:</b> {x.preferredContact}
+                {x.preferredContact === "EMAIL" && x.contactEmail
+                  ? ` | ${x.contactEmail}`
+                  : ""}
+                {x.preferredContact === "PHONE" && x.contactPhone
+                  ? ` | ${x.contactPhone}`
+                  : ""}
                 {x.isAnonymous ? " | Anonymous" : ""}
               </div>
 
