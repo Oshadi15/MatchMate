@@ -1,10 +1,16 @@
-const router = require("express").Router();
-const controller = require("../../controllers/campus_assistant/helpRequest.controller");
+const express = require("express");
+const router = express.Router();
 
-router.post("/", controller.createHelpRequest);
-router.get("/", controller.getHelpRequests);
-router.get("/:id", controller.getHelpRequestById);
-router.patch("/:id/status", controller.updateHelpStatus);
-router.delete("/:id", controller.deleteHelpRequest);
+const {
+  createHelpRequest,
+  getHelpRequests,
+  getMyHelpRequests,
+  deleteHelpRequest,
+} = require("../../controllers/campus_assistant/helpRequest.controller");
+
+router.post("/", createHelpRequest);
+router.get("/", getHelpRequests);
+router.get("/mine", getMyHelpRequests);
+router.delete("/:id", deleteHelpRequest);
 
 module.exports = router;

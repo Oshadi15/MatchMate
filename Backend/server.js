@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
+const helpRequestRoutes = require("./routes/campus_assistant/helpRequest.route");
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.get("/", (req, res) => {
 
 // ✅ Help board API
 app.use("/api/help", helpRoutes);
+
+app.use("/api/help-requests", helpRequestRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
