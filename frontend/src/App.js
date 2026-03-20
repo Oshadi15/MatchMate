@@ -1,24 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
 
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import HelpBoard from "./pages/helpBoard";
+import CreateHelpRequest from "./pages/createHelpRequest";
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div style={{ padding: 15, display: "flex", gap: 15 }}>
+        <Link to="/">Help Board</Link>
+        <Link to="/create">Create Help Request</Link>
+      </div>
+
+      <Routes>
+        <Route path="/" element={<HelpBoard />} />
+        <Route path="/create" element={<CreateHelpRequest />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
