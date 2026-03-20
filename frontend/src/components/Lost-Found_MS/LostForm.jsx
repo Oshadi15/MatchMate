@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./FoundForm.css";
+
 const LostForm = () => {
   const [formData, setFormData] = useState({
     itemName: "",
@@ -11,6 +13,7 @@ const LostForm = () => {
     image: null,
   });
 
+  // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -20,10 +23,34 @@ const LostForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  // ================= SUBMIT =================
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Lost Item Submitted:", formData);
-    alert("Lost Item Submitted Successfully!");
+
+    try {
+      const data = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+
+      const response = await axios.post(
+        "http://localhost:5000/api/lost",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response.data);
+      alert("✅ Lost Item Submitted Successfully!");
+
+    } catch (error) {
+      console.error("Error submitting:", error);
+      alert("❌ Failed to submit item");
+    }
   };
 
   return (
@@ -35,7 +62,6 @@ const LostForm = () => {
         <input
           type="text"
           name="itemName"
-          placeholder="What did you lose?"
           onChange={handleChange}
           required
         />
@@ -78,7 +104,6 @@ const LostForm = () => {
         <label>Description</label>
         <textarea
           name="description"
-          placeholder="Provide unique details (stickers, scratches, etc.)"
           onChange={handleChange}
           required
         />

@@ -1,4 +1,4 @@
-const FoundItem = require("../models/FoundItem");
+const FoundItem = require("../../models/Lost-Found_MS/FoundItem");
 
 
 // ==============================
