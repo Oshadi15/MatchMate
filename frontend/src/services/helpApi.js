@@ -5,3 +5,8 @@ export const createHelpRequest = (data) => API.post("/api/help", data);
 export const deleteHelpRequest = (id) => API.delete(`/api/help/${id}`);
 export const updateHelpStatus = (id, status) =>
   API.patch(`/api/help/${id}/status`, { status });
+
+export const getMyHelpRequests = (requesterKey) =>
+  API.get("/mine", {
+    params: { requesterKey },
+  });

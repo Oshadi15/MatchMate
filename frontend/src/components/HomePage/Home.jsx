@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaRobot } from "react-icons/fa";
-
-import axios from 'axios'; 
+import axios from 'axios';
 import './Home.css';
 import HomeNav from '../../HomeNav/HomeNav';
 import logoImg from '../../assets/f2.png';
@@ -14,27 +13,28 @@ import heroImage3 from '../../assets/f2.png';
 import featureIcon1 from '../../assets/f2.png';
 import featureIcon2 from '../../assets/f2.png';
 import featureIcon3 from '../../assets/f2.png';
+import HomeNav from '../../HomeNav/HomeNav';
 
 const heroImages = [heroImage1, heroImage2, heroImage3];
 
-
 function Home() {
   const history = useNavigate();
+
   const [member, setMember] = useState({
     gmail: "",
     password: "",
   });
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showLogin, setShowLogin] = useState(false);
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
     }, 5000);
+
     return () => clearInterval(interval);
   }, []);
-
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +42,15 @@ function Home() {
       ...prevMember,
       [name]: value,
     }));
+  };
+
+  const sendRequest = async () => {
+    return await axios
+      .post("http://localhost:5000/members/login", {
+        gmail: member.gmail,
+        password: member.password,
+      })
+      .then((res) => res.data);
   };
 
   const handleSubmit = async (e) => {
@@ -59,15 +68,6 @@ function Home() {
     }
   };
 
-  const sendRequest = async () => {
-    return await axios
-      .post("http://localhost:5000/members/login", {
-        gmail: member.gmail,
-        password: member.password,
-      })
-      .then((res) => res.data);
-  };
-
   return (
     <>
     <HomeNav />
@@ -79,12 +79,21 @@ function Home() {
   <FaRobot size={38} />
 </button>
 
+    <HomeNav/>
+      {/* Chat Button */}
+      <button
+        className="chat-button"
+        onClick={() => history("/enterpin")}
+      >
+        <FaRobot size={38} />
+      </button>
 
       <div className="home-page">
+        {/* Hero Section */}
         <section className="hero-section">
           <div className="hero-slideshow">
             {heroImages.map((img, index) => (
-              <div 
+              <div
                 key={index}
                 className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
                 style={{ backgroundImage: `url(${img})` }}
@@ -92,15 +101,19 @@ function Home() {
                 <div className="slide-overlay">
                   <h1>Lost & Found System</h1>
                   <p>Efficient. Reliable. Always Available</p>
-                  <button onClick={() => setShowLogin(!showLogin)} className="cta-button">
+                  <button
+                    onClick={() => setShowLogin(!showLogin)}
+                    className="cta-button"
+                  >
                     {showLogin ? 'Explore More' : 'Admin Login'}
                   </button>
                 </div>
               </div>
             ))}
+
             <div className="slide-dots">
               {heroImages.map((_, index) => (
-                <span 
+                <span
                   key={index}
                   className={index === currentSlide ? 'active' : ''}
                   onClick={() => setCurrentSlide(index)}
@@ -109,21 +122,34 @@ function Home() {
             </div>
           </div>
         </section>
-        
 
         {/* Features Section */}
         <section className="features-section">
-          <div className="feature-card">
+          <div
+            className="feature-card"
+            onClick={() => history("/fast-service")}
+            style={{ cursor: "pointer" }}
+          >
             <img src={featureIcon1} alt="Fast Service" />
             <h3>Fast Service</h3>
             <p>Our automated systems ensure you get fuel quickly without delays</p>
           </div>
-          <div className="feature-card">
-            <img src={featureIcon2} alt="24/7 Availability" />
-            <h3>24/7 Availability</h3>
+
+          <div
+            className="feature-card"
+            onClick={() => history("/report")}
+            style={{ cursor: "pointer" }}
+          >
+            <img src={featureIcon2} alt="Lost & Found Item" />
+            <h3>Lost & Found Item</h3>
             <p>Round-the-clock service for all your fuel needs</p>
           </div>
-          <div className="feature-card">
+
+          <div
+            className="feature-card"
+            onClick={() => history("/easy-payments")}
+            style={{ cursor: "pointer" }}
+          >
             <img src={featureIcon3} alt="Easy Payments" />
             <h3>Easy Payments</h3>
             <p>Multiple payment options including digital wallets</p>
@@ -136,6 +162,7 @@ function Home() {
             {showLogin ? (
               <form className="login-form" onSubmit={handleSubmit}>
                 <h3>Admin Portal</h3>
+
                 <input
                   type="email"
                   id="gmail"
@@ -145,6 +172,7 @@ function Home() {
                   placeholder="Admin Email"
                   required
                 />
+
                 <input
                   type="password"
                   id="password"
@@ -154,12 +182,14 @@ function Home() {
                   placeholder="Password"
                   required
                 />
+
                 <div className="form-options">
                   <label>
                     <input type="checkbox" /> Remember me
                   </label>
                   <a href="/member-forgot">Forgot password?</a>
                 </div>
+
                 <button type="submit">SIGN IN</button>
               </form>
             ) : (
@@ -172,14 +202,26 @@ function Home() {
                   </h2>
                   <p className="subtitle">Dasu Filling Station, Galle</p>
                 </div>
+
                 <div className="action-buttons">
-                  <button onClick={() => history('/evlog')} className="action-button">
+                  <button
+                    onClick={() => history('/evlog')}
+                    className="action-button"
+                  >
                     Charge Your Electric Vehicle.
                   </button>
-                  <button onClick={() => history('/flogin')} className="action-button">
+
+                  <button
+                    onClick={() => history('/flogin')}
+                    className="action-button"
+                  >
                     Place Your Commercial Purpose Fuel Order.
                   </button>
-                  <button onClick={() => history('/stations')} className="action-button">
+
+                  <button
+                    onClick={() => history('/stations')}
+                    className="action-button"
+                  >
                     Find Our Other Stations.
                   </button>
                 </div>
@@ -187,8 +229,6 @@ function Home() {
             )}
           </div>
         </section>
-
-        
 
         {/* Testimonials Section */}
         <section className="testimonials-section">
@@ -201,6 +241,7 @@ function Home() {
                 <span className="customer-role">Regular Customer</span>
               </div>
             </div>
+
             <div className="testimonial-card">
               <p>"Their digital payment system saves me so much time during my deliveries."</p>
               <div className="customer-info">
@@ -222,6 +263,7 @@ function Home() {
                 <li><a href="/contact">Contact</a></li>
               </ul>
             </div>
+
             <div className="home-footer-section">
               <h4>Services</h4>
               <ul>
@@ -231,13 +273,15 @@ function Home() {
                 <li><a href="/">Corporate Accounts</a></li>
               </ul>
             </div>
+
             <div className="home-footer-section">
               <h4>Contact Us</h4>
-              <p className='p'>Dasu Filling Station</p>
+              <p className="p">Dasu Filling Station</p>
               <p>123 Main Road, Galle</p>
               <p>Phone: +94 76 677 3745</p>
               <p>Email: info@dasufilling.com</p>
             </div>
+
             <div className="home-footer-section">
               <h4>Follow Us</h4>
               <div className="social-icons">
@@ -247,6 +291,7 @@ function Home() {
               </div>
             </div>
           </div>
+
           <div className="home-footer-bottom">
             <p>© 2025 Dasu Filling Station. All Rights Reserved. | Fully Created & Developed by Amod Indupa</p>
           </div>

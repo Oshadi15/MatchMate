@@ -5,6 +5,7 @@ require("dotenv").config();
 
 // Existing routes
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
+const helpRequestRoutes = require("./routes/campus_assistant/helpRequest.route");
 
 // ✅ New Feedback routes
 const feedbackRoutes = require("./routes/FeedbackRoutes");
@@ -39,6 +40,8 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/help", helpRoutes);
+
+app.use("/api/help-requests", helpRequestRoutes);
 
 // ✅ Feedback API route
 app.use("/api/feedback", feedbackRoutes);
