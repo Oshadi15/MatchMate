@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import './FoundForm.css'
+import axios from "axios";
+import "./FoundForm.css";
 
 const FoundForm = () => {
+
   const [formData, setFormData] = useState({
     itemName: "",
     category: "",
@@ -12,6 +14,9 @@ const FoundForm = () => {
     image: null,
   });
 
+  /* =========================
+     HANDLE INPUT CHANGE
+  ========================= */
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -21,10 +26,47 @@ const FoundForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  /* =========================
+     SUBMIT TO BACKEND
+  ========================= */
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Found Item Submitted:", formData);
-    alert("Found Item Submitted Successfully!");
+
+    try {
+      // FormData required for image upload
+      const data = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
+
+      const res = await axios.post(
+        "http://localhost:5000/api/found",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert(res.data.message);
+
+      // reset form
+      setFormData({
+        itemName: "",
+        category: "",
+        color: "",
+        dateTime: "",
+        location: "",
+        description: "",
+        image: null,
+      });
+
+    } catch (error) {
+      console.error(error);
+      alert("Error submitting found item");
+    }
   };
 
   return (
@@ -32,6 +74,7 @@ const FoundForm = () => {
       <h2>Report Found Item</h2>
 
       <form onSubmit={handleSubmit}>
+
         <label>Item Name</label>
         <input
           type="text"
