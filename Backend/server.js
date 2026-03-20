@@ -3,12 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-// Existing routes
-const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
-const helpRequestRoutes = require("./routes/campus_assistant/helpRequest.route");
 
 // ✅ New Feedback routes
-const feedbackRoutes = require("./routes/FeedbackRoutes");
+const feedbackRoutes = require("./routes/FeedbackRoutes/FeedbackRoutes");
 
 
 // Middleware
@@ -40,7 +37,6 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/help", helpRoutes);
 
-app.use("/api/help-requests", helpRequestRoutes);
 
 // ✅ Feedback API route
 app.use("/api/feedback", feedbackRoutes);
@@ -50,8 +46,6 @@ app.use("/api/feedback", feedbackRoutes);
    API ROUTES
 ============================== */
 
-// Campus Assistant Help Board
-app.use("/api/help", helpRoutes);
 
 // Lost Item Management
 app.use("/api/lost", lostRoutes);
