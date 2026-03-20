@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useCallback } from "react";
 import React, { useEffect, useState } from "react";
 import { getHelpRequests, deleteHelpRequest } from "../../services/helpApi";
 
@@ -8,6 +9,7 @@ export default function HelpBoard() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const load = useCallback(async () => {
   const load = async () => {
     setLoading(true);
 
@@ -20,6 +22,11 @@ export default function HelpBoard() {
     } finally {
       setLoading(false);
     }
+  }, [status, supportType, q]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
   };
 
   useEffect(() => {
