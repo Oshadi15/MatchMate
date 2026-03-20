@@ -1,0 +1,96 @@
+.ca-page {
+  min-height: 100vh;
+  background: #e9f0fb;
+  font-family: Arial, sans-serif;
+}
+
+.ca-header {
+  background: linear-gradient(90deg, #0d3f80, #1c73c6);
+  border-bottom: 6px solid #f1b400;
+  padding: 18px 0;
+}
+
+.ca-header-inner {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+.ca-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ca-bot {
+  font-size: 44px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.ca-title {
+  margin: 0;
+  color: #fff;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.ca-title-accent {
+  color: #f1b400;
+}
+
+.ca-content {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+  padding: 44px 0;
+}
+
+.ca-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.ca-card {
+  border: none;
+  padding: 0;
+  text-align: left;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ca-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+}
+
+.ca-card-body {
+  padding: 26px 22px;
+  text-align: center;
+}
+
+.ca-card-title {
+  margin: 0 0 12px 0;
+  color: #173a63;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.ca-card-icon {
+  font-size: 78px;
+  margin-top: 6px;
+}
+
+.ca-card-footer {
+  background: linear-gradient(90deg, #0d3f80, #1c73c6);
+  color: #fff;
+  text-align: center;
+  padding: 14px 16px;
+  font-weight: 700;
+}

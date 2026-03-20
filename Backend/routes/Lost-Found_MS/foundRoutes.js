@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const foundController = require("../controllers/foundController");
+const foundController = require("../../controllers/Lost-Found_MS/foundController");
 const multer = require("multer");
 
 
