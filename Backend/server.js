@@ -3,6 +3,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
+// Existing routes
+const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
+
+// ✅ New Feedback routes
+const feedbackRoutes = require("./routes/FeedbackRoutes");
+
+const app = express();
+
+// Middleware
 const app = express();
 
 /* ==============================
@@ -28,6 +37,13 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
+// Routes
+app.use("/api/help", helpRoutes);
+
+// ✅ Feedback API route
+app.use("/api/feedback", feedbackRoutes);
+
+// MongoDB connection
 /* ==============================
    API ROUTES
 ============================== */
