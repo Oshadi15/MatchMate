@@ -10,7 +10,6 @@ const helpRequestRoutes = require("./routes/campus_assistant/helpRequest.route")
 // ✅ New Feedback routes
 const feedbackRoutes = require("./routes/FeedbackRoutes");
 
-const app = express();
 
 // Middleware
 const app = express();
