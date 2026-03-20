@@ -1,4 +1,4 @@
-const Feedback = require("../Models/Feedback");
+const Feedback = require("../../models/Feedback/Feedback");
 
 const addFeedbacks = async (req, res) => {
   const { name, gmail, section, contact, message } = req.body;
