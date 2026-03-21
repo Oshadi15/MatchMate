@@ -86,9 +86,7 @@ export default function HelpBoard() {
             <option value="OTHER">OTHER</option>
           </select>
 
-          <button className="help-board-filter-button" onClick={load}>
-            Filter
-          </button>
+         
         </div>
 
         {loading ? (

@@ -1,7 +1,9 @@
+/* createHelpRequest.css (FULL - dropdown fixed) */
+
 .create-help-request-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #eef4ff, #f8fbff);
-  padding: 36px 18px;
+  background: #0b1220; /* dark navy */
+  padding: 24px 14px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -10,145 +12,177 @@
 
 .create-help-request-card {
   width: 100%;
-  max-width: 860px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 22px 20px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  max-width: 620px;
+  background: rgba(255, 255, 255, 0.06); /* glass */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 18px 16px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
 }
 
 .create-help-request-card h2 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
-  font-weight: 800;
-  color: #1f2937;
+  margin: 0 0 6px 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
 }
 
 .create-help-request-subtitle {
-  margin: 0 0 18px 0;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.6;
+  margin: 0 0 14px 0;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .create-help-request-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+
+  /* ✅ makes native controls (select dropdown etc.) use dark palette where supported */
+  color-scheme: dark;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
+/* ✅ FIX: your JSX uses normal <label> */
 .field label {
   font-size: 13px;
-  font-weight: 700;
-  color: #374151;
+  font-weight: 800;
+  color: #e5e7eb;
+  opacity: 1;
+  display: block;
+}
+
+/* keep if you ever use field-label class */
+.field-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #e5e7eb !important;
+  opacity: 1 !important;
+  display: block;
 }
 
 .req {
-  color: #dc2626;
+  color: #f59e0b; /* orange */
   margin-left: 3px;
+  font-weight: 900;
 }
 
 .create-help-request-form input,
 .create-help-request-form select,
 .create-help-request-form textarea {
   width: 100%;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
-  font-size: 14px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 13px;
   outline: none;
   transition: 0.18s ease;
   box-sizing: border-box;
 }
 
+/* ✅ dropdown arrow + native select look */
+.create-help-request-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* keep background dark and readable */
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+/* ✅ IMPORTANT: style the dropdown list items (options) */
+.create-help-request-form select option {
+  background: #0f172a; /* dark option background */
+  color: #ffffff;      /* white text */
+}
+
+/* ✅ optional: style selected/hover option in some browsers */
+.create-help-request-form select option:checked {
+  background: #1f2937;
+  color: #f59e0b;
+}
+
+.create-help-request-form input::placeholder,
+.create-help-request-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .create-help-request-form input:focus,
 .create-help-request-form select:focus,
 .create-help-request-form textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  border-color: rgba(245, 158, 11, 0.9);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
 }
 
 .create-help-request-form textarea {
-  min-height: 150px;
+  min-height: 110px;
   resize: vertical;
 }
 
 .segmented {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 .seg-btn {
-  padding: 11px 12px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
   font-weight: 800;
+  font-size: 12px;
   cursor: pointer;
   transition: 0.15s ease;
   text-align: center;
+  outline: none;
 }
 
 .seg-btn:hover {
   transform: translateY(-1px);
-  border-color: rgba(37, 99, 235, 0.55);
+  border-color: rgba(245, 158, 11, 0.7);
 }
 
 .seg-btn.active {
-  background: rgba(37, 99, 235, 0.10);
-  border-color: rgba(37, 99, 235, 0.75);
-  color: #1d4ed8;
-}
-
-.file-list {
-  margin-top: 10px;
-  display: grid;
-  gap: 8px;
-}
-
-.file-item {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  color: #111827;
-  font-size: 13px;
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.85);
+  color: #f59e0b;
 }
 
 .hint {
   margin-top: 6px;
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 11px;
+  color: #9ca3af;
 }
 
 .create-help-request-button {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: none;
-  border-radius: 14px;
-  background: #2563eb;
-  color: #ffffff;
-  font-size: 15px;
+  border-radius: 12px;
+  background: #f59e0b;
+  color: #0b1220;
+  font-size: 14px;
   font-weight: 900;
   cursor: pointer;
   transition: 0.18s ease;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .create-help-request-button:hover {
-  background: #1d4ed8;
+  background: #fb923c;
   transform: translateY(-1px);
 }
 
@@ -159,20 +193,5 @@
 @media (max-width: 900px) {
   .segmented {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .create-help-request-page {
-    padding: 22px 12px;
-  }
-
-  .create-help-request-card h2 {
-    font-size: 22px;
-  }
-
-  .create-help-request-card {
-    padding: 16px 14px;
-    border-radius: 16px;
   }
 }

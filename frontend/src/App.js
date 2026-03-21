@@ -2,6 +2,8 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
+import Layout from "./components/common/Layout";
+
 // Components
 import FoundForm from './components/Lost-Found_MS/FoundForm';
 import LostForm from './components/Lost-Found_MS/LostForm';
@@ -10,7 +12,6 @@ import ReportSelection from './components/Lost-Found_MS/Report';
 import Home from "./components/HomePage/Home";
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
-import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
 // import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
@@ -31,12 +32,11 @@ function App() {
     <BrowserRouter>
    
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/help" element={<HelpBoard />} />
-        <Route path="/create" element={<CreateHelpRequest />} />
-        <Route path="/my-requests" element={<MyRequests />} />
-        <Route path="/campus-assistant" element={<SmartAssistantHome />} />
-        <Route path="/help/reply/:id" element={<ReplyHelpRequest />} />
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/help" element={<Layout><HelpBoard /></Layout>} />
+        <Route path="/create" element={<Layout><CreateHelpRequest /></Layout>} />
+        <Route path="/campus-assistant" element={<Layout><SmartAssistantHome /></Layout>} />
+        <Route path="/help/reply/:id" element={<Layout><ReplyHelpRequest /></Layout>} />
         
       
         <Route path="/signup" element={<StudentSignup />} />
@@ -46,10 +46,10 @@ function App() {
          <Route path='/report' element={<ReportSelection/>} /> */}
          <Route path="/adminlogin" element={<AdminLogin />} />
 
-        <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
-        <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
-        <Route path="/report" element={<ReportSelection />} />
-        <Route path="/browseitems" element={<BrowseItems refreshFlag={refreshFlag} />} />
+        <Route path="/found" element={<Layout><FoundForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
+        <Route path="/lost" element={<Layout><LostForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
+        <Route path="/report" element={<Layout><ReportSelection /></Layout>} />
+        <Route path="/browseitems" element={<Layout><BrowseItems refreshFlag={refreshFlag} /></Layout>} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,12 +1,15 @@
+
+
 .ca-page {
   min-height: 100vh;
-  background: #e9f0fb;
+  background: #0b1220;
   font-family: Arial, sans-serif;
 }
 
 .ca-header {
-  background: linear-gradient(90deg, #0d3f80, #1c73c6);
-  border-bottom: 6px solid #f1b400;
+  background: rgba(9, 18, 36, 0.72);
+  backdrop-filter: blur(10px);
+  border-bottom: 3px solid #f59e0b;
   padding: 18px 0;
 }
 
@@ -23,22 +26,22 @@
 
 .ca-bot {
   font-size: 44px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   padding: 10px 12px;
 }
 
 .ca-title {
   margin: 0;
-  color: #fff;
+  color: #ffffff;
   font-size: 44px;
   font-weight: 800;
   letter-spacing: 0.3px;
 }
 
 .ca-title-accent {
-  color: #f1b400;
+  color: #ffffff;
 }
 
 .ca-content {
@@ -54,20 +57,29 @@
 }
 
 .ca-card {
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.10);
   padding: 0;
   text-align: left;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+
+  /* ✅ base shadow */
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  /* ✅ remove default button focus/blue */
+  outline: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* ✅ keep hover movement only */
 .ca-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
 }
 
 .ca-card-body {
@@ -77,7 +89,7 @@
 
 .ca-card-title {
   margin: 0 0 12px 0;
-  color: #173a63;
+  color: #ffffff;
   font-size: 26px;
   font-weight: 800;
 }
@@ -88,23 +100,27 @@
 }
 
 .ca-card-footer {
-  background: linear-gradient(90deg, #0d3f80, #1c73c6);
-  color: #fff;
+  background: #f59e0b;
+  color: #0b1220;
   text-align: center;
   padding: 14px 16px;
-  font-weight: 700;
+  font-weight: 800;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
 }
+
 .ca-card-image{
   width: 120px;
   height: 120px;
   object-fit: contain;
 }
+
 .ca-card-imageWrap{
   width: 100%;
   height: 220px;
   margin-top: 12px;
   border-radius: 14px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .ca-card-imageFull{
@@ -113,14 +129,15 @@
   object-fit: cover;
   display: block;
 }
-/* --- Notes section + footer (add to the bottom of smartAssistantHome.css) --- */
 
+/* --- Notes section + footer --- */
 .ca-notes{
   margin-top: 30px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 18px;
   padding: 18px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .ca-notes-header{
@@ -135,12 +152,12 @@
   margin: 0;
   font-size: 20px;
   font-weight: 800;
-  color: #173a63;
+  color: #ffffff;
 }
 
 .ca-notes-sub{
   font-size: 13px;
-  color: #5a6a7c;
+  color: #cbd5e1;
 }
 
 .ca-notes-grid{
@@ -150,8 +167,8 @@
 }
 
 .ca-note{
-  background: #f6f9ff;
-  border: 1px solid rgba(13, 63, 128, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 14px;
   padding: 12px;
 }
@@ -162,12 +179,12 @@
 
 .ca-note-title{
   font-weight: 800;
-  color: #0d3f80;
+  color: #f59e0b;
   margin-bottom: 6px;
 }
 
 .ca-note-text{
-  color: #2b2b2b;
+  color: #e5e7eb;
   line-height: 1.5;
   font-size: 14px;
 }
@@ -175,14 +192,42 @@
 .ca-footer{
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid rgba(13, 63, 128, 0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  color: #5a6a7c;
+  color: #9ca3af;
   font-size: 12px;
 }
 
 .ca-footer-dot{
   opacity: 0.7;
+}
+
+/* ✅ FINAL OVERRIDE: FORCE REMOVE ANY BLUE FOCUS / BOOTSTRAP GLOW */
+.ca-card,
+.ca-card:hover,
+.ca-card:active,
+.ca-card:focus,
+.ca-card:focus-visible {
+  outline: none !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* keep shadow stable on focus */
+.ca-card:focus,
+.ca-card:focus-visible {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* keep hover shadow */
+.ca-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* remove blue text selection highlight inside cards */
+.ca-card ::selection {
+  background: transparent;
 }
