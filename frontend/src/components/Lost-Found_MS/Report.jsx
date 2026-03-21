@@ -42,7 +42,7 @@ const Report = () => {
         <div className="report-header-inner">
           <div className="report-logo-box">🔍</div>
           <h1>
-            Lost <span>&</span> Found Management
+            Lost & Found Management
           </h1>
         </div>
       </div>
