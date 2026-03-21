@@ -3,20 +3,22 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-
-// ✅ New Feedback routes
-const feedbackRoutes = require("./routes/FeedbackRoutes/FeedbackRoutes");
-
-
-// Middleware
 const app = express();
 
 /* ==============================
    ROUTE IMPORTS
 ============================== */
+
+// Campus Assistant
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
+
+// ✅ Feedback (FIXED PATH)
+const feedbackRoutes = require("./routes/FeedbackRoutes/FeedbackRoutes");
+
+// Lost & Found
 const lostRoutes = require("./routes/Lost-Found_MS/lostRoutes");
 const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
+const itemRoutes = require("./routes/Lost-Found_MS/itemRoutes");
 
 /* ==============================
    MIDDLEWARE
@@ -24,7 +26,6 @@ const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 app.use(cors());
 app.use(express.json());
 
-// ✅ Access uploaded images
 app.use("/uploads", express.static("uploads"));
 
 /* ==============================
@@ -34,25 +35,15 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-// Routes
-app.use("/api/help", helpRoutes);
-
-
-// ✅ Feedback API route
-app.use("/api/feedback", feedbackRoutes);
-
-// MongoDB connection
 /* ==============================
    API ROUTES
 ============================== */
 
-
-// Lost Item Management
+app.use("/api/help", helpRoutes);
+app.use("/api/feedback", feedbackRoutes);
 app.use("/api/lost", lostRoutes);
-
-// Found Item Management
 app.use("/api/found", foundRoutes);
-
+app.use("/api/found", itemRoutes)
 
 /* ==============================
    DATABASE CONNECTION

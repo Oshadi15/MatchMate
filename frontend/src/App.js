@@ -8,6 +8,7 @@ import LostForm from './components/Lost-Found_MS/LostForm';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 
 
 // Admin Dashboard
@@ -22,13 +23,7 @@ import StudentSignup from "./components/UserManagement/StudentSignup";
 function App() {
   return (
     <BrowserRouter>
-      <div style={{ padding: 15, display: "flex", gap: 15 }}>
-        <Link to="/">Home</Link>
-        <Link to="/help">Help Board</Link>
-        <Link to="/create">Create Help Request</Link>
-        <Link to="/signup">Student Signup</Link>
-        <Link to="/admin">Admin Dashboard</Link>
-      </div>
+     
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -44,6 +39,7 @@ function App() {
         <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} />
+         <Route path='/browseitems' element={<BrowseItems/>} />
 
       </Routes>
     </BrowserRouter>

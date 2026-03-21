@@ -13,7 +13,6 @@ import heroImage3 from '../../assets/f2.png';
 import featureIcon1 from '../../assets/f2.png';
 import featureIcon2 from '../../assets/f2.png';
 import featureIcon3 from '../../assets/f2.png';
-import HomeNav from '../../HomeNav/HomeNav';
 
 const heroImages = [heroImage1, heroImage2, heroImage3];
 
@@ -79,7 +78,6 @@ function Home() {
   <FaRobot size={38} />
 </button>
 
-    <HomeNav/>
       {/* Chat Button */}
       <button
         className="chat-button"
