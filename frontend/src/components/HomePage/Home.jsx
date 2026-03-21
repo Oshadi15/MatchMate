@@ -1,119 +1,106 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaRobot } from "react-icons/fa";
-import axios from 'axios';
-import './Home.css';
-import HomeNav from '../../HomeNav/HomeNav';
-import logoImg from '../../assets/f2.png';
+import "./Home.css";
 
-import heroImage1 from '../../assets/f2.png';
-import heroImage2 from '../../assets/f2.png';
-import heroImage3 from '../../assets/f2.png';
+// Images
+import hero1 from "../../assets/f5.jpg";
+import hero2 from "../../assets/f2.png";
+import hero3 from "../../assets/f5.jpg";
 
-import featureIcon1 from '../../assets/f2.png';
-import featureIcon2 from '../../assets/f2.png';
-import featureIcon3 from '../../assets/f2.png';
+import feature1 from "../../assets/f6.jpg";
+import feature2 from "../../assets/f7.jpeg";
+import feature3 from "../../assets/f9.webp";
 
-const heroImages = [heroImage1, heroImage2, heroImage3];
+import logoImg from "../../assets/f3.png";
 
-function Home() {
-  const history = useNavigate();
+const heroImages = [hero1, hero2, hero3];
 
-  const [member, setMember] = useState({
-    gmail: "",
-    password: "",
-  });
-
+export default function Home() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
+    }, 4500);
     return () => clearInterval(interval);
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setMember((prevMember) => ({
-      ...prevMember,
-      [name]: value,
-    }));
-  };
-
-  const sendRequest = async () => {
-    return await axios
-      .post("http://localhost:5000/members/login", {
-        gmail: member.gmail,
-        password: member.password,
-      })
-      .then((res) => res.data);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await sendRequest();
-      if (response.staff) {
-        alert("Login Success");
-        history("/admin");
-      } else {
-        alert("Login error: Invalid credentials");
-      }
-    } catch (err) {
-      alert("Error: " + err.message);
-    }
-  };
-
   return (
     <>
-    <HomeNav />
+    {/* <HomeNav /> */}
 {/*chat */}
-<button 
+{/* <button 
   className="chat-button"
   onClick={() => history("/enterpin")}
 >
   <FaRobot size={38} />
-</button>
+</button> */}
 
       {/* Chat Button */}
-      <button
-        className="chat-button"
-        onClick={() => history("/enterpin")}
-      >
-        <FaRobot size={38} />
+      <button className="chat-button" onClick={() => navigate("/help")}>
+        <FaRobot size={34} />
       </button>
 
       <div className="home-page">
+
+        {/* Navbar */}
+        <header className="home-nav">
+          <div className="brand" onClick={() => navigate("/")}>
+            <img src={logoImg} alt="MatchMate Logo" className="brand-logo" />
+            <div className="brand-text">
+              <h3>MatchMate</h3>
+              <p>Lost & Found System</p>
+            </div>
+          </div>
+
+          <nav className="nav-links">
+            <Link to="/" className="nav-link active">Home</Link>
+            <Link to="/report" className="nav-link">Lost & Found</Link>
+            <Link to="/assistant" className="nav-link">Campus Assistant</Link>
+            <Link to="/contact" className="nav-link">Contact</Link>
+          </nav>
+
+          <div className="nav-actions">
+            <button className="nav-btn ghost" onClick={() => navigate("/login")}>
+              Login
+            </button>
+
+            {/* ✅ FIXED HERE */}
+            <button className="nav-btn primary" onClick={() => navigate("/signup")}>
+              Register
+            </button>
+
+            <button className="nav-btn primary" onClick={() => navigate("/adminlogin")}>
+              Admin Login
+            </button>
+          </div>
+        </header>
+
         {/* Hero Section */}
         <section className="hero-section">
           <div className="hero-slideshow">
             {heroImages.map((img, index) => (
               <div
                 key={index}
-                className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
+                className={`hero-slide ${index === currentSlide ? "active" : ""}`}
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Lost & Found System</h1>
-                  <p>Efficient. Reliable. Always Available</p>
-                  <button
-                    onClick={() => setShowLogin(!showLogin)}
-                    className="cta-button"
-                  >
-                    {showLogin ? 'Explore More' : 'Admin Login'}
-                  </button>
+                  <h1>Lost And Found System</h1>
+                  <p>A smart platform to manage lost and found items.</p>
                 </div>
               </div>
             ))}
 
+            {/* Dots */}
             <div className="slide-dots">
               {heroImages.map((_, index) => (
                 <span
                   key={index}
-                  className={index === currentSlide ? 'active' : ''}
+                  className={index === currentSlide ? "active" : ""}
                   onClick={() => setCurrentSlide(index)}
                 />
               ))}
@@ -121,182 +108,115 @@ function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features */}
         <section className="features-section">
-          <div
+
+          <div 
             className="feature-card"
-            onClick={() => history("/fast-service")}
+            onClick={() => navigate("/report")}
             style={{ cursor: "pointer" }}
           >
-            <img src={featureIcon1} alt="Fast Service" />
-            <h3>Fast Service</h3>
-            <p>Our automated systems ensure you get fuel quickly without delays</p>
+            <img src={feature1} alt="Lost and Found" />
+            <h3>Lost and Found</h3>
+            <p>Smart lost and found system.</p>
           </div>
 
-          <div
+          <div 
             className="feature-card"
-            onClick={() => history("/report")}
+            onClick={() => navigate("/assistant")}
             style={{ cursor: "pointer" }}
           >
-            <img src={featureIcon2} alt="Lost & Found Item" />
-            <h3>Lost & Found Item</h3>
-            <p>Round-the-clock service for all your fuel needs</p>
+            <img src={feature2} alt="Campus Assistant" />
+            <h3>Campus Assistant</h3>
+            <p>Connecting students with campus resources easily.</p>
           </div>
 
-          <div
+          <div 
             className="feature-card"
-            onClick={() => history("/easy-payments")}
+            onClick={() => navigate("/feedback")}
             style={{ cursor: "pointer" }}
           >
-            <img src={featureIcon3} alt="Easy Payments" />
-            <h3>Easy Payments</h3>
-            <p>Multiple payment options including digital wallets</p>
+            <img src={feature3} alt="Feedback" />
+            <h3>Feedback</h3>
+            <p>Help us improve with your feedback.</p>
           </div>
+
         </section>
 
-        {/* Login/Register Section */}
-        <section className={`auth-section ${showLogin ? 'show-login' : ''}`}>
+        {/* Auth Section */}
+        <section className={`auth-section ${showAuth ? "show-auth" : ""}`}>
           <div className="auth-container">
-            {showLogin ? (
-              <form className="login-form" onSubmit={handleSubmit}>
-                <h3>Admin Portal</h3>
 
-                <input
-                  type="email"
-                  id="gmail"
-                  name="gmail"
-                  onChange={handleInputChange}
-                  value={member.gmail}
-                  placeholder="Admin Email"
-                  required
-                />
+            <div className="auth-left">
+              <h2>Welcome to MatchMate</h2>
+              <p>Login to access your dashboard.</p>
 
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  onChange={handleInputChange}
-                  value={member.password}
-                  placeholder="Password"
-                  required
-                />
+              <div className="auth-actions">
+                <button className="action-button" onClick={() => navigate("/login")}>
+                  Login
+                </button>
 
-                <div className="form-options">
-                  <label>
-                    <input type="checkbox" /> Remember me
-                  </label>
-                  <a href="/member-forgot">Forgot password?</a>
-                </div>
+                {/* ✅ FIXED HERE ALSO */}
+                <button className="action-button outline" onClick={() => navigate("/signup")}>
+                  Register
+                </button>
 
-                <button type="submit">SIGN IN</button>
-              </form>
-            ) : (
-              <div className="welcome-content">
-                <div className="logo">
-                  <img src={logoImg} alt="FuelFlow Logo" />
-                  <h2>
-                    <span className="fuel">FUEL</span>
-                    <span className="flow">FLOW</span>
-                  </h2>
-                  <p className="subtitle">Dasu Filling Station, Galle</p>
-                </div>
-
-                <div className="action-buttons">
-                  <button
-                    onClick={() => history('/evlog')}
-                    className="action-button"
-                  >
-                    Charge Your Electric Vehicle.
-                  </button>
-
-                  <button
-                    onClick={() => history('/flogin')}
-                    className="action-button"
-                  >
-                    Place Your Commercial Purpose Fuel Order.
-                  </button>
-
-                  <button
-                    onClick={() => history('/stations')}
-                    className="action-button"
-                  >
-                    Find Our Other Stations.
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section className="testimonials-section">
-          <h2>What Our Customers Say...</h2>
-          <div className="testimonials-container">
-            <div className="testimonial-card">
-              <p>"The fastest fuel service I've ever experienced. Highly recommended!"</p>
-              <div className="customer-info">
-                <span className="customer-name">- Kamal D.</span>
-                <span className="customer-role">Regular Customer</span>
+                <button className="close-auth" onClick={() => setShowAuth(false)}>
+                  Close
+                </button>
               </div>
             </div>
 
-            <div className="testimonial-card">
-              <p>"Their digital payment system saves me so much time during my deliveries."</p>
-              <div className="customer-info">
-                <span className="customer-name">- Amal M.</span>
-                <span className="customer-role">Commercial Client</span>
+            <div className="auth-right">
+              <div className="auth-box">
+                <h3>Quick Links</h3>
+
+                <button onClick={() => navigate("/report")} className="quick-btn">
+                  Report Lost Item
+                </button>
+
+                <button onClick={() => navigate("/assistant")} className="quick-btn">
+                  Campus Assistant
+                </button>
+
+                <button onClick={() => navigate("/feedback")} className="quick-btn">
+                  Give Feedback
+                </button>
+
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* Footer Section */}
+        {/* Footer */}
         <footer className="modern-home-footer">
           <div className="home-footer-content">
+
             <div className="home-footer-section">
               <h4>Quick Links</h4>
               <ul>
-                <li><a href="/services">Services</a></li>
-                <li><a href="/fuel-prices">Fuel Prices</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li><Link to="/report">Lost & Found</Link></li>
+                <li><Link to="/assistant">Campus Assistant</Link></li>
+                <li><Link to="/login">Login</Link></li>
               </ul>
             </div>
 
             <div className="home-footer-section">
-              <h4>Services</h4>
-              <ul>
-                <li><a href="/">Fuel Delivery</a></li>
-                <li><a href="/">Fleet Services</a></li>
-                <li><a href="/">Loyalty Program</a></li>
-                <li><a href="/">Corporate Accounts</a></li>
-              </ul>
+              <h4>Contact</h4>
+              <p>MatchMate Support</p>
+              <p>Phone: +94 7X XXX XXXX</p>
+              <p>Email: support@matchmate.com</p>
             </div>
 
-            <div className="home-footer-section">
-              <h4>Contact Us</h4>
-              <p className="p">Dasu Filling Station</p>
-              <p>123 Main Road, Galle</p>
-              <p>Phone: +94 76 677 3745</p>
-              <p>Email: info@dasufilling.com</p>
-            </div>
-
-            <div className="home-footer-section">
-              <h4>Follow Us</h4>
-              <div className="social-icons">
-                <a href="#twitter"><i className="fab fa-twitter"></i></a>
-                <a href="#instagram"><i className="fab fa-instagram"></i></a>
-                <a href="#linkedin"><i className="fab fa-linkedin"></i></a>
-              </div>
-            </div>
           </div>
 
           <div className="home-footer-bottom">
-            <p>© 2025 Dasu Filling Station. All Rights Reserved. | Fully Created & Developed by Amod Indupa</p>
+            <p>© {new Date().getFullYear()} MatchMate. All Rights Reserved.</p>
           </div>
         </footer>
+
       </div>
     </>
   );
 }
-
-export default Home;
