@@ -35,6 +35,15 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
+// Routes
+app.use("/api/help", helpRoutes);
+
+
+
+// ✅ Feedback API route
+app.use("/api/feedback", feedbackRoutes);
+
+// MongoDB connection
 /* ==============================
    API ROUTES
 ============================== */
