@@ -37,14 +37,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 42px;
+  font-size: 30px;
 }
 
 .report-header h1 {
   margin: 0;
   color: white;
-  font-size: 54px;
-  font-weight: 800;
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .report-header h1 span {
@@ -232,11 +233,11 @@ body {
   .report-logo-box {
     width: 78px;
     height: 72px;
-    font-size: 34px;
+    font-size: 30px;
   }
 
   .report-header h1 {
-    font-size: 34px;
+    font-size: 30px;
     line-height: 1.2;
   }
 
