@@ -1,191 +1,160 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../../services/api";
 import "./StudentSignup.css";
 
-export default function Register() {
+function Register() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     itNumber: "",
     name: "",
-    year: "",
-    faculty: "",
     contactNumber: "",
     email: "",
+    year: "",
+    faculty: "",
     password: "",
-    role: "participant",
   });
 
-  const [msg, setMsg] = useState({ type: "", text: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const validate = () => {
-    if (!form.itNumber.trim()) return "IT Number is required";
-    if (!form.name.trim()) return "Name is required";
-    if (!form.year.trim()) return "Year is required";
-    if (!form.faculty.trim()) return "Faculty is required";
-    if (!form.contactNumber.trim()) return "Contact number is required";
-    if (!form.email.trim()) return "Email is required";
-    if (!form.password.trim()) return "Password is required";
-
-    // simple contact number check (Sri Lanka style)
-    if (!/^\d{10}$/.test(form.contactNumber)) return "Contact number must be 10 digits";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) return "Enter a valid email";
-
-    if (form.password.length < 6) return "Password must be at least 6 characters";
-    return null;
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMsg({ type: "", text: "" });
-
-    const error = validate();
-    if (error) {
-      setMsg({ type: "error", text: error });
-      return;
-    }
+    setError("");
+    setSuccess("");
 
     try {
-      setLoading(true);
+      const res = await API.post("/api/users/register", formData);
 
-      // ⚠️ Change URL if your backend route is different
-      // Example: http://localhost:5000/api/auth/register
-      const res = await axios.post("http://localhost:5000/api/users/register", form);
+      setSuccess(res.data.message || "Registration successful!");
 
-      setMsg({ type: "success", text: res.data?.message || "Registered successfully!" });
-
-      setTimeout(() => navigate("/login"), 900);
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     } catch (err) {
-      const text =
-        err.response?.data?.message ||
-        err.message ||
-        "Registration failed. Try again.";
-
-      setMsg({ type: "error", text });
-    } finally {
-      setLoading(false);
+      setError(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
     <div className="register-page">
       <div className="register-card">
-        <div className="register-head">
-          <h2>Create Account</h2>
-          <p>Register as an Organizer or Participant</p>
-        </div>
+        <h2>Create Account</h2>
+        <p className="register-subtitle">Fill in your details to register</p>
 
-        {msg.text && (
-          <div className={`alert ${msg.type === "success" ? "success" : "error"}`}>
-            {msg.text}
-          </div>
-        )}
+        {error && <p className="register-message error">{error}</p>}
+        {success && <p className="register-message success">{success}</p>}
 
         <form onSubmit={handleSubmit} className="register-form">
-          <div className="grid-2">
-            <div className="field">
+          <div className="register-grid">
+            <div className="form-group">
               <label>IT Number</label>
               <input
+                type="text"
                 name="itNumber"
-                value={form.itNumber}
+                value={formData.itNumber}
                 onChange={handleChange}
-                placeholder="IT123456"
+                placeholder="IT2023001"
+                required
               />
             </div>
 
-            <div className="field">
+            <div className="form-group">
               <label>Full Name</label>
               <input
+                type="text"
                 name="name"
-                value={form.name}
+                value={formData.name}
                 onChange={handleChange}
-                placeholder="Your Name"
+                placeholder="Enter your full name"
+                required
               />
             </div>
-          </div>
 
-          <div className="grid-2">
-            <div className="field">
-              <label>Year</label>
-              <select name="year" value={form.year} onChange={handleChange}>
-                <option value="">Select Year</option>
-                <option value="1">1st Year</option>
-                <option value="2">2nd Year</option>
-                <option value="3">3rd Year</option>
-                <option value="4">4th Year</option>
-              </select>
-            </div>
-
-            <div className="field">
-              <label>Faculty</label>
-              <select name="faculty" value={form.faculty} onChange={handleChange}>
-                <option value="">Select Faculty</option>
-                <option value="Computing">Computing</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Business">Business</option>
-                <option value="Humanities">Humanities</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid-2">
-            <div className="field">
+            <div className="form-group">
               <label>Contact Number</label>
               <input
+                type="text"
                 name="contactNumber"
-                value={form.contactNumber}
+                value={formData.contactNumber}
                 onChange={handleChange}
-                placeholder="07XXXXXXXX"
+                placeholder="0771234567"
+                required
               />
             </div>
 
-            <div className="field">
-              <label>Role</label>
-              <select name="role" value={form.role} onChange={handleChange}>
-                <option value="participant">Participant</option>
-                <option value="organizer">Organizer</option>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="example@gmail.com"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Year</label>
+              <select
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select year</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
               </select>
+            </div>
+
+            <div className="form-group">
+              <label>Faculty</label>
+              <input
+                type="text"
+                name="faculty"
+                value={formData.faculty}
+                onChange={handleChange}
+                placeholder="Faculty of Computing"
+                required
+              />
+            </div>
+
+            <div className="form-group full-width">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                required
+              />
             </div>
           </div>
 
-          <div className="field">
-            <label>Email</label>
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="example@gmail.com"
-            />
-          </div>
-
-          <div className="field">
-            <label>Password</label>
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Minimum 6 characters"
-            />
-          </div>
-
-          <button className="register-btn" disabled={loading}>
-            {loading ? "Creating..." : "Create Account"}
+          <button type="submit" className="register-btn">
+            Register
           </button>
         </form>
 
         <p className="register-footer">
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </div>
     </div>
   );
 }
+
+export default Register;

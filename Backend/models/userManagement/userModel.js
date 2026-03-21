@@ -6,27 +6,34 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     name: {
       type: String,
       required: true,
-    },
-    year: {
-      type: String,
-      required: true,
-    },
-    faculty: {
-      type: String,
-      required: true,
+      trim: true,
     },
     contactNumber: {
       type: String,
       required: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    year: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    faculty: {
+      type: String,
+      required: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -34,11 +41,13 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["organizer", "participant"],
-      required: true,
+      enum: ["student", "admin"],
+      default: "student",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("User", userSchema);

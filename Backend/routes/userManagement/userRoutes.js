@@ -4,18 +4,17 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
-  deleteUser,
-} = require("../Controllers/userController");
+} = require("../../controllers/userManagement/userController");
 
+// test route
+router.get("/test", (req, res) => {
+  res.json({ message: "User routes working!" });
+});
+
+// register
 router.post("/register", registerUser);
-router.post("/login", loginUser);
 
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+// login
+router.post("/login", loginUser);
 
 module.exports = router;
