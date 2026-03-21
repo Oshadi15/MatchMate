@@ -8,7 +8,7 @@ return (
     <nav className="fuel-navbar">
       <div className="navbar-logo">
         <FaGasPump size={24} />
-        <span className="logo-text">Lost AND Found <span className="logo-flow">Station, Galle.</span></span>
+        <span className="logo-text">Lost And Found<span className="logo-flow"> System</span></span>
       </div>
       <ul className="navbar-links">
       {/* <li><Link to="/admin">Dashboard</Link></li> */}

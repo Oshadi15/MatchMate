@@ -8,32 +8,38 @@ import LostForm from './components/Lost-Found_MS/LostForm';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 
 
-// ✅ Admin Dashboard
+// Admin Dashboard
 import AdminDashboard from "./components/AdminDashBoard/AdminDashBoard";
 
-// ✅ Home component (adjust path if needed)
+// Home
 import Home from "./components/HomePage/Home";
+
+// ✅ Student Signup
+import StudentSignup from "./components/UserManagement/StudentSignup";
 
 function App() {
   return (
     <BrowserRouter>
+     
 
       <Routes>
-        {/* ✅ Home route */}
         <Route path="/" element={<Home />} />
-
-        {/* Updated help route */}
         <Route path="/help" element={<HelpBoard />} />
-
         <Route path="/create" element={<CreateHelpRequest />} />
+
+        {/* ✅ Student Signup Route */}
+        <Route path="/signup" element={<StudentSignup />} />
+
         <Route path="/my-requests" element={<MyRequests />} />
         <Route path="/campus-assistant" element={<SmartAssistantHome />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} />
+         <Route path='/browseitems' element={<BrowseItems/>} />
 
       </Routes>
     </BrowserRouter>
