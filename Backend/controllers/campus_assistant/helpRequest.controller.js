@@ -1,5 +1,6 @@
 const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
+// CREATE
 exports.createHelpRequest = async (req, res) => {
   try {
     const item = await HelpRequest.create(req.body);
@@ -12,6 +13,7 @@ exports.createHelpRequest = async (req, res) => {
   }
 };
 
+// GET ALL (with filters)
 exports.getHelpRequests = async (req, res) => {
   try {
     const { status, supportType, q } = req.query;
@@ -38,6 +40,25 @@ exports.getHelpRequests = async (req, res) => {
   }
 };
 
+// ✅ NEW: GET ONE BY ID (for Reply page)
+exports.getHelpRequestById = async (req, res) => {
+  try {
+    const item = await HelpRequest.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch help request",
+      error: error.message,
+    });
+  }
+};
+
+// GET MY REQUESTS (by requesterKey)
 exports.getMyHelpRequests = async (req, res) => {
   try {
     const { requesterKey } = req.query;
@@ -59,6 +80,7 @@ exports.getMyHelpRequests = async (req, res) => {
   }
 };
 
+// DELETE
 exports.deleteHelpRequest = async (req, res) => {
   try {
     await HelpRequest.findByIdAndDelete(req.params.id);
