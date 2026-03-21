@@ -42,7 +42,7 @@ const Report = () => {
         <div className="report-header-inner">
           <div className="report-logo-box">🔍</div>
           <h1>
-            Lost <span>@C</span> Found Management
+            Lost <span>&</span> Found Management
           </h1>
         </div>
       </div>
@@ -53,7 +53,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/lost")}>
             <h2>Report Lost Item</h2>
             <img
-              src="https://cdn-icons-png.flaticon.com/512/891/891462.png"
+              src="https://t3.ftcdn.net/jpg/05/16/15/92/360_F_516159243_MLDfrTZHcCRoyEfs8zUUUQ7tJS5k7oCL.jpg"
               alt="Report Lost Item"
             />
             <div className="report-card-footer lost-card-footer">
@@ -64,7 +64,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/found")}>
             <h2>Report Found Item</h2>
             <img
-              src="https://cdn-icons-png.flaticon.com/512/1048/1048941.png"
+              src="https://media.istockphoto.com/vectors/lost-and-found-vector-id874626438?k=20&m=874626438&s=612x612&w=0&h=IWxtd50nG-CdU00wVtFx7ltBejB2jB8ejojnQQVOnfQ="
               alt="Report Found Item"
             />
             <div className="report-card-footer found-card-footer">
@@ -72,7 +72,7 @@ const Report = () => {
             </div>
           </div>
 
-          <div className="report-card" onClick={() => navigate("/browse")}>
+          <div className="report-card" onClick={() => navigate("/browseitems")}>
             <h2>Browse Items</h2>
             <img
               src="https://cdn-icons-png.flaticon.com/512/622/622669.png"

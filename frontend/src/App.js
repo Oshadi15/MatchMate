@@ -8,6 +8,7 @@ import LostForm from './components/Lost-Found_MS/LostForm';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 
 
 // Admin Dashboard
@@ -38,6 +39,7 @@ function App() {
         <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} />
+         <Route path='/browseitems' element={<BrowseItems/>} />
 
       </Routes>
     </BrowserRouter>
