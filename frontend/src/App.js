@@ -9,6 +9,9 @@ import ReportSelection from './components/Lost-Found_MS/Report';
 import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
 import BrowseItems from './components/Lost-Found_MS/BrowseItems';
+import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
+
+
 
 
 // Admin Dashboard
@@ -35,6 +38,9 @@ function App() {
 
         <Route path="/my-requests" element={<MyRequests />} />
         <Route path="/campus-assistant" element={<SmartAssistantHome />} />
+        <Route path="/help/reply/:id" element={<ReplyHelpRequest />} />
+        
+      
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
