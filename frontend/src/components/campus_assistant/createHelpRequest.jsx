@@ -7,59 +7,73 @@ export default function CreateHelpRequest() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    title: "",
     supportType: "",
-    priority: "MEDIUM",
+    title: "",
     description: "",
-    preferredContact: "IN_APP",
-    contactEmail: "",
-    contactPhone: "",
-    isAnonymous: false,
+    priority: "MEDIUM",
+    attachments: [],
   });
 
+  // ✅ keep your validation rule: first non-space character must be a letter
+  const firstNonSpaceIsLetter = (value) => {
+    const trimmedStart = value.replace(/^\s+/, "");
+    if (trimmedStart.length === 0) return true;
+    return /^[A-Za-z]/.test(trimmedStart);
+  };
+
   const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, files } = e.target;
+
+    // File handling (still kept)
+    if (type === "file") {
+      const arr = Array.from(files || []);
+      const limited = arr.slice(0, 3);
+      setForm((prev) => ({ ...prev, attachments: limited }));
+      return;
+    }
+
+    // ✅ block typing numbers/symbols as first character for title & description
+    if (type !== "checkbox" && (name === "title" || name === "description")) {
+      if (value.length === 0) {
+        setForm((prev) => ({ ...prev, [name]: "" }));
+        return;
+      }
+      if (!firstNonSpaceIsLetter(value)) {
+        return;
+      }
+    }
 
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
+  const setPriority = (p) => setForm((prev) => ({ ...prev, priority: p }));
+
   const validate = () => {
-    if (form.title.trim().length < 5) {
-      return "Title must be at least 5 characters";
-    }
+    const titleTrimmed = form.title.trim();
+    const descTrimmed = form.description.trim();
 
-    if (!form.supportType) {
-      return "Support type is required";
-    }
+    if (!form.supportType) return "Category is required";
 
-    if (form.description.trim().length < 10) {
-      return "Description must be at least 10 characters";
-    }
+    if (titleTrimmed.length < 5) return "Request subject must be at least 5 characters";
+    if (!/^[A-Za-z]/.test(titleTrimmed))
+      return "Request subject must start with a letter (no numbers/symbols at the beginning)";
 
-    if (form.preferredContact === "EMAIL" && !form.contactEmail.trim()) {
-      return "Email is required when preferred contact is EMAIL";
-    }
-
-    if (form.preferredContact === "PHONE" && !form.contactPhone.trim()) {
-      return "Phone number is required when preferred contact is PHONE";
-    }
+    if (descTrimmed.length < 10) return "Description must be at least 10 characters";
+    if (!/^[A-Za-z]/.test(descTrimmed))
+      return "Description must start with a letter (no numbers/symbols at the beginning)";
 
     return null;
   };
 
   const getRequesterKey = () => {
     let requesterKey = localStorage.getItem("studentRequesterKey");
-
     if (!requesterKey) {
-      requesterKey = `student_${Date.now()}_${Math.random()
-        .toString(36)
-        .slice(2, 10)}`;
+      requesterKey = `student_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
       localStorage.setItem("studentRequesterKey", requesterKey);
     }
-
     return requesterKey;
   };
 
@@ -74,8 +88,11 @@ export default function CreateHelpRequest() {
 
     try {
       const payload = {
-        ...form,
         requesterKey: getRequesterKey(),
+        supportType: form.supportType,
+        title: form.title,
+        description: form.description,
+        priority: form.priority,
       };
 
       await createHelpRequest(payload);
@@ -96,84 +113,98 @@ export default function CreateHelpRequest() {
         </p>
 
         <form className="create-help-request-form" onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title (e.g., Exam schedule clarification)"
-            value={form.title}
-            onChange={onChange}
-          />
-
-          <div className="create-help-request-row">
-            <select
-              name="supportType"
-              value={form.supportType}
-              onChange={onChange}
-            >
-              <option value="">Select Support Type</option>
-              <option value="ACADEMIC">ACADEMIC</option>
-              <option value="REGISTRATION">REGISTRATION</option>
-              <option value="FACILITIES">FACILITIES</option>
-              <option value="IT_SUPPORT">IT_SUPPORT</option>
-              <option value="FINANCE">FINANCE</option>
-              <option value="CLUBS_EVENTS">CLUBS & EVENTS</option>
-              <option value="OTHER">OTHER</option>
-            </select>
-
-            <select name="priority" value={form.priority} onChange={onChange}>
-              <option value="LOW">LOW</option>
-              <option value="MEDIUM">MEDIUM</option>
-              <option value="HIGH">HIGH</option>
+          <div className="field">
+            <label>
+              Category <span className="req">*</span>
+            </label>
+            <select name="supportType" value={form.supportType} onChange={onChange}>
+              <option value="">Select category</option>
+              <option value="ACADEMIC">Academic</option>
+              <option value="REGISTRATION">Registration</option>
+              <option value="FACILITIES">Facilities</option>
+              <option value="IT_SUPPORT">IT Support</option>
+              <option value="FINANCE">Finance</option>
+              <option value="CLUBS_EVENTS">Clubs & Events</option>
+              <option value="OTHER">Other</option>
             </select>
           </div>
 
-          <textarea
-            name="description"
-            placeholder="Describe your question/request clearly..."
-            rows={5}
-            value={form.description}
-            onChange={onChange}
-          />
-
-          <select
-            name="preferredContact"
-            value={form.preferredContact}
-            onChange={onChange}
-          >
-            <option value="IN_APP">In-app reply</option>
-            <option value="EMAIL">Email</option>
-            <option value="PHONE">Phone</option>
-          </select>
-
-          {form.preferredContact === "EMAIL" && (
+          <div className="field">
+            <label>
+              Request subject <span className="req">*</span>
+            </label>
             <input
-              type="email"
-              name="contactEmail"
-              placeholder="Your email"
-              value={form.contactEmail}
+              name="title"
+              placeholder="Brief title of your issue"
+              value={form.title}
               onChange={onChange}
             />
-          )}
+          </div>
 
-          {form.preferredContact === "PHONE" && (
-            <input
-              type="text"
-              name="contactPhone"
-              placeholder="Your phone number"
-              value={form.contactPhone}
+          <div className="field">
+            <label>
+              Description <span className="req">*</span>
+            </label>
+            <textarea
+              name="description"
+              rows={6}
+              placeholder="Describe your issue in detail..."
+              value={form.description}
               onChange={onChange}
             />
-          )}
+          </div>
 
-          <label className="create-help-request-checkbox">
+          <div className="field">
+            <label>
+              Priority <span className="req">*</span>
+            </label>
+            <div className="segmented">
+              <button
+                type="button"
+                className={`seg-btn ${form.priority === "LOW" ? "active" : ""}`}
+                onClick={() => setPriority("LOW")}
+              >
+                Low — can wait
+              </button>
+              <button
+                type="button"
+                className={`seg-btn ${form.priority === "MEDIUM" ? "active" : ""}`}
+                onClick={() => setPriority("MEDIUM")}
+              >
+                Medium — this week
+              </button>
+              <button
+                type="button"
+                className={`seg-btn ${form.priority === "HIGH" ? "active" : ""}`}
+                onClick={() => setPriority("HIGH")}
+              >
+                High — urgent
+              </button>
+            </div>
+          </div>
+
+          <div className="field">
+            <label>Supporting documents (optional)</label>
             <input
-              type="checkbox"
-              name="isAnonymous"
-              checked={form.isAnonymous}
+              type="file"
+              multiple
+              name="attachments"
+              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
               onChange={onChange}
             />
-            Submit anonymously
-          </label>
+            {form.attachments.length > 0 && (
+              <div className="file-list">
+                {form.attachments.map((f, i) => (
+                  <div className="file-item" key={i}>
+                    {f.name}
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="hint">
+              PDF, JPG, PNG, DOCX — max 10 MB each (up to 3 files)
+            </div>
+          </div>
 
           <button className="create-help-request-button" type="submit">
             Submit Request

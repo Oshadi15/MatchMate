@@ -1,58 +1,73 @@
 .create-help-request-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #eef4ff, #f8fbff);
+  padding: 36px 18px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  box-sizing: border-box;
+  align-items: flex-start;
 }
 
 .create-help-request-card {
   width: 100%;
-  max-width: 720px;
+  max-width: 860px;
   background: #ffffff;
-  border-radius: 20px;
-  padding: 36px 32px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
   border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
 }
 
 .create-help-request-card h2 {
-  margin: 0 0 10px;
-  font-size: 30px;
-  font-weight: 700;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 800;
   color: #1f2937;
-  text-align: center;
 }
 
 .create-help-request-subtitle {
-  margin: 0 0 28px;
+  margin: 0 0 18px 0;
   color: #6b7280;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
-  text-align: center;
 }
 
 .create-help-request-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.req {
+  color: #dc2626;
+  margin-left: 3px;
 }
 
 .create-help-request-form input,
 .create-help-request-form select,
 .create-help-request-form textarea {
   width: 100%;
-  padding: 14px 15px;
-  border: 1px solid #d1d5db;
+  padding: 12px 12px;
   border-radius: 12px;
-  font-size: 15px;
+  border: 1px solid #d1d5db;
   background: #ffffff;
   color: #111827;
+  font-size: 14px;
   outline: none;
-  transition: all 0.2s ease;
+  transition: 0.18s ease;
   box-sizing: border-box;
 }
 
@@ -64,43 +79,72 @@
 }
 
 .create-help-request-form textarea {
-  min-height: 130px;
+  min-height: 150px;
   resize: vertical;
 }
 
-.create-help-request-row {
+.segmented {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-.create-help-request-checkbox {
-  display: flex;
-  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
-  font-size: 15px;
-  color: #374151;
-  padding: 6px 2px;
 }
 
-.create-help-request-checkbox input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
+.seg-btn {
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.15s ease;
+  text-align: center;
+}
+
+.seg-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(37, 99, 235, 0.55);
+}
+
+.seg-btn.active {
+  background: rgba(37, 99, 235, 0.10);
+  border-color: rgba(37, 99, 235, 0.75);
+  color: #1d4ed8;
+}
+
+.file-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.file-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+  font-size: 13px;
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
 }
 
 .create-help-request-button {
   width: 100%;
-  padding: 14px 18px;
+  padding: 14px 16px;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #2563eb;
   color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 900;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 8px;
+  transition: 0.18s ease;
+  margin-top: 4px;
 }
 
 .create-help-request-button:hover {
@@ -112,27 +156,23 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
-  .create-help-request-page {
-    padding: 24px 14px;
-    align-items: center;
+@media (max-width: 900px) {
+  .segmented {
+    grid-template-columns: 1fr;
   }
+}
 
-  .create-help-request-card {
-    padding: 24px 18px;
-    border-radius: 16px;
+@media (max-width: 600px) {
+  .create-help-request-page {
+    padding: 22px 12px;
   }
 
   .create-help-request-card h2 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
-  .create-help-request-row {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .create-help-request-form {
-    gap: 14px;
+  .create-help-request-card {
+    padding: 16px 14px;
+    border-radius: 16px;
   }
 }
