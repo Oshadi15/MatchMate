@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createHelpRequest } from "../../services/helpApi";
 import { useNavigate } from "react-router-dom";
+import "./createHelpRequest.css";
 
 export default function CreateHelpRequest() {
   const navigate = useNavigate();
@@ -49,6 +50,19 @@ export default function CreateHelpRequest() {
     return null;
   };
 
+  const getRequesterKey = () => {
+    let requesterKey = localStorage.getItem("studentRequesterKey");
+
+    if (!requesterKey) {
+      requesterKey = `student_${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2, 10)}`;
+      localStorage.setItem("studentRequesterKey", requesterKey);
+    }
+
+    return requesterKey;
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -59,105 +73,113 @@ export default function CreateHelpRequest() {
     }
 
     try {
-      await createHelpRequest(form);
+      const payload = {
+        ...form,
+        requesterKey: getRequesterKey(),
+      };
+
+      await createHelpRequest(payload);
       alert("Support request submitted!");
-      navigate("/");
+      navigate("/my-requests");
     } catch (error) {
       console.error("Submit failed:", error);
-      alert("Submit failed");
+      alert(error.response?.data?.message || "Submit failed");
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Ask Admin (Student Support Request)</h2>
-      <p style={{ marginTop: -5, color: "#555" }}>
-        Use this for academic or non-academic questions. Admin will respond.
-      </p>
+    <div className="create-help-request-page">
+      <div className="create-help-request-card">
+        <h2>Student Help Request Form</h2>
+        <p className="create-help-request-subtitle">
+          Submit your academic or non-academic issue using the form below.
+        </p>
 
-      <form
-        onSubmit={onSubmit}
-        style={{ display: "grid", gap: 10, maxWidth: 520 }}
-      >
-        <input
-          type="text"
-          name="title"
-          placeholder="Title (e.g., Exam schedule clarification)"
-          value={form.title}
-          onChange={onChange}
-        />
-
-        <select
-          name="supportType"
-          value={form.supportType}
-          onChange={onChange}
-        >
-          <option value="">Select Support Type</option>
-          <option value="ACADEMIC">ACADEMIC</option>
-          <option value="REGISTRATION">REGISTRATION</option>
-          <option value="FACILITIES">FACILITIES</option>
-          <option value="IT_SUPPORT">IT_SUPPORT</option>
-          <option value="FINANCE">FINANCE</option>
-          <option value="CLUBS_EVENTS">CLUBS & EVENTS</option>
-          <option value="OTHER">OTHER</option>
-        </select>
-
-        <select name="priority" value={form.priority} onChange={onChange}>
-          <option value="LOW">LOW</option>
-          <option value="MEDIUM">MEDIUM</option>
-          <option value="HIGH">HIGH</option>
-        </select>
-
-        <textarea
-          name="description"
-          placeholder="Describe your question/request clearly..."
-          rows={5}
-          value={form.description}
-          onChange={onChange}
-        />
-
-        <select
-          name="preferredContact"
-          value={form.preferredContact}
-          onChange={onChange}
-        >
-          <option value="IN_APP">In-app reply</option>
-          <option value="EMAIL">Email</option>
-          <option value="PHONE">Phone</option>
-        </select>
-
-        {form.preferredContact === "EMAIL" && (
-          <input
-            type="email"
-            name="contactEmail"
-            placeholder="Your email"
-            value={form.contactEmail}
-            onChange={onChange}
-          />
-        )}
-
-        {form.preferredContact === "PHONE" && (
+        <form className="create-help-request-form" onSubmit={onSubmit}>
           <input
             type="text"
-            name="contactPhone"
-            placeholder="Your phone number"
-            value={form.contactPhone}
+            name="title"
+            placeholder="Title (e.g., Exam schedule clarification)"
+            value={form.title}
             onChange={onChange}
           />
-        )}
 
-        <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <input
-            type="checkbox"
-            name="isAnonymous"
-            checked={form.isAnonymous}
+          <div className="create-help-request-row">
+            <select
+              name="supportType"
+              value={form.supportType}
+              onChange={onChange}
+            >
+              <option value="">Select Support Type</option>
+              <option value="ACADEMIC">ACADEMIC</option>
+              <option value="REGISTRATION">REGISTRATION</option>
+              <option value="FACILITIES">FACILITIES</option>
+              <option value="IT_SUPPORT">IT_SUPPORT</option>
+              <option value="FINANCE">FINANCE</option>
+              <option value="CLUBS_EVENTS">CLUBS & EVENTS</option>
+              <option value="OTHER">OTHER</option>
+            </select>
+
+            <select name="priority" value={form.priority} onChange={onChange}>
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+            </select>
+          </div>
+
+          <textarea
+            name="description"
+            placeholder="Describe your question/request clearly..."
+            rows={5}
+            value={form.description}
             onChange={onChange}
           />
-          Submit anonymously
-        </label>
 
-        <button type="submit">Submit Request</button>
-      </form>
+          <select
+            name="preferredContact"
+            value={form.preferredContact}
+            onChange={onChange}
+          >
+            <option value="IN_APP">In-app reply</option>
+            <option value="EMAIL">Email</option>
+            <option value="PHONE">Phone</option>
+          </select>
+
+          {form.preferredContact === "EMAIL" && (
+            <input
+              type="email"
+              name="contactEmail"
+              placeholder="Your email"
+              value={form.contactEmail}
+              onChange={onChange}
+            />
+          )}
+
+          {form.preferredContact === "PHONE" && (
+            <input
+              type="text"
+              name="contactPhone"
+              placeholder="Your phone number"
+              value={form.contactPhone}
+              onChange={onChange}
+            />
+          )}
+
+          <label className="create-help-request-checkbox">
+            <input
+              type="checkbox"
+              name="isAnonymous"
+              checked={form.isAnonymous}
+              onChange={onChange}
+            />
+            Submit anonymously
+          </label>
+
+          <button className="create-help-request-button" type="submit">
+            Submit Request
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

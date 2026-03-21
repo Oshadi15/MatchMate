@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
    API ROUTES
 ============================== */
 
-// Campus Assistant Help Board
+// Campus Assistant
 app.use("/api/help", helpRoutes);
 
 // Feedback

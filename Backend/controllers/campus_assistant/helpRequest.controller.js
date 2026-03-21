@@ -1,21 +1,23 @@
 const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
-// POST /api/help
 exports.createHelpRequest = async (req, res) => {
   try {
-    const created = await HelpRequest.create(req.body);
-    res.status(201).json(created);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const item = await HelpRequest.create(req.body);
+    res.status(201).json(item);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create help request",
+      error: error.message,
+    });
   }
 };
 
-// GET /api/help
 exports.getHelpRequests = async (req, res) => {
   try {
     const { status, supportType, q } = req.query;
 
     const filter = {};
+
     if (status) filter.status = status;
     if (supportType) filter.supportType = supportType;
 
@@ -26,49 +28,45 @@ exports.getHelpRequests = async (req, res) => {
       ];
     }
 
-    const list = await HelpRequest.find(filter).sort({ createdAt: -1 });
-    res.json(list);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const items = await HelpRequest.find(filter).sort({ createdAt: -1 });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch help requests",
+      error: error.message,
+    });
   }
 };
 
-// GET /api/help/:id
-exports.getHelpRequestById = async (req, res) => {
+exports.getMyHelpRequests = async (req, res) => {
   try {
-    const item = await HelpRequest.findById(req.params.id);
-    if (!item) return res.status(404).json({ message: "Help request not found" });
-    res.json(item);
-  } catch (err) {
-    res.status(400).json({ message: "Invalid ID" });
+    const { requesterKey } = req.query;
+
+    if (!requesterKey) {
+      return res.status(400).json({ message: "requesterKey is required" });
+    }
+
+    const items = await HelpRequest.find({ requesterKey }).sort({
+      createdAt: -1,
+    });
+
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch student requests",
+      error: error.message,
+    });
   }
 };
 
-// PATCH /api/help/:id/status
-exports.updateHelpStatus = async (req, res) => {
-  try {
-    const { status } = req.body;
-
-    const updated = await HelpRequest.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
-    );
-
-    if (!updated) return res.status(404).json({ message: "Help request not found" });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// DELETE /api/help/:id
 exports.deleteHelpRequest = async (req, res) => {
   try {
-    const deleted = await HelpRequest.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Help request not found" });
-    res.json({ message: "Deleted successfully" });
-  } catch (err) {
-    res.status(400).json({ message: "Invalid ID" });
+    await HelpRequest.findByIdAndDelete(req.params.id);
+    res.json({ message: "Help request deleted successfully" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete help request",
+      error: error.message,
+    });
   }
 };
