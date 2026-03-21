@@ -12,8 +12,8 @@ const app = express();
 // Campus Assistant
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
 
-// Feedback
-const feedbackRoutes = require("./routes/FeedbackRoutes");
+// ✅ Feedback (FIXED PATH)
+const feedbackRoutes = require("./routes/FeedbackRoutes/FeedbackRoutes");
 
 // Lost & Found
 const lostRoutes = require("./routes/Lost-Found_MS/lostRoutes");
@@ -25,7 +25,6 @@ const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 app.use(cors());
 app.use(express.json());
 
-// Access uploaded images
 app.use("/uploads", express.static("uploads"));
 
 /* ==============================
@@ -39,16 +38,9 @@ app.get("/", (req, res) => {
    API ROUTES
 ============================== */
 
-// Campus Assistant
 app.use("/api/help", helpRoutes);
-
-// Feedback
 app.use("/api/feedback", feedbackRoutes);
-
-// Lost Item Management
 app.use("/api/lost", lostRoutes);
-
-// Found Item Management
 app.use("/api/found", foundRoutes);
 
 /* ==============================
