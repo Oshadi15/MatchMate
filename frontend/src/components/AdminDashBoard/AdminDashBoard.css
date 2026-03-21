@@ -19,8 +19,8 @@
 
 .dashboard-nav {
   z-index: 1;
-  background-color: rgba(0, 31, 122, 0.95);
-  color: #fff;
+  background-color: rgba(1, 6, 37, 0.95);
+  color: #ffffff;
   padding: 15px 40px;
   display: flex;
   justify-content: space-between;
@@ -72,7 +72,7 @@
   z-index: 1;
   padding: 50px 40px;
   text-align: center;
-  background: rgba(180, 180, 255, 0.9);
+  background: rgba(4, 4, 27, 0.9);
    max-width: 1300px;
   margin: 50px auto;
   border-radius: 20px;
@@ -82,13 +82,13 @@
 
 .dashboard-content h1 {
   font-size: 2.4rem;
-  color: #001f7a;
+  color: #8d919e;
   margin-bottom: 10px;
 }
 
 .dashboard-sub {
   font-size: 1.2rem;
-  color: #333;
+  color: #626473;
   margin-bottom: 40px;
   font-weight: 500;
 }
@@ -107,7 +107,7 @@
 }
 
 .card {
-  background: linear-gradient(145deg, #ffffff, #f1f1f1);
+  background: linear-gradient(145deg, #10193b, #f1f1f1);
   border-radius: 20px;
   padding: 30px 20px;
   text-align: center;
@@ -140,7 +140,7 @@
   margin-top: 10px;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #ff6f00;
+  color: #070b22;
 }
 
 .card p {

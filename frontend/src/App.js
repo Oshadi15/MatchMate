@@ -14,8 +14,7 @@ import MyRequests from "./components/campus_assistant/myRequests";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
 // import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
-
-
+import AdminLogin from "./components/AdminLogin/AdminLogin";
 
 
 // Admin Dashboard
@@ -30,6 +29,7 @@ function App() {
 
   return (
     <BrowserRouter>
+   
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/help" element={<HelpBoard />} />
@@ -41,6 +41,10 @@ function App() {
       
         <Route path="/signup" element={<StudentSignup />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        {/* <Route path='/found' element={<FoundForm/>} />
+         <Route path='/lost' element={<LostForm/>} />
+         <Route path='/report' element={<ReportSelection/>} /> */}
+         <Route path="/adminlogin" element={<AdminLogin />} />
 
         <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
         <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
