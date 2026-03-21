@@ -38,18 +38,6 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/help", helpRoutes);
-
-
-
-// ✅ Feedback API route
-app.use("/api/feedback", feedbackRoutes);
-
-// MongoDB connection
-/* ==============================
-   API ROUTES
-============================== */
-
-app.use("/api/help", helpRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/lost", lostRoutes);
 app.use("/api/found", foundRoutes);
