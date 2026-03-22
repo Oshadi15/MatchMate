@@ -99,7 +99,7 @@ function Admin() {
 
           {/* Row 3 */}
           <div className="card-row">
-            <Link to="/displaymember" className="card">
+            <Link to="/help" className="card">
               <FaUsers size={40} />
               <h3>Help Board</h3>
               <p>Manage student help</p>

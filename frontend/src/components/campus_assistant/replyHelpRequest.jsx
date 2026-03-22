@@ -38,51 +38,66 @@ export default function ReplyHelpRequest() {
     try {
       await replyToHelpRequest(id, reply.trim());
       alert("Reply sent!");
-      navigate("/help"); // back to help board
+      navigate("/help");
     } catch (err) {
       alert(err.response?.data?.message || "Reply failed");
     }
   };
 
-  if (loading) return <div style={{ padding: 20 }}>Loading...</div>;
-  if (!item) return <div style={{ padding: 20 }}>No request found.</div>;
+  if (loading) return <div className="rhr-loading">Loading...</div>;
+  if (!item) return <div className="rhr-empty">No request found.</div>;
+
+  const statusClass =
+    item.status === "OPEN"
+      ? "open"
+      : item.status === "IN_PROGRESS"
+      ? "progress"
+      : item.status === "RESOLVED"
+      ? "resolved"
+      : "";
 
   return (
-    <div style={{ padding: 20, maxWidth: 900, margin: "0 auto" }}>
-      <h2>Reply to Support Request</h2>
+    <div className="rhr-page">
+      <div className="rhr-container">
+        <h2 className="rhr-title">Reply to Support Request</h2>
+        <p className="rhr-sub">Review the request details and send an admin reply.</p>
 
-      <div style={{ background: "#fff", padding: 16, borderRadius: 12, border: "1px solid #ddd" }}>
-        <h3>{item.title}</h3>
-        <p><b>Type:</b> {item.supportType} | <b>Priority:</b> {item.priority}</p>
-        <p><b>Status:</b> {item.status}</p>
-        <p><b>Description:</b> {item.description}</p>
-      </div>
+        <div className="rhr-card">
+          <h3>{item.title}</h3>
 
-      <div style={{ marginTop: 16 }}>
-        <label style={{ fontWeight: 700 }}>Admin Reply</label>
-        <textarea
-          rows={5}
-          style={{ width: "100%", marginTop: 8, padding: 12, borderRadius: 10, border: "1px solid #ccc" }}
-          value={reply}
-          onChange={(e) => setReply(e.target.value)}
-          placeholder="Type your reply here..."
-        />
-      </div>
+          <p className="rhr-meta">
+            <b>Type:</b> {item.supportType} | <b>Priority:</b> {item.priority}
+          </p>
 
-      <div style={{ marginTop: 12, display: "flex", gap: 10 }}>
-        <button
-          onClick={handleSend}
-          style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: "#2563eb", color: "#fff", fontWeight: 800 }}
-        >
-          Send Reply
-        </button>
+          <div className="rhr-badges">
+            <span className={`rhr-badge ${statusClass}`}>{item.status}</span>
+          </div>
 
-        <button
-          onClick={() => navigate("/help")}
-          style={{ padding: "10px 14px", borderRadius: 10, border: "1px solid #ccc", background: "#fff", fontWeight: 800 }}
-        >
-          Cancel
-        </button>
+          <p className="rhr-desc">
+            <b>Description:</b> {item.description}
+          </p>
+
+          <div className="rhr-section">
+            <label className="rhr-label">Admin Reply</label>
+            <textarea
+              className="rhr-textarea"
+              rows={5}
+              value={reply}
+              onChange={(e) => setReply(e.target.value)}
+              placeholder="Type your reply here..."
+            />
+          </div>
+
+          <div className="rhr-actions">
+            <button className="rhr-btn" onClick={handleSend}>
+              Send Reply
+            </button>
+
+            <button className="rhr-btn-outline" onClick={() => navigate("/help")}>
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

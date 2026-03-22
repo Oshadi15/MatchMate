@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { createHelpRequest } from "../../services/helpApi";
-import { useNavigate } from "react-router-dom";
 import "./createHelpRequest.css";
 
 export default function CreateHelpRequest() {
-  const navigate = useNavigate();
-
   const [form, setForm] = useState({
     supportType: "",
     title: "",
@@ -57,11 +54,13 @@ export default function CreateHelpRequest() {
 
     if (!form.supportType) return "Category is required";
 
-    if (titleTrimmed.length < 5) return "Request subject must be at least 5 characters";
+    if (titleTrimmed.length < 5)
+      return "Request subject must be at least 5 characters";
     if (!/^[A-Za-z]/.test(titleTrimmed))
       return "Request subject must start with a letter (no numbers/symbols at the beginning)";
 
-    if (descTrimmed.length < 10) return "Description must be at least 10 characters";
+    if (descTrimmed.length < 10)
+      return "Description must be at least 10 characters";
     if (!/^[A-Za-z]/.test(descTrimmed))
       return "Description must start with a letter (no numbers/symbols at the beginning)";
 
@@ -71,7 +70,9 @@ export default function CreateHelpRequest() {
   const getRequesterKey = () => {
     let requesterKey = localStorage.getItem("studentRequesterKey");
     if (!requesterKey) {
-      requesterKey = `student_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+      requesterKey = `student_${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2, 10)}`;
       localStorage.setItem("studentRequesterKey", requesterKey);
     }
     return requesterKey;
@@ -97,7 +98,15 @@ export default function CreateHelpRequest() {
 
       await createHelpRequest(payload);
       alert("Support request submitted!");
-      navigate("/my-requests");
+
+      // ✅ stay on same page + clear form
+      setForm({
+        supportType: "",
+        title: "",
+        description: "",
+        priority: "MEDIUM",
+        attachments: [],
+      });
     } catch (error) {
       console.error("Submit failed:", error);
       alert(error.response?.data?.message || "Submit failed");
@@ -117,7 +126,11 @@ export default function CreateHelpRequest() {
             <label>
               Category <span className="req">*</span>
             </label>
-            <select name="supportType" value={form.supportType} onChange={onChange}>
+            <select
+              name="supportType"
+              value={form.supportType}
+              onChange={onChange}
+            >
               <option value="">Select category</option>
               <option value="ACADEMIC">Academic</option>
               <option value="REGISTRATION">Registration</option>
