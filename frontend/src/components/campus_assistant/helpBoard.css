@@ -138,14 +138,32 @@
   color: #ffffff;
 }
 
+/* ✅ ONLY status colors changed */
 .help-board-status {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.help-board-status.open {
+  background: rgba(59, 130, 246, 0.18);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.35);
+}
+
+.help-board-status.progress {
   background: rgba(245, 158, 11, 0.18);
   color: #f59e0b;
-  white-space: nowrap;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.help-board-status.resolved {
+  background: rgba(34, 197, 94, 0.18);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
 }
 
 /* ✅ top-right group */
@@ -161,10 +179,10 @@
 .help-board-reply-button {
   border: none;
   border-radius: 8px;
-  padding: 5px 9px;       
+  padding: 5px 9px;
   background: #f59e0b;
   color: #0b1220;
-  font-size: 12px;         
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -180,10 +198,10 @@
 .help-board-delete-button {
   border: none;
   border-radius: 8px;
-  padding: 5px 9px;        /* ✅ smaller */
+  padding: 5px 9px;
   background: #ef4444;
   color: #ffffff;
-  font-size: 12px;         /* ✅ smaller */
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -260,11 +278,11 @@
 
 .help-board-reply-button,
 .help-board-delete-button {
-  padding: 6px 10px !important;   
-  font-size: 12px !important;    
-  border-radius: 8px !important;  
-  min-width: auto !important;     
-  width: auto !important;         
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  border-radius: 8px !important;
+  min-width: auto !important;
+  width: auto !important;
   line-height: 1 !important;
 }
 

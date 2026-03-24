@@ -94,6 +94,11 @@ const helpRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    document: {
+      type: String,
+      default: "",
+      trim: true,
+   },
 
     // OPTIONAL (for admin reply feature)
     adminReply: {

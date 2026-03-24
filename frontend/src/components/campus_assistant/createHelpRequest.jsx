@@ -8,10 +8,9 @@ export default function CreateHelpRequest() {
     title: "",
     description: "",
     priority: "MEDIUM",
-    attachments: [],
+    document: null,
   });
 
-  // ✅ keep your validation rule: first non-space character must be a letter
   const firstNonSpaceIsLetter = (value) => {
     const trimmedStart = value.replace(/^\s+/, "");
     if (trimmedStart.length === 0) return true;
@@ -21,20 +20,18 @@ export default function CreateHelpRequest() {
   const onChange = (e) => {
     const { name, value, type, files } = e.target;
 
-    // File handling (still kept)
     if (type === "file") {
-      const arr = Array.from(files || []);
-      const limited = arr.slice(0, 3);
-      setForm((prev) => ({ ...prev, attachments: limited }));
+      const file = files && files[0] ? files[0] : null;
+      setForm((prev) => ({ ...prev, document: file }));
       return;
     }
 
-    // ✅ block typing numbers/symbols as first character for title & description
     if (type !== "checkbox" && (name === "title" || name === "description")) {
       if (value.length === 0) {
         setForm((prev) => ({ ...prev, [name]: "" }));
         return;
       }
+
       if (!firstNonSpaceIsLetter(value)) {
         return;
       }
@@ -54,27 +51,39 @@ export default function CreateHelpRequest() {
 
     if (!form.supportType) return "Category is required";
 
-    if (titleTrimmed.length < 5)
+    if (titleTrimmed.length < 5) {
       return "Request subject must be at least 5 characters";
-    if (!/^[A-Za-z]/.test(titleTrimmed))
-      return "Request subject must start with a letter (no numbers/symbols at the beginning)";
+    }
 
-    if (descTrimmed.length < 10)
+    if (!/^[A-Za-z]/.test(titleTrimmed)) {
+      return "Request subject must start with a letter (no numbers/symbols at the beginning)";
+    }
+
+    if (descTrimmed.length < 10) {
       return "Description must be at least 10 characters";
-    if (!/^[A-Za-z]/.test(descTrimmed))
+    }
+
+    if (!/^[A-Za-z]/.test(descTrimmed)) {
       return "Description must start with a letter (no numbers/symbols at the beginning)";
+    }
+
+    if (form.document && form.document.size > 10 * 1024 * 1024) {
+      return "Document size must be less than 10 MB";
+    }
 
     return null;
   };
 
   const getRequesterKey = () => {
     let requesterKey = localStorage.getItem("studentRequesterKey");
+
     if (!requesterKey) {
       requesterKey = `student_${Date.now()}_${Math.random()
         .toString(36)
         .slice(2, 10)}`;
       localStorage.setItem("studentRequesterKey", requesterKey);
     }
+
     return requesterKey;
   };
 
@@ -88,25 +97,30 @@ export default function CreateHelpRequest() {
     }
 
     try {
-      const payload = {
-        requesterKey: getRequesterKey(),
-        supportType: form.supportType,
-        title: form.title,
-        description: form.description,
-        priority: form.priority,
-      };
+      const formData = new FormData();
+      formData.append("requesterKey", getRequesterKey());
+      formData.append("supportType", form.supportType);
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("priority", form.priority);
 
-      await createHelpRequest(payload);
+      if (form.document) {
+        formData.append("document", form.document);
+      }
+
+      await createHelpRequest(formData);
       alert("Support request submitted!");
 
-      // ✅ stay on same page + clear form
       setForm({
         supportType: "",
         title: "",
         description: "",
         priority: "MEDIUM",
-        attachments: [],
+        document: null,
       });
+
+      const fileInput = document.getElementById("help-request-document");
+      if (fileInput) fileInput.value = "";
     } catch (error) {
       console.error("Submit failed:", error);
       alert(error.response?.data?.message || "Submit failed");
@@ -197,25 +211,23 @@ export default function CreateHelpRequest() {
           </div>
 
           <div className="field">
-            <label>Supporting documents (optional)</label>
+            <label>Supporting document (optional)</label>
             <input
+              id="help-request-document"
               type="file"
-              multiple
-              name="attachments"
+              name="document"
               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
               onChange={onChange}
             />
-            {form.attachments.length > 0 && (
+
+            {form.document && (
               <div className="file-list">
-                {form.attachments.map((f, i) => (
-                  <div className="file-item" key={i}>
-                    {f.name}
-                  </div>
-                ))}
+                <div className="file-item">{form.document.name}</div>
               </div>
             )}
+
             <div className="hint">
-              PDF, JPG, PNG, DOCX — max 10 MB each (up to 3 files)
+              PDF, JPG, PNG, DOC, DOCX — max 10 MB
             </div>
           </div>
 

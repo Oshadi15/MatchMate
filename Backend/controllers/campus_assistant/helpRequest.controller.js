@@ -1,9 +1,16 @@
 const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
+
 // CREATE
 exports.createHelpRequest = async (req, res) => {
   try {
-    const item = await HelpRequest.create(req.body);
+    const newHelpRequest = {
+      ...req.body,
+      document: req.file ? `/uploads/${req.file.filename}` : "",
+    };
+
+    const item = await HelpRequest.create(newHelpRequest);
+
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({

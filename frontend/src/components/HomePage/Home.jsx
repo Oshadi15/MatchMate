@@ -58,7 +58,7 @@ export default function Home() {
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Lost And Found System</h1>
+                  <h1>Lost And Found Management System</h1>
                   <p>A smart platform to manage lost and found items.</p>
                 </div>
               </div>
