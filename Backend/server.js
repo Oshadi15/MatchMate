@@ -1,7 +1,13 @@
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+
+
+const smartMatchRoutes = require('./routes/smart_matching/smartMatchRoutes');
 
 
 // ✅ New Feedback routes
@@ -40,6 +46,13 @@ app.use("/api/help", helpRoutes);
 
 // ✅ Feedback API route
 app.use("/api/feedback", feedbackRoutes);
+
+
+
+// Samart Matching API routes
+app.use('/api/smart-match', smartMatchRoutes);
+
+
 
 // MongoDB connection
 /* ==============================
