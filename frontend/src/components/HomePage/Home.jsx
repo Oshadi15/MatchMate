@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaRobot } from "react-icons/fa";
 import axios from 'axios';
 import './Home.css';
+import HomeNav from '../../HomeNav/HomeNav';
 import logoImg from '../../assets/f2.png';
 
 import heroImage1 from '../../assets/f2.png';
@@ -69,6 +70,15 @@ function Home() {
 
   return (
     <>
+    <HomeNav />
+{/*chat */}
+<button 
+  className="chat-button"
+  onClick={() => history("/enterpin")}
+>
+  <FaRobot size={38} />
+</button>
+
     <HomeNav/>
       {/* Chat Button */}
       <button
@@ -89,7 +99,7 @@ function Home() {
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Premium Fuel Solutions</h1>
+                  <h1>Lost & Found System</h1>
                   <p>Efficient. Reliable. Always Available</p>
                   <button
                     onClick={() => setShowLogin(!showLogin)}
