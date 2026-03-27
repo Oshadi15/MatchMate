@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaRobot } from "react-icons/fa";
 import axios from 'axios';
 import './Home.css';
-import HomeNav from '../../HomeNav/HomeNav';
+
 import logoImg from '../../assets/f2.png';
 
 import heroImage1 from '../../assets/f2.png';

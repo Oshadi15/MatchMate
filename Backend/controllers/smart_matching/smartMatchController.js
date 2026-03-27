@@ -1,6 +1,15 @@
 const Match = require('../../models/smart_matching/Match');
 const LostItem = require('../../models/Lost-Found_MS/LostItem');
 const FoundItem = require('../../models/Lost-Found_MS/FoundItem');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER, // Your Gmail
+        pass: process.env.EMAIL_PASS  // Your App Password
+    }
+});
 
 // 1. Smart Matching Logic (100-point)
 exports.findMatches = async (req, res) => {
@@ -150,5 +159,50 @@ exports.deleteAllMatches = async (req, res) => {
         res.status(200).json({ success: true, message: "All matches cleared successfully" });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+
+
+exports.sendMatchNotification = async (userEmail, lostItemName, matchScore) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: userEmail,
+        subject: 'Good News! A potential match for your lost item was found',
+        html: `
+            <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
+                <h2 style="color: #28a745;">Potential Match Found!</h2>
+                <p>Hello,</p>
+                <p>Our smart matching system found a match for your lost item: <strong>${lostItemName}</strong>.</p>
+                <p><strong>Match Confidence:</strong> ${matchScore}%</p>
+                <p>Please log in to your dashboard to view the details and claim your item.</p>
+                <br>
+                <p>Best regards,<br>Lost & Found Team</p>
+            </div>
+        `
+    };
+
+    return transporter.sendMail(mailOptions);
+};
+
+exports.notifyUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const match = await Match.findById(id).populate('lostItemId');
+
+        if (!match) return res.status(404).json({ message: "Match not found" });
+
+        // Assuming lostItemId has a 'userEmail' field
+        const userEmail = match.lostItemId.userEmail; 
+        
+        await sendMatchNotification(userEmail, match.lostItemId.itemName, match.matchScore);
+
+        // Update status to 'notified'
+        match.status = 'notified';
+        await match.save();
+
+        res.status(200).json({ success: true, message: "Notification sent successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
