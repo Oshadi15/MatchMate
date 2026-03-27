@@ -11,7 +11,7 @@ const app = express();
 
 // Campus Assistant
 const helpRoutes = require("./routes/campus_assistant/helpRequest.route");
-const locationRoutes = require("./routes/campus_assistant/location.route");
+
 
 // ✅ Feedback (FIXED PATH)
 const feedbackRoutes = require("./routes/FeedbackRoutes/FeedbackRoutes");
@@ -39,7 +39,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/help", helpRoutes);
-app.use("/api/locations", locationRoutes);
+
 
 
 app.use("/api/feedback", feedbackRoutes);

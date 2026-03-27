@@ -1,10 +1,4 @@
-import React, { useEffect, useState } from "react";
-import {
-  getLocations,
-  createLocation,
-  updateLocation,
-  deleteLocation,
-} from "../../services/locationApi";
+import React, { useState } from "react";
 import "./manageLocation.css";
 
 const initialForm = {
@@ -13,35 +7,55 @@ const initialForm = {
   building: "",
   floor: "",
   roomNumber: "",
-  description: "",
   nearbyLandmark: "",
+  description: "",
   googleMapsLink: "",
-  image: "",
   status: "Available",
 };
 
-export default function ManageLocations() {
-  const [locations, setLocations] = useState([]);
+const initialLocations = [
+  {
+    _id: "1",
+    name: "SLIIT Car Park",
+    category: "Parking",
+    building: "Near New Building",
+    floor: "Ground Floor",
+    roomNumber: "",
+    nearbyLandmark: "Next to New Building",
+    description: "Main student parking area inside the campus.",
+    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Car+Park",
+    status: "Available",
+  },
+  {
+    _id: "2",
+    name: "Main Library",
+    category: "Library",
+    building: "Block A",
+    floor: "2",
+    roomNumber: "A-201",
+    nearbyLandmark: "Opposite New Building",
+    description: "Library for study and learning resources.",
+    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Library",
+    status: "Available",
+  },
+  {
+    _id: "3",
+    name: "Engineering Lab",
+    category: "Lab",
+    building: "Engineering Block",
+    floor: "3",
+    roomNumber: "E-305",
+    nearbyLandmark: "Near Main Library",
+    description: "Laboratory facility for engineering practical sessions.",
+    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Engineering+Lab",
+    status: "Temporarily Closed",
+  },
+];
+
+export default function ManageLocation() {
   const [formData, setFormData] = useState(initialForm);
+  const [locations, setLocations] = useState(initialLocations);
   const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const loadLocations = async () => {
-    try {
-      setLoading(true);
-      const data = await getLocations();
-      setLocations(data);
-    } catch (error) {
-      console.error("Failed to fetch locations", error);
-      alert("Failed to fetch locations");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadLocations();
-  }, []);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -55,24 +69,25 @@ export default function ManageLocations() {
     setEditingId(null);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      if (editingId) {
-        await updateLocation(editingId, formData);
-        alert("Location updated successfully");
-      } else {
-        await createLocation(formData);
-        alert("Location created successfully");
-      }
-
-      resetForm();
-      loadLocations();
-    } catch (error) {
-      console.error("Failed to save location", error);
-      alert(error?.response?.data?.message || "Failed to save location");
+    if (editingId) {
+      const updatedLocations = locations.map((location) =>
+        location._id === editingId ? { ...location, ...formData } : location
+      );
+      setLocations(updatedLocations);
+      alert("Location updated successfully");
+    } else {
+      const newLocation = {
+        _id: Date.now().toString(),
+        ...formData,
+      };
+      setLocations([newLocation, ...locations]);
+      alert("Location added successfully");
     }
+
+    resetForm();
   };
 
   const handleEdit = (location) => {
@@ -82,40 +97,35 @@ export default function ManageLocations() {
       building: location.building || "",
       floor: location.floor || "",
       roomNumber: location.roomNumber || "",
-      description: location.description || "",
       nearbyLandmark: location.nearbyLandmark || "",
+      description: location.description || "",
       googleMapsLink: location.googleMapsLink || "",
-      image: location.image || "",
       status: location.status || "Available",
     });
+
     setEditingId(location._id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = async (id) => {
-    const ok = window.confirm("Are you sure you want to delete this location?");
-    if (!ok) return;
+  const handleDelete = (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this location?");
+    if (!confirmed) return;
 
-    try {
-      await deleteLocation(id);
-      alert("Location deleted successfully");
-      loadLocations();
-    } catch (error) {
-      console.error("Failed to delete location", error);
-      alert("Failed to delete location");
-    }
+    const updatedLocations = locations.filter((location) => location._id !== id);
+    setLocations(updatedLocations);
+    alert("Location deleted successfully");
   };
 
   return (
-    <div className="location-admin-page">
-      <div className="location-admin-container">
+    <div className="manage-location-page">
+      <div className="manage-location-container">
         <h1>Manage Campus Locations</h1>
-        <p className="subtitle">
-          Add, edit, and delete official campus locations for students.
+        <p className="manage-subtitle">
+          Add, edit, and remove official campus locations for students.
         </p>
 
-        <form className="location-form" onSubmit={handleSubmit}>
-          <div className="form-grid">
+        <form className="manage-location-form" onSubmit={handleSubmit}>
+          <div className="manage-form-grid">
             <input
               type="text"
               name="name"
@@ -186,14 +196,6 @@ export default function ManageLocations() {
               required
             />
 
-            <input
-              type="text"
-              name="image"
-              placeholder="Image URL (optional)"
-              value={formData.image}
-              onChange={handleChange}
-            />
-
             <select
               name="status"
               value={formData.status}
@@ -207,56 +209,76 @@ export default function ManageLocations() {
           <textarea
             name="description"
             placeholder="Description"
+            rows="4"
             value={formData.description}
             onChange={handleChange}
-            rows="4"
           />
 
-          <div className="form-actions">
+          <div className="manage-form-actions">
             <button type="submit" className="save-btn">
               {editingId ? "Update Location" : "Add Location"}
             </button>
 
-            <button type="button" className="cancel-btn" onClick={resetForm}>
+            <button type="button" className="clear-btn" onClick={resetForm}>
               Clear
             </button>
           </div>
         </form>
 
-        <div className="location-list">
-          <h2>All Locations</h2>
+        <div className="manage-location-list">
+          <h2>Saved Locations</h2>
 
-          {loading ? (
-            <p>Loading locations...</p>
-          ) : locations.length === 0 ? (
-            <p>No locations found.</p>
+          {locations.length === 0 ? (
+            <p className="empty-text">No locations available.</p>
           ) : (
-            <div className="location-cards">
+            <div className="manage-location-grid">
               {locations.map((location) => (
-                <div className="location-card" key={location._id}>
-                  {location.image ? (
-                    <img
-                      src={location.image}
-                      alt={location.name}
-                      className="location-image"
-                    />
-                  ) : (
-                    <div className="image-placeholder">No Image</div>
-                  )}
-
+                <div className="manage-location-card" key={location._id}>
                   <h3>{location.name}</h3>
                   <p><strong>Category:</strong> {location.category}</p>
                   <p><strong>Building:</strong> {location.building}</p>
                   <p><strong>Floor:</strong> {location.floor}</p>
-                  <p><strong>Status:</strong> {location.status}</p>
 
-                  <div className="card-actions">
-                    <button onClick={() => handleEdit(location)} className="edit-btn">
+                  {location.roomNumber && (
+                    <p><strong>Room:</strong> {location.roomNumber}</p>
+                  )}
+
+                  {location.nearbyLandmark && (
+                    <p><strong>Nearby:</strong> {location.nearbyLandmark}</p>
+                  )}
+
+                  {location.description && (
+                    <p><strong>Description:</strong> {location.description}</p>
+                  )}
+
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <span
+                      className={
+                        location.status === "Available"
+                          ? "status-available"
+                          : "status-closed"
+                      }
+                    >
+                      {location.status}
+                    </span>
+                  </p>
+
+                  <div className="manage-card-actions">
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(location)}
+                    >
                       Edit
                     </button>
-                    <button onClick={() => handleDelete(location._id)} className="delete-btn">
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(location._id)}
+                    >
                       Delete
                     </button>
+
                     <a
                       href={location.googleMapsLink}
                       target="_blank"
