@@ -24,7 +24,7 @@ export default function CampusAssistantHome() {
         <div className="ca-cards">
           <button
             className="ca-card"
-           onClick={() => navigate("/create")}
+           onClick={() => navigate("/location-finder")}
             type="button"
           >
             <div className="ca-card-body">
