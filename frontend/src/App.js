@@ -1,6 +1,6 @@
 import './App.css';
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
 import FoundForm from './components/Lost-Found_MS/FoundForm';
@@ -19,6 +19,9 @@ import Home from "./components/HomePage/Home";
 // ✅ Student Signup
 import StudentSignup from "./components/UserManagement/StudentSignup";
 
+import UserMatches from './components/Smart_Matching/UserMatches';
+import AdminMatchPanel from './components/Smart_Matching/AdminMatchPanel';
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +31,7 @@ function App() {
         <Link to="/create">Create Help Request</Link>
         <Link to="/signup">Student Signup</Link>
         <Link to="/admin">Admin Dashboard</Link>
+        <Link to="/matches">Match Card</Link>
       </div>
 
       <Routes>
@@ -44,6 +48,8 @@ function App() {
         <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} />
+         <Route path='/usermatches' element={<UserMatches/>} />
+         <Route path='/adminmatches' element={<AdminMatchPanel/>} />
 
       </Routes>
     </BrowserRouter>

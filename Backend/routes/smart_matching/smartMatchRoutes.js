@@ -11,4 +11,6 @@ router.delete('/:id', smartMatchController.deleteMatch);
 // delete All matches
 router.delete('/delete/all', smartMatchController.deleteAllMatches);
 
+router.post('/notify/:id', smartMatchController.notifyUser);
+
 module.exports = router;
