@@ -113,17 +113,17 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/BrowseItems")}
+            onClick={() => navigate("/report")}
             style={{ cursor: "pointer" }}
           >
-            <img src={feature1} alt="Browse Items" />
-            <h3>Browse Items</h3>
+            <img src={feature1} alt="Lost and Found" />
+            <h3>Lost and Found</h3>
             <p>Smart lost and found system.</p>
           </div>
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/assistant")}
             style={{ cursor: "pointer" }}
           >
             <img src={feature2} alt="Campus Assistant" />
@@ -133,7 +133,7 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/feedback")}
             style={{ cursor: "pointer" }}
           >
             <img src={feature3} alt="Feedback" />
@@ -171,8 +171,8 @@ export default function Home() {
               <div className="auth-box">
                 <h3>Quick Links</h3>
 
-                <button onClick={() => navigate("/BrowseItems")} className="quick-btn">
-                  Browse Lost & Found items
+                <button onClick={() => navigate("/report")} className="quick-btn">
+                  Report Lost Item
                 </button>
 
                 <button onClick={() => navigate("/assistant")} className="quick-btn">
