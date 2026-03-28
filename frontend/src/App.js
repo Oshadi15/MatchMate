@@ -21,6 +21,7 @@ import AdminLogin from "./components/AdminLogin/AdminLogin";
 // Admin Dashboard
 import AdminDashboard from "./components/AdminDashBoard/AdminDashBoard";
 import StudentSignup from "./components/UserManagement/StudentSignup";
+import LostFoundManagement from "./components/AdminDashBoard/LostFoundManagement";
 
 function App() {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -45,6 +46,7 @@ function App() {
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} /> */}
          <Route path="/adminlogin" element={<AdminLogin />} />
+         <Route path="/admin/lostfound" element={<LostFoundManagement />} />
 
         <Route path="/found" element={<Layout><FoundForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
         <Route path="/lost" element={<Layout><LostForm onSubmitSuccess={handleFormSubmit} /></Layout>} />

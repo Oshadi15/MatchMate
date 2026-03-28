@@ -20,10 +20,19 @@ const FoundForm = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: files ? files[0] : value,
-    });
+    }));
+  };
+
+  /* =========================
+     DATE VALIDATION FUNCTION
+  ========================= */
+  const isFutureDate = (selectedDate) => {
+    const now = new Date();
+    const pickedDate = new Date(selectedDate);
+    return pickedDate > now;
   };
 
   /* =========================
@@ -32,12 +41,19 @@ const FoundForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ Prevent future dates
+    if (isFutureDate(formData.dateTime)) {
+      alert("Future dates are not allowed.");
+      return;
+    }
+
     try {
-      // FormData required for image upload
       const data = new FormData();
 
       Object.keys(formData).forEach((key) => {
-        data.append(key, formData[key]);
+        if (formData[key] !== null) {
+          data.append(key, formData[key]);
+        }
       });
 
       const res = await axios.post(
@@ -50,9 +66,9 @@ const FoundForm = () => {
         }
       );
 
-      alert(res.data.message);
+      alert(res.data.message || "Found item submitted successfully!");
 
-      // reset form
+      // ✅ Reset form
       setFormData({
         itemName: "",
         category: "",
@@ -63,10 +79,22 @@ const FoundForm = () => {
         image: null,
       });
 
+      // reset file input manually
+      document.querySelector('input[type="file"]').value = "";
+
     } catch (error) {
       console.error(error);
       alert("Error submitting found item");
     }
+  };
+
+  /* =========================
+     GET CURRENT DATETIME
+     (Prevents selecting future)
+  ========================= */
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, 16);
   };
 
   return (
@@ -80,12 +108,18 @@ const FoundForm = () => {
           type="text"
           name="itemName"
           placeholder="What did you find?"
+          value={formData.itemName}
           onChange={handleChange}
           required
         />
 
         <label>Category</label>
-        <select name="category" onChange={handleChange} required>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Category</option>
           <option>Electronics</option>
           <option>Documents</option>
@@ -94,7 +128,12 @@ const FoundForm = () => {
         </select>
 
         <label>Color</label>
-        <select name="color" onChange={handleChange} required>
+        <select
+          name="color"
+          value={formData.color}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Color</option>
           <option>Black</option>
           <option>Blue</option>
@@ -106,12 +145,19 @@ const FoundForm = () => {
         <input
           type="datetime-local"
           name="dateTime"
+          value={formData.dateTime}
+          max={getCurrentDateTime()}   // ✅ blocks future selection
           onChange={handleChange}
           required
         />
 
         <label>Location</label>
-        <select name="location" onChange={handleChange} required>
+        <select
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Location</option>
           <option>Library</option>
           <option>Cafeteria</option>
@@ -123,6 +169,7 @@ const FoundForm = () => {
         <textarea
           name="description"
           placeholder="Describe where and how you found it"
+          value={formData.description}
           onChange={handleChange}
           required
         />
@@ -136,6 +183,7 @@ const FoundForm = () => {
         />
 
         <button type="submit">Submit Found Item</button>
+
       </form>
     </div>
   );
