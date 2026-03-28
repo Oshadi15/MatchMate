@@ -2,6 +2,39 @@ const mongoose = require("mongoose");
 
 const helpRequestSchema = new mongoose.Schema(
   {
+    // Student Information fields (NOW OPTIONAL)
+    fullName: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    studentId: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    faculty: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    yearOfStudy: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    email: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    // Existing fields (kept)
     title: {
       type: String,
       required: true,
@@ -30,6 +63,8 @@ const helpRequestSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    // Keep these optional (even if not used by new form)
     preferredContact: {
       type: String,
       enum: ["IN_APP", "EMAIL", "PHONE"],
@@ -45,6 +80,7 @@ const helpRequestSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+
     isAnonymous: {
       type: Boolean,
       default: false,
@@ -57,6 +93,17 @@ const helpRequestSchema = new mongoose.Schema(
     requesterKey: {
       type: String,
       required: true,
+    },
+
+    // OPTIONAL (for admin reply feature)
+    adminReply: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    repliedAt: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }

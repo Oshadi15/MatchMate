@@ -1,108 +1,160 @@
-// src/components/UserManagement/StudentSignup.js
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../../services/api";
-import logoImage from "../../assets/f2.png";
-import "./StudentSignup.css"; // ✅ external CSS
+import "./StudentSignup.css";
 
-export default function StudentSignup() {
-  const [form, setForm] = useState({
-    username: "",
+function Register() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    itNumber: "",
     name: "",
+    contactNumber: "",
     email: "",
-    phone: "",
+    year: "",
+    faculty: "",
     password: "",
-    confirmPassword: ""
   });
 
-  const [msg, setMsg] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const nav = useNavigate();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const validateForm = () => {
-    if (!form.username || !form.email || !form.password) {
-      setMsg("Please fill all required fields");
-      return false;
-    }
-    if (form.password !== form.confirmPassword) {
-      setMsg("Passwords do not match");
-      return false;
-    }
-    return true;
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  async function submit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMsg("");
+    setError("");
+    setSuccess("");
 
-    if (!validateForm()) return;
-
-    setIsLoading(true);
     try {
-      const { data } = await API.post("/auth/signup", form);
+      const res = await API.post("/api/users/register", formData);
 
-      if (data.ok) {
-        setMsg("Signup successful!");
-        setTimeout(() => nav("/login"), 1500);
-      } else {
-        setMsg(data.message);
-      }
+      setSuccess(res.data.message || "Registration successful!");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     } catch (err) {
-      setMsg("Signup failed");
-    } finally {
-      setIsLoading(false);
+      setError(err.response?.data?.message || "Registration failed");
     }
-  }
+  };
 
   return (
-    <div className="signup-container">
-      <div className="signup-card">
+    <div className="register-page">
+      <div className="register-card">
+        <h2>Create Account</h2>
+        <p className="register-subtitle">Fill in your details to register</p>
 
-        <div className="signup-header">
-          <img src={logoImage} alt="logo" className="logo" />
-          <h2>Create Account</h2>
-        </div>
+        {error && <p className="register-message error">{error}</p>}
+        {success && <p className="register-message success">{success}</p>}
 
-        <form onSubmit={submit} className="signup-form">
-          <input placeholder="Username"
-            onChange={(e)=>setForm({...form, username:e.target.value})} />
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="register-grid">
+            <div className="form-group">
+              <label>IT Number</label>
+              <input
+                type="text"
+                name="itNumber"
+                value={formData.itNumber}
+                onChange={handleChange}
+                placeholder="IT2023001"
+                required
+              />
+            </div>
 
-          <input placeholder="Full Name"
-            onChange={(e)=>setForm({...form, name:e.target.value})} />
+            <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
 
-          <input placeholder="Email"
-            onChange={(e)=>setForm({...form, email:e.target.value})} />
+            <div className="form-group">
+              <label>Contact Number</label>
+              <input
+                type="text"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                placeholder="0771234567"
+                required
+              />
+            </div>
 
-          <input placeholder="Phone"
-            onChange={(e)=>setForm({...form, phone:e.target.value})} />
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="example@gmail.com"
+                required
+              />
+            </div>
 
-          <div className="password-field">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              onChange={(e)=>setForm({...form, password:e.target.value})}
-            />
-            <button type="button" onClick={()=>setShowPassword(!showPassword)}>
-              👁
-            </button>
+            <div className="form-group">
+              <label>Year</label>
+              <select
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select year</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Faculty</label>
+              <input
+                type="text"
+                name="faculty"
+                value={formData.faculty}
+                onChange={handleChange}
+                placeholder="Faculty of Computing"
+                required
+              />
+            </div>
+
+            <div className="form-group full-width">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+                required
+              />
+            </div>
           </div>
 
-          <input type="password" placeholder="Confirm Password"
-            onChange={(e)=>setForm({...form, confirmPassword:e.target.value})} />
-
-          <button className="signup-btn" disabled={isLoading}>
-            {isLoading ? "Loading..." : "Signup"}
+          <button type="submit" className="register-btn">
+            Register
           </button>
         </form>
 
-        {msg && <p className="message">{msg}</p>}
-
-        <p className="login-link">
-          Already have an account? <Link to="/login">Login</Link>
+        <p className="register-footer">
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
-
       </div>
     </div>
   );
 }
+
+export default Register;

@@ -1,112 +1,148 @@
-/* src/components/UserManagement/StudentSignup.css */
-
-.signup-container {
-  height: 100vh;
+.register-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* ✅ Background Image */
-  background: url("../../assets/f2.png") no-repeat center center/cover;
-  position: relative;
+  background: linear-gradient(135deg, #050d1a, #021226);
+  padding: 30px 16px;
+  box-sizing: border-box;
 }
 
-/* ✅ Dark overlay for better readability */
-.signup-container::before {
-  content: "";
-  position: absolute;
+.register-card {
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  top: 0;
-  left: 0;
+  max-width: 760px;
+  background: #353e70;
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
-/* Card stays above overlay */
-.signup-card {
-  width: 400px;
-  padding: 30px;
-  background: rgb(202, 185, 185);
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-
-  position: relative;
-  z-index: 1;
-}
-
-.signup-header {
+.register-card h2 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 800;
+  color: #f0f1f3;
   text-align: center;
-  margin-bottom: 20px;
 }
 
-.logo {
-  width: 60px;
-  margin-bottom: 10px;
+.register-subtitle {
+  margin: 0 0 22px;
+  text-align: center;
+  color: #c0c4cc;
+  font-size: 14px;
 }
 
-.signup-form {
+.register-message {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.register-message.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.register-message.success {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.register-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 
-.signup-form input {
-  padding: 12px;
-  border: 1px solid #e7dede;
-  background: #c9c3be;
-  border-radius: 5px;
-  outline: none;
-  transition: 0.3s;
+.register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
-.signup-form input:focus {
-  border-color: rgb(162, 200, 162);
-  box-shadow: 0 0 5px rgba(0,128,0,0.3);
-}
-
-.password-field {
+.form-group {
   display: flex;
+  flex-direction: column;
 }
 
-.password-field input {
-  flex: 1;
+.form-group label {
+  margin-bottom: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #a3a6aa;
 }
 
-.password-field button {
-  padding: 10px;
+.form-group input,
+.form-group select {
+  height: 46px;
+  border: 1px solid #042048;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+  background: #1e1d3a;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.register-btn {
+  width: 100%;
+  height: 48px;
   border: none;
-  background: #ddd;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.signup-btn {
-  padding: 12px;
-  background: rgb(47, 88, 47);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.3s;
+.register-btn:hover {
+  background: #1341b5;
 }
 
-.signup-btn:hover {
-  background: darkgreen;
-  transform: translateY(-2px);
-}
-
-.message {
+.register-footer {
+  margin-top: 18px;
   text-align: center;
-  margin-top: 10px;
-  color: red;
+  color: #dfe2e5;
+  font-size: 14px;
 }
 
-.login-link {
-  text-align: center;
-  margin-top: 15px;
-  color: white;
-}
-
-.login-link a {
-  color: #2e3332;
+.register-footer a {
+  color: #b2b4b9;
   text-decoration: none;
+  font-weight: 600;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .register-card {
+    padding: 24px 18px;
+  }
+
+  .register-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
 }

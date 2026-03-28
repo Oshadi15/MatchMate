@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { getHelpRequests, deleteHelpRequest } from "../../services/helpApi";
 import "./helpBoard.css";
+import { useNavigate } from "react-router-dom";
 
 export default function HelpBoard() {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("");
   const [supportType, setSupportType] = useState("");
@@ -38,6 +40,11 @@ export default function HelpBoard() {
       console.error("Delete failed:", err);
       alert("Delete failed");
     }
+  };
+
+  // ✅ NEW: Reply button action (for now just shows a message)
+    const handleReply = (item) => {
+    navigate(`/help/reply/${item._id}`);
   };
 
   return (
@@ -115,6 +122,14 @@ export default function HelpBoard() {
                 </div>
 
                 <div className="help-board-actions">
+                  {/* ✅ NEW Reply button */}
+                  <button
+                    className="help-board-reply-button"
+                    onClick={() => handleReply(x)}
+                  >
+                    Reply
+                  </button>
+
                   <button
                     className="help-board-delete-button"
                     onClick={() => handleDelete(x._id)}
