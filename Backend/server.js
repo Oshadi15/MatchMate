@@ -1,3 +1,6 @@
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -37,6 +40,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
+app.use('/api/smart-match', smartMatchRoutes);
 app.use("/api/help", helpRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/lost", lostRoutes);
