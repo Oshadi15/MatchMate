@@ -92,7 +92,6 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            // onClick={() => navigate("/campus-assistant")}
             onClick={() => navigate("/login")}
             style={{ cursor: "pointer" }}
           >

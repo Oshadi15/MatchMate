@@ -23,6 +23,7 @@ import UserDashboard from "./components/userDashboard/userDashboard";
 // Admin Dashboard
 import AdminDashboard from "./components/AdminDashBoard/AdminDashBoard";
 import StudentSignup from "./components/UserManagement/StudentSignup";
+import LostFoundManagement from "./components/AdminDashBoard/LostFoundManagement";
 import FeedbackInsert from "./components/FeedbackInsert/FeedbackInsert";
 import FeedbackDisplay from "./components/FeedbackDisplay/FeedbackDisplay";
 
@@ -50,6 +51,7 @@ function App() {
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} /> */}
          <Route path="/adminlogin" element={<AdminLogin />} />
+         <Route path="/admin/lostfound" element={<LostFoundManagement />} />
 
         <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
         <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
