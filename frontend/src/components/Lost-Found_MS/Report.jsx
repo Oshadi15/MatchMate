@@ -75,7 +75,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/browseitems")}>
             <h2>Browse Items</h2>
             <img
-              src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+              src="https://i.pinimg.com/736x/74/02/4a/74024aaf1a63f9ff793f1a10055b43fc.jpg"
               alt="Browse Items"
             />
             <div className="report-card-footer browse-card-footer">

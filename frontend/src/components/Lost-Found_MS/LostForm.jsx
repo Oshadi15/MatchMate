@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FoundForm.css";
 
 const LostForm = () => {
+
+  /* ================= STATE ================= */
   const [formData, setFormData] = useState({
     itemName: "",
     category: "",
@@ -13,9 +15,39 @@ const LostForm = () => {
     image: null,
   });
 
-  // ================= HANDLE CHANGE =================
+  const [dateError, setDateError] = useState("");
+
+  /* ================= GET CURRENT DATETIME ================= */
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const local = new Date(now.getTime() - offset * 60000);
+    return local.toISOString().slice(0, 16);
+  };
+
+  /* ================= AUTO SET CURRENT TIME ================= */
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      dateTime: getCurrentDateTime(),
+    }));
+  }, []);
+
+  /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // ✅ Future date validation
+    if (name === "dateTime") {
+      const selectedDate = new Date(value);
+      const currentDate = new Date();
+
+      if (selectedDate > currentDate) {
+        setDateError("❌ Future date & time not allowed");
+      } else {
+        setDateError("");
+      }
+    }
 
     setFormData({
       ...formData,
@@ -23,9 +55,18 @@ const LostForm = () => {
     });
   };
 
-  // ================= SUBMIT =================
+  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const selectedDate = new Date(formData.dateTime);
+    const currentDate = new Date();
+
+    // ✅ Final safety validation
+    if (selectedDate > currentDate) {
+      alert("❌ You cannot select a future date or time.");
+      return;
+    }
 
     try {
       const data = new FormData();
@@ -44,8 +85,18 @@ const LostForm = () => {
         }
       );
 
-      console.log(response.data);
       alert("✅ Lost Item Submitted Successfully!");
+
+      // Reset form
+      setFormData({
+        itemName: "",
+        category: "",
+        color: "",
+        dateTime: getCurrentDateTime(),
+        location: "",
+        description: "",
+        image: null,
+      });
 
     } catch (error) {
       console.error("Error submitting:", error);
@@ -53,21 +104,30 @@ const LostForm = () => {
     }
   };
 
+  /* ================= UI ================= */
   return (
     <div className="form-container">
       <h2>Report Lost Item</h2>
 
       <form onSubmit={handleSubmit}>
+        {/* Item Name */}
         <label>Item Name</label>
         <input
           type="text"
           name="itemName"
+          value={formData.itemName}
           onChange={handleChange}
           required
         />
 
+        {/* Category */}
         <label>Category</label>
-        <select name="category" onChange={handleChange} required>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Category</option>
           <option>Electronics</option>
           <option>Documents</option>
@@ -75,8 +135,14 @@ const LostForm = () => {
           <option>Clothes</option>
         </select>
 
+        {/* Color */}
         <label>Color</label>
-        <select name="color" onChange={handleChange} required>
+        <select
+          name="color"
+          value={formData.color}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Color</option>
           <option>Black</option>
           <option>Blue</option>
@@ -84,16 +150,28 @@ const LostForm = () => {
           <option>White</option>
         </select>
 
+        {/* Date & Time */}
         <label>Date & Time</label>
         <input
           type="datetime-local"
           name="dateTime"
+          value={formData.dateTime}
+          max={getCurrentDateTime()}   /* ✅ blocks future dates */
           onChange={handleChange}
           required
+          className={dateError ? "input-error" : ""}
         />
 
+        {dateError && <p className="error-text">{dateError}</p>}
+
+        {/* Location */}
         <label>Location</label>
-        <select name="location" onChange={handleChange} required>
+        <select
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Location</option>
           <option>Library</option>
           <option>Cafeteria</option>
@@ -101,13 +179,16 @@ const LostForm = () => {
           <option>Parking Area</option>
         </select>
 
+        {/* Description */}
         <label>Description</label>
         <textarea
           name="description"
+          value={formData.description}
           onChange={handleChange}
           required
         />
 
+        {/* Image */}
         <label>Upload Photo</label>
         <input
           type="file"
@@ -116,7 +197,10 @@ const LostForm = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit Lost Item</button>
+        {/* Submit */}
+        <button type="submit" disabled={dateError}>
+          Submit Lost Item
+        </button>
       </form>
     </div>
   );
