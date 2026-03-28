@@ -19,11 +19,15 @@ import ManageLocation from "./components/campus_assistant/manageLocation";
 import LocationFinder from "./components/campus_assistant/locationFinder";
 
 import AdminLogin from "./components/AdminLogin/AdminLogin";
+import Userlogin from "./components/Userlogin/Userlogin";
+import UserDashboard from "./components/userDashboard/userDashboard";
 
 
 // Admin Dashboard
 import AdminDashboard from "./components/AdminDashBoard/AdminDashBoard";
 import StudentSignup from "./components/UserManagement/StudentSignup";
+import FeedbackInsert from "./components/FeedbackInsert/FeedbackInsert";
+import FeedbackDisplay from "./components/FeedbackDisplay/FeedbackDisplay";
 
 function App() {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -45,16 +49,21 @@ function App() {
         
       
         <Route path="/signup" element={<StudentSignup />} />
+        <Route path="/login" element={<Userlogin />} />
         <Route path="/admin" element={<AdminDashboard />} />
         {/* <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} /> */}
          <Route path="/adminlogin" element={<AdminLogin />} />
 
-        <Route path="/found" element={<Layout><FoundForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
-        <Route path="/lost" element={<Layout><LostForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
-        <Route path="/report" element={<Layout><ReportSelection /></Layout>} />
-        <Route path="/browseitems" element={<Layout><BrowseItems refreshFlag={refreshFlag} /></Layout>} />
+        <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
+        <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
+        <Route path="/report" element={<ReportSelection />} />
+        <Route path="/browseitems" element={<BrowseItems refreshFlag={refreshFlag} />} />
+        <Route path="/feedback" element={<FeedbackInsert />} />
+        <Route path="/feedback" element={<FeedbackDisplay />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+
       </Routes>
     </BrowserRouter>
   );
