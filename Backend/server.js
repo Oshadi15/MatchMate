@@ -24,6 +24,8 @@ const lostRoutes = require("./routes/Lost-Found_MS/lostRoutes");
 const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 const itemRoutes = require("./routes/Lost-Found_MS/itemRoutes");
 const userRoutes = require("./routes/userManagement/userRoutes");
+const LostFoundManagement = require("./routes/Lost-Found_MS/LostFoundManagement");
+
 
 /* ==============================
    MIDDLEWARE
@@ -49,8 +51,9 @@ app.use("/api/help", helpRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/lost", lostRoutes);
 app.use("/api/found", foundRoutes);
-app.use("/api/found", itemRoutes)
+app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/lostfound", LostFoundManagement);
 
 /* ==============================
    DATABASE CONNECTION
