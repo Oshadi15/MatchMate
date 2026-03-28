@@ -25,7 +25,7 @@ const itemRoutes = require("./routes/Lost-Found_MS/itemRoutes");
 const userRoutes = require("./routes/userManagement/userRoutes");
 const LostFoundManagement = require("./routes/Lost-Found_MS/LostFoundManagement");
 
-
+const smartMatchRoutes = require("./routes/smart_matching/smartMatchRoutes");
 /* ==============================
    MIDDLEWARE
 ============================== */
@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-app.use('/api/smart-match', smartMatchRoutes);
+app.use('/api/smart-match',smartMatchRoutes);
 app.use("/api/help", helpRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/lost", lostRoutes);
