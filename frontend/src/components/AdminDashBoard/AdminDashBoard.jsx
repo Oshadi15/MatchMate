@@ -111,7 +111,7 @@ function Admin() {
               <p>View lost items</p>
             </Link>
 
-            <Link to="/feedbackslist" className="card">
+            <Link to="/feedback" className="card">
               <FaCommentDots size={40} />
               <h3>Feedbacks</h3>
               <p>View student feedback</p>
