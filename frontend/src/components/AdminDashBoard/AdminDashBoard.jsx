@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './AdminDashBoard.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./AdminDashBoard.css";
+
 import {
   FaUsers,
   FaWarehouse,
@@ -12,17 +13,20 @@ import {
   FaStar,
   FaCommentDots,
   FaComments,
-  FaWhatsapp
-} from 'react-icons/fa';
+  FaWhatsapp,
+} from "react-icons/fa";
 
-function Admin() {
+function AdminDashboard() {
 
-  const stockId = localStorage.getItem("stockId"); 
+  const stockId = localStorage.getItem("stockId");
 
+  /* ================= WHATSAPP SUPPORT ================= */
   const handleSendReport = () => {
     const phoneNumber = "+94766773745";
-    const message = `Hello what you want to know`;
-    const WhatsAppUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+    const message = `Hello, I need support regarding the Lost and Found system.`;
+    const WhatsAppUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
+      message
+    )}`;
     window.open(WhatsAppUrl, "_blank");
   };
 
@@ -30,7 +34,7 @@ function Admin() {
     <div className="admin-dashboard">
       <div className="admin-overlay"></div>
 
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
       <nav className="dashboard-nav">
         <div className="nav-logo-section">
           <h2>Lost and Found System</h2>
@@ -38,7 +42,7 @@ function Admin() {
 
         <div className="nav-links">
           <Link to="/">Home</Link>
-          <Link to="/logout">Logout</Link>
+          <Link to="/adminlogin">Logout</Link>
         </div>
 
         <div className="whatsapp-btn-container">
@@ -48,40 +52,44 @@ function Admin() {
         </div>
       </nav>
 
-      {/* CONTENT */}
+      {/* ================= CONTENT ================= */}
       <div className="dashboard-content">
         <h1>Welcome, Admin</h1>
         <p className="dashboard-sub">Manage everything from one place</p>
 
         <div className="dashboard-cards">
 
-          {/* Row 1 */}
+          {/* ================= ROW 1 ================= */}
           <div className="card-row">
+
             <Link to={`/displaystock/${stockId}`} className="card">
               <FaWarehouse size={40} />
               <h3>Campus Locations</h3>
               <p>View campus locations</p>
             </Link>
 
-            <Link to="/displaypayments" className="card">
+            {/* ✅ LOST & FOUND MANAGEMENT */}
+            <Link to="/admin/lostfound" className="card">
               <FaMoneyBillWave size={40} />
-              <h3>Lost And Found</h3>
-              <p>View lost items</p>
+              <h3>Lost & Found</h3>
+              <p>Manage lost & found items</p>
             </Link>
 
             <Link to="/recordsale" className="card">
               <FaTruck size={40} />
-              <h3>Claim Request</h3>
-              <p>Track deliveries</p>
+              <h3>Claim Requests</h3>
+              <p>Manage claim requests</p>
             </Link>
+
           </div>
 
-          {/* Row 2 */}
+          {/* ================= ROW 2 ================= */}
           <div className="card-row">
+
             <Link to="/sales" className="card">
               <FaFileInvoiceDollar size={40} />
               <h3>User Management</h3>
-              <p>View sales details</p>
+              <p>Manage system users</p>
             </Link>
 
             <Link to="/summary" className="card">
@@ -93,38 +101,44 @@ function Admin() {
             <Link to="/fuel-levels" className="card">
               <FaOilCan size={40} />
               <h3>Smart Machine</h3>
-              <p>Monitor fuel status</p>
+              <p>Monitor machine status</p>
             </Link>
+
           </div>
 
-          {/* Row 3 */}
+          {/* ================= ROW 3 ================= */}
           <div className="card-row">
+
             <Link to="/help" className="card">
               <FaUsers size={40} />
               <h3>Help Board</h3>
-              <p>Manage student help</p>
+              <p>Manage student help requests</p>
             </Link>
 
-            <Link to="/ratingdisplay" className="card">
+            {/* ✅ MAIN LOST & FOUND ADMIN ACCESS */}
+            <Link to="/admin/lostfound" className="card">
               <FaStar size={40} />
-              <h3>Lost & Found</h3>
-              <p>View lost items</p>
+              <h3>Lost & Found Management</h3>
+              <p>Edit, delete & manage item status</p>
             </Link>
 
-            <Link to="/feedbackslist" className="card">
+            <Link to="/feedback" className="card">
               <FaCommentDots size={40} />
               <h3>Feedbacks</h3>
               <p>View student feedback</p>
             </Link>
+
           </div>
 
-          {/* Row 4 (only 1 card to make total 10) */}
+          {/* ================= ROW 4 ================= */}
           <div className="card-row">
+
             <Link to="/adminchat" className="card">
               <FaComments size={40} />
               <h3>Student Chat</h3>
-              <p>View chats</p>
+              <p>View conversations</p>
             </Link>
+
           </div>
 
         </div>
@@ -133,4 +147,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default AdminDashboard;
