@@ -12,35 +12,66 @@ function Login() {
   });
 
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({}); // 🔴 for individual field errors
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    // Clear field error while typing
+    setFieldErrors((prev) => ({
+      ...prev,
+      [e.target.name]: "",
+    }));
+  };
+
+  const validate = () => {
+    const errors = {};
+
+    // 🔴 Email validation
+    if (!formData.email) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Invalid email format";
+    }
+
+    // 🔴 Password validation
+    if (!formData.password) {
+      errors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    return errors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    const validationErrors = validate();
+
+    // 🔴 Stop if validation fails
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      return;
+    }
+
     try {
-      // ✅ FIXED API PATH
       const res = await API.post("/api/users/login", formData);
 
-      // ✅ Save token & user
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      // ✅ Redirect based on role
       if (res.data.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/dashboard"); // student redirect
+        navigate("/dashboard");
       }
 
     } catch (err) {
-      // ✅ Show backend error message
       setError(err.response?.data?.message || "Login failed");
     }
   };
@@ -51,9 +82,12 @@ function Login() {
         <h2>Welcome Back</h2>
         <p className="login-subtitle">Sign in to continue</p>
 
+        {/* 🔴 Global error */}
         {error && <p className="login-message error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="login-form">
+
+          {/* EMAIL */}
           <div className="login-form-group">
             <label>Email</label>
             <input
@@ -62,10 +96,14 @@ function Login() {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              required
+              className={fieldErrors.email ? "input-error" : ""}
             />
+            {fieldErrors.email && (
+              <p className="field-error">{fieldErrors.email}</p>
+            )}
           </div>
 
+          {/* PASSWORD */}
           <div className="login-form-group">
             <label>Password</label>
             <input
@@ -74,8 +112,11 @@ function Login() {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              required
+              className={fieldErrors.password ? "input-error" : ""}
             />
+            {fieldErrors.password && (
+              <p className="field-error">{fieldErrors.password}</p>
+            )}
           </div>
 
           <button type="submit" className="login-btn">
@@ -85,7 +126,7 @@ function Login() {
 
         <p className="login-footer">
           Don’t have an account?{" "}
-          <Link to="/signup">Register</Link> {/* ✅ FIXED */}
+          <Link to="/signup">Register</Link>
         </p>
       </div>
     </div>
