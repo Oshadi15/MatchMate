@@ -146,77 +146,127 @@
   color: #fdba74;
 }
 
-/* Table */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 18px;
+/* Small card grid */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
 
-.table-wrapper table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 980px;
-  overflow: hidden;
-}
-
-.table-wrapper thead tr {
-  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
-}
-
-.table-wrapper th {
-  padding: 15px 14px;
-  text-align: left;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.table-wrapper td {
-  padding: 14px;
-  font-size: 14px;
-  color: #e2e8f0;
-  vertical-align: middle;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(15, 23, 42, 0.82);
-}
-
-.table-wrapper tbody tr:hover td {
-  background: rgba(30, 41, 59, 0.95);
-}
-
-.table-wrapper td:nth-child(6) {
-  min-width: 220px;
-  line-height: 1.5;
-  color: #cbd5e1;
-}
-
-/* Images */
-.table-image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 14px;
-  display: block;
+/* Small item card */
+.item-card {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(10, 18, 36, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #0f172a;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Scrollbar */
-.table-wrapper::-webkit-scrollbar {
-  height: 10px;
+.item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
 }
 
-.table-wrapper::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.85);
-  border-radius: 20px;
+/* Image area */
+.item-card-image-wrapper {
+  width: 100%;
+  height: 150px;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
 }
 
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.55);
-  border-radius: 20px;
+.item-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.no-image-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+/* Badge */
+.item-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.badge-lost {
+  background: rgba(59, 130, 246, 0.9);
+}
+
+.badge-found {
+  background: rgba(249, 115, 22, 0.9);
+}
+
+/* Card content */
+.item-card-content {
+  padding: 14px;
+}
+
+.item-card-title {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: capitalize;
+  line-height: 1.3;
+}
+
+.item-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.item-card-details p {
+  margin: 0;
+  font-size: 13px;
+  color: #dbeafe;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.item-card-details span {
+  color: #fdba74;
+  font-weight: 700;
+}
+
+.claim-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #28a745;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.claim-btn:hover {
+  background: #218838;
 }
 
 /* Responsive */
@@ -248,6 +298,15 @@
   .section-title {
     font-size: 22px;
   }
+
+  .items-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .item-card-image-wrapper {
+    height: 135px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -255,14 +314,19 @@
     font-size: 23px;
   }
 
-  .table-image {
-    width: 68px;
-    height: 68px;
+  .item-card-title {
+    font-size: 17px;
   }
 
-  .table-wrapper th,
-  .table-wrapper td {
-    padding: 12px;
-    font-size: 13px;
+  .item-card-details p {
+    font-size: 12px;
+  }
+
+  .item-card-image-wrapper {
+    height: 125px;
+  }
+
+  .items-grid {
+    grid-template-columns: 1fr;
   }
 }
