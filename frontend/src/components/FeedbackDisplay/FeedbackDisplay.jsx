@@ -42,7 +42,7 @@ function FeedbackDisplayPage() {
     <div className="feedbacklist-display-page">
       {/* Navbar */}
       <nav className="feedbacklist-display-navbar">
-        <a href="/" className="feedbacknav-title">Dasu Filling Station, Galle</a>
+        <a href="/" className="feedbacknav-title">MachMate.Campus</a>
         <div className="nav-links">
           <a href="/admin">Admin</a>
           <a href="/">Logout</a>
@@ -56,8 +56,8 @@ function FeedbackDisplayPage() {
         <div>
         <select value={filterSection} onChange={(e) => setFilterSection(e.target.value)}>
           <option value="">All Sections</option>
-          <option value="EV Section">EV Section</option>
-          <option value="Bulk Order Section">Bulk Order Section</option>
+          <option value=" Section"> Section</option>
+          <option value=" Order Section"> Order Section</option>
         </select>
         </div>
     <div>

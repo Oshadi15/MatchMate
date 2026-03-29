@@ -94,11 +94,11 @@ function AdminDashboard() {
 
             <Link to="/summary" className="card">
               <FaMoneyBill size={40} />
-              <h3>Income</h3>
-              <p>Check daily income</p>
+              <h3>Item Status</h3>
+              <p>Check item status</p>
             </Link>
 
-            <Link to="/fuel-levels" className="card">
+            <Link to="/-levels" className="card">
               <FaOilCan size={40} />
               <h3>Smart Machine</h3>
               <p>Monitor machine status</p>

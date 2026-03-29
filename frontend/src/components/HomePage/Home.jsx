@@ -165,8 +165,8 @@ export default function Home() {
             <div className="home-footer-section">
               <h4>Quick Links</h4>
               <ul>
-                <li><Link to="/report">Lost & Found</Link></li>
-                <li><Link to="/assistant">Campus Assistant</Link></li>
+                <li><Link to="/login">Lost & Found</Link></li>
+                <li><Link to="/login">Campus Assistant</Link></li>
                 <li><Link to="/login">Login</Link></li>
               </ul>
             </div>
