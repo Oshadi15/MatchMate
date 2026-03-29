@@ -41,9 +41,6 @@ export default function Header() {
             Register
           </button>
 
-          <button className="mm-nav-btn primary" onClick={() => navigate("/adminlogin")}>
-            Admin Login
-          </button>
         </div>
       </div>
     </header>
