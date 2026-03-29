@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import API from "../../services/api";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 import "./Userlogin.css";
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate();
 
+  /* ================= STATE ================= */
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -13,83 +14,104 @@ function Login() {
 
   const [error, setError] = useState("");
 
+  /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
-    }));
+    });
   };
 
+  /* ================= LOGIN FUNCTION ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    try {
-      // ✅ FIXED API PATH
-      const res = await API.post("/api/users/login", formData);
+    /* ==========================================
+       ✅ HARD CODED ADMIN LOGIN
+    ========================================== */
 
-      // ✅ Save token & user
-      localStorage.setItem("token", res.data.token);
+    const adminEmail = "admin@gmail.com";
+    const adminPassword = "admin123";
+
+    if (
+      formData.email === adminEmail &&
+      formData.password === adminPassword
+    ) {
+      const adminUser = {
+        name: "Administrator",
+        email: adminEmail,
+        role: "admin",
+      };
+
+      // save admin session
+      localStorage.setItem("user", JSON.stringify(adminUser));
+
+      alert("Admin Login Successful!");
+      navigate("/admin");
+      return;
+    }
+
+    /* ==========================================
+       ✅ NORMAL USER LOGIN (BACKEND)
+    ========================================== */
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/users/login",
+        formData
+      );
+
+      // save user data
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      // ✅ Redirect based on role
+      alert("Login Successful!");
+
+      // role-based redirect
       if (res.data.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/dashboard"); // student redirect
+        navigate("/dashboard");
       }
-
     } catch (err) {
-      // ✅ Show backend error message
-      setError(err.response?.data?.message || "Login failed");
+      setError("Invalid Email or Password");
     }
   };
 
+  /* ================= UI ================= */
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2>Welcome Back</h2>
-        <p className="login-subtitle">Sign in to continue</p>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h2>Login</h2>
 
-        {error && <p className="login-message error">{error}</p>}
+        {error && <p className="error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="login-form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          value={formData.email}
+          onChange={handleChange}
+        />
 
-          <div className="login-form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+          value={formData.password}
+          onChange={handleChange}
+        />
 
-          <button type="submit" className="login-btn">
-            Sign In
-          </button>
-        </form>
+        <button type="submit">Login</button>
 
-        <p className="login-footer">
-          Don’t have an account?{" "}
-          <Link to="/signup">Register</Link> {/* ✅ FIXED */}
+        <p>
+          Don't have an account? <Link to="/register">Register</Link>
         </p>
-      </div>
+      </form>
     </div>
   );
-}
+};
 
 export default Login;

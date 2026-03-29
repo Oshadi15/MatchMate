@@ -69,7 +69,7 @@ function AdminDashboard() {
             </Link>
 
             {/* ✅ LOST & FOUND MANAGEMENT */}
-            <Link to="/admin/lostfound" className="card">
+            <Link to="/adminbrowse" className="card">
               <FaMoneyBillWave size={40} />
               <h3>Lost & Found</h3>
               <p>Manage lost & found items</p>

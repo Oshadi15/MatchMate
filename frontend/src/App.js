@@ -20,6 +20,9 @@ import LocationFinder from "./components/campus_assistant/locationFinder";
 
 import AdminLogin from "./components/AdminLogin/AdminLogin";
 import Userlogin from "./components/Userlogin/Userlogin";
+
+import AdminBrowse from "./components/Lost-Found_MS/AdminBrowse";
+
 import UserDashboard from "./components/userDashboard/userDashboard";
 
 
@@ -60,11 +63,12 @@ function App() {
 
         <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
         <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
-        <Route path="/report" element={<ReportSelection />} />
+        <Route path="/report" element={<Layout><ReportSelection /> </Layout>} />
         <Route path="/browseitems" element={<BrowseItems refreshFlag={refreshFlag} />} />
         <Route path="/feedback" element={<FeedbackInsert />} />
         <Route path="/feedback" element={<FeedbackDisplay />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/adminbrowse" element={<AdminBrowse />} />
 
       </Routes>
     </BrowserRouter>
