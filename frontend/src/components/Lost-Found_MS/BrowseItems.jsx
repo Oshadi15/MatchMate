@@ -15,6 +15,15 @@ const BrowserItems = () => {
     fetchItems();
   }, []);
 
+  /* ================= CLAIM FUNCTION ================= */
+  // ✅ NEW
+  const handleClaim = (item) => {
+    alert(`Claim request sent for: ${item.itemName}`);
+    
+    // Later you can connect backend here
+    // axios.post("http://localhost:5000/api/claim", { itemId: item._id })
+  };
+
   const getArrayFromResponse = (data, possibleKeys = []) => {
     if (Array.isArray(data)) return data;
 
@@ -34,9 +43,6 @@ const BrowserItems = () => {
         axios.get("http://localhost:5000/api/found"),
         axios.get("http://localhost:5000/api/lost"),
       ]);
-
-      console.log("Found response:", foundRes.data);
-      console.log("Lost response:", lostRes.data);
 
       const foundArray = getArrayFromResponse(foundRes.data, [
         "foundItems",
@@ -99,7 +105,62 @@ const BrowserItems = () => {
     ? lostItems.filter(matchesSearch)
     : [];
 
-  if (loading) return <p className="loading-text">Loading items...</p>;
+  const renderItemCards = (items, emptyMessage) => {
+    if (items.length === 0) {
+      return <p className="empty-text">{emptyMessage}</p>;
+    }
+
+    return (
+      <div className="items-grid">
+        {items.map((item) => (
+          <div className="item-card" key={item._id}>
+            <div className="item-card-image-wrapper">
+              {item.image ? (
+                <img
+                  src={`http://localhost:5000/uploads/${item.image}`}
+                  alt={item.itemName}
+                  className="item-card-image"
+                />
+              ) : (
+                <div className="no-image-box">No image</div>
+              )}
+            </div>
+
+            <div className="item-card-content">
+              <h3 className="item-card-title">
+                {item.itemName || "Unnamed Item"}
+              </h3>
+
+              <div className="item-card-details">
+                <p><span>Category:</span> {item.category || "N/A"}</p>
+                <p><span>Color:</span> {item.color || "N/A"}</p>
+                <p><span>Date & Time:</span> {formatDateTime(item.dateTime)}</p>
+                <p><span>Location:</span> {item.location || "N/A"}</p>
+                <p><span>Description:</span> {item.description || "No description"}</p>
+              </div>
+
+              {/* ✅ CLAIM BUTTON ADDED */}
+              <button
+                className="claim-btn"
+                onClick={() => handleClaim(item)}
+              >
+                Claim
+              </button>
+
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="browse-items-page">
+        <p className="loading-text">Loading items...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="browse-items-page">
@@ -134,98 +195,12 @@ const BrowserItems = () => {
         <div className="items-sections">
           <div className="items-card">
             <h2 className="section-title lost-title">Recent Lost Items</h2>
-
-            {filteredLostItems.length > 0 ? (
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Item Name</th>
-                      <th>Category</th>
-                      <th>Color</th>
-                      <th>Date & Time</th>
-                      <th>Location</th>
-                      <th>Description</th>
-                      <th>Image</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredLostItems.map((item) => (
-                      <tr key={item._id}>
-                        <td>{item.itemName}</td>
-                        <td>{item.category}</td>
-                        <td>{item.color}</td>
-                        <td>{formatDateTime(item.dateTime)}</td>
-                        <td>{item.location}</td>
-                        <td>{item.description}</td>
-                        <td>
-                          {item.image ? (
-                            <img
-                              src={`http://localhost:5000/uploads/${item.image}`}
-                              alt={item.itemName}
-                              width="80"
-                              className="table-image"
-                            />
-                          ) : (
-                            "No image"
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="empty-text">No lost items found.</p>
-            )}
+            {renderItemCards(filteredLostItems, "No lost items found.")}
           </div>
 
           <div className="items-card">
             <h2 className="section-title found-title">Recent Found Items</h2>
-
-            {filteredFoundItems.length > 0 ? (
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Item Name</th>
-                      <th>Category</th>
-                      <th>Color</th>
-                      <th>Date & Time</th>
-                      <th>Location</th>
-                      <th>Description</th>
-                      <th>Image</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredFoundItems.map((item) => (
-                      <tr key={item._id}>
-                        <td>{item.itemName}</td>
-                        <td>{item.category}</td>
-                        <td>{item.color}</td>
-                        <td>{formatDateTime(item.dateTime)}</td>
-                        <td>{item.location}</td>
-                        <td>{item.description}</td>
-                        <td>
-                          {item.image ? (
-                            <img
-                              src={`http://localhost:5000/uploads/${item.image}`}
-                              alt={item.itemName}
-                              width="80"
-                              className="table-image"
-                            />
-                          ) : (
-                            "No image"
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="empty-text">No found items found.</p>
-            )}
+            {renderItemCards(filteredFoundItems, "No found items found.")}
           </div>
         </div>
       </div>
