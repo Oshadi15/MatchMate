@@ -13,60 +13,19 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({}); // 🔴 for individual field errors
 
   /* ================= HANDLE CHANGE ================= */
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    }));
-
-    // Clear field error while typing
-    setFieldErrors((prev) => ({
-      ...prev,
-      [e.target.name]: "",
-    }));
-  };
-
-  const validate = () => {
-    const errors = {};
-
-    // 🔴 Email validation
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "Invalid email format";
-    }
-
-    // 🔴 Password validation
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
-    }
-
-    return errors;
+    });
   };
 
   /* ================= LOGIN FUNCTION ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    const validationErrors = validate();
-
-    // 🔴 Stop if validation fails
-    if (Object.keys(validationErrors).length > 0) {
-      setFieldErrors(validationErrors);
-      return;
-    }
-
-    try {
-      const res = await API.post("/api/users/login", formData);
-
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data));
 
     /* ==========================================
        ✅ HARD CODED ADMIN LOGIN
@@ -115,7 +74,6 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
       setError("Invalid Email or Password");
     }
   };
