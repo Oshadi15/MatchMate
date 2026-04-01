@@ -82,7 +82,7 @@ exports.getMyHelpRequests = async (req, res) => {
   }
 };
 
-// ✅ REPLY (ADMIN)
+// REPLY (ADMIN)
 exports.replyToHelpRequest = async (req, res) => {
   try {
     const { adminReply } = req.body;
@@ -108,7 +108,7 @@ exports.replyToHelpRequest = async (req, res) => {
   }
 };
 
-// ✅ STATUS UPDATE (ADMIN)
+// STATUS UPDATE (ADMIN)
 exports.updateHelpStatus = async (req, res) => {
   try {
     const { status } = req.body;

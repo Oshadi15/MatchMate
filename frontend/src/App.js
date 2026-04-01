@@ -10,9 +10,11 @@ import LostForm from './components/Lost-Found_MS/LostForm';
 import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import Home from "./components/HomePage/Home";
+
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+
 // import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
 import ManageLocation from "./components/campus_assistant/manageLocation";
@@ -44,6 +46,7 @@ function App() {
    
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
+        
         <Route path="/help" element={<Layout><HelpBoard /></Layout>} />
         <Route path="/create" element={<Layout><CreateHelpRequest /></Layout>} />
         <Route path="/campus-assistant" element={<Layout><SmartAssistantHome /></Layout>} />

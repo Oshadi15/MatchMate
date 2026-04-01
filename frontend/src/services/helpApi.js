@@ -13,13 +13,13 @@ export const getMyHelpRequests = (requesterKey) =>
     params: { requesterKey },
   });
 
-// ✅ single request by id (for Reply page)
+// single request by id (for Reply page)
 export const getHelpRequestById = (id) => API.get(`/api/help/${id}`);
 
-// ✅ admin reply (needs backend route PATCH /api/help/:id/reply)
+// admin reply (needs backend route PATCH /api/help/:id/reply)
 export const replyToHelpRequest = (id, adminReply) =>
   API.patch(`/api/help/${id}/reply`, { adminReply });
 
-// ✅ status update (needs backend route PATCH /api/help/:id/status)
+// status update (needs backend route PATCH /api/help/:id/status)
 export const updateHelpStatus = (id, status) =>
   API.patch(`/api/help/${id}/status`, { status });

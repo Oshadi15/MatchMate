@@ -138,7 +138,7 @@
   color: #ffffff;
 }
 
-/* ✅ ONLY status colors changed */
+
 .help-board-status {
   padding: 6px 10px;
   border-radius: 999px;
@@ -166,7 +166,7 @@
   border-color: rgba(74, 222, 128, 0.35);
 }
 
-/* ✅ top-right group */
+
 .help-board-top-right {
   display: flex;
   align-items: center;
@@ -175,7 +175,7 @@
   justify-content: flex-end;
 }
 
-/* ✅ SMALL Reply button */
+
 .help-board-reply-button {
   border: none;
   border-radius: 8px;
@@ -194,7 +194,7 @@
   transform: translateY(-1px);
 }
 
-/* ✅ SMALL Delete button */
+
 .help-board-delete-button {
   border: none;
   border-radius: 8px;
@@ -269,7 +269,7 @@
   }
 }
 
-/* ✅ make Reply + Delete buttons small (override) */
+
 .help-board-actions {
   display: flex;
   justify-content: flex-end;
@@ -286,7 +286,7 @@
   line-height: 1 !important;
 }
 
-/* ✅ reply color to match theme */
+
 .help-board-reply-button {
   border: none;
   background: #f59e0b;

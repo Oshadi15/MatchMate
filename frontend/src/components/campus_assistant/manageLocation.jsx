@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  getLocations,
+  createLocation,
+  updateLocation,
+  deleteLocation,
+} from "../../services/locationApi";
 import "./manageLocation.css";
 
 const initialForm = {
@@ -10,6 +16,7 @@ const initialForm = {
   nearbyLandmark: "",
   description: "",
   googleMapsLink: "",
+  image: "",
   status: "Available",
 };
 
@@ -21,54 +28,38 @@ const initialErrors = {
   nearbyLandmark: "",
   description: "",
   googleMapsLink: "",
+  image: "",
 };
-
-const initialLocations = [
-  {
-    _id: "1",
-    name: "SLIIT Car Park",
-    category: "Parking",
-    building: "Near New Building",
-    floor: "Ground Floor",
-    roomNumber: "",
-    nearbyLandmark: "Next to New Building",
-    description: "Main student parking area inside the campus.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Car+Park",
-    status: "Available",
-  },
-  {
-    _id: "2",
-    name: "Main Library",
-    category: "Library",
-    building: "Block A",
-    floor: "2",
-    roomNumber: "A-201",
-    nearbyLandmark: "Opposite New Building",
-    description: "Library for study and learning resources.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Library",
-    status: "Available",
-  },
-  {
-    _id: "3",
-    name: "Engineering Lab",
-    category: "Lab",
-    building: "Engineering Block",
-    floor: "3",
-    roomNumber: "E-305",
-    nearbyLandmark: "Near Main Library",
-    description: "Laboratory facility for engineering practical sessions.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Engineering+Lab",
-    status: "Temporarily Closed",
-  },
-];
 
 export default function ManageLocation() {
   const [formData, setFormData] = useState(initialForm);
   const [errors, setErrors] = useState(initialErrors);
-  const [locations, setLocations] = useState(initialLocations);
+  const [locations, setLocations] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [pageMessage, setPageMessage] = useState("");
 
   const textOnlyFields = ["name", "building", "nearbyLandmark"];
+
+  const loadLocations = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getLocations();
+      setLocations(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to fetch locations", error);
+      setPageMessage(
+        error?.response?.data?.message || "Failed to load locations"
+      );
+      setLocations([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadLocations();
+  }, [loadLocations]);
 
   const validateField = (name, value) => {
     const trimmedValue = value.trim();
@@ -134,6 +125,12 @@ export default function ManageLocation() {
         }
         return "";
 
+      case "image":
+        if (trimmedValue && !/^https?:\/\/.+/i.test(trimmedValue)) {
+          return "Enter a valid image URL";
+        }
+        return "";
+
       default:
         return "";
     }
@@ -194,10 +191,12 @@ export default function ManageLocation() {
     setFormData(initialForm);
     setErrors(initialErrors);
     setEditingId(null);
+    setPageMessage("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setPageMessage("");
 
     if (!validateForm()) return;
 
@@ -210,25 +209,27 @@ export default function ManageLocation() {
       nearbyLandmark: formData.nearbyLandmark.trim(),
       description: formData.description.trim(),
       googleMapsLink: formData.googleMapsLink.trim(),
+      image: formData.image.trim(),
       status: formData.status.trim(),
     };
 
-    if (editingId) {
-      const updatedLocations = locations.map((location) =>
-        location._id === editingId ? { ...location, ...cleanedData } : location
-      );
-      setLocations(updatedLocations);
-      alert("Location updated successfully");
-    } else {
-      const newLocation = {
-        _id: Date.now().toString(),
-        ...cleanedData,
-      };
-      setLocations([newLocation, ...locations]);
-      alert("Location added successfully");
-    }
+    try {
+      if (editingId) {
+        await updateLocation(editingId, cleanedData);
+        setPageMessage("Location updated successfully");
+      } else {
+        await createLocation(cleanedData);
+        setPageMessage("Location added successfully");
+      }
 
-    resetForm();
+      resetForm();
+      loadLocations();
+    } catch (error) {
+      console.error("Failed to save location", error);
+      setPageMessage(
+        error?.response?.data?.message || "Failed to save location"
+      );
+    }
   };
 
   const handleEdit = (location) => {
@@ -241,21 +242,32 @@ export default function ManageLocation() {
       nearbyLandmark: location.nearbyLandmark || "",
       description: location.description || "",
       googleMapsLink: location.googleMapsLink || "",
+      image: location.image || "",
       status: location.status || "Available",
     });
 
     setErrors(initialErrors);
     setEditingId(location._id);
+    setPageMessage("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this location?");
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this location?"
+    );
     if (!confirmed) return;
 
-    const updatedLocations = locations.filter((location) => location._id !== id);
-    setLocations(updatedLocations);
-    alert("Location deleted successfully");
+    try {
+      await deleteLocation(id);
+      setPageMessage("Location deleted successfully");
+      loadLocations();
+    } catch (error) {
+      console.error("Failed to delete location", error);
+      setPageMessage(
+        error?.response?.data?.message || "Failed to delete location"
+      );
+    }
   };
 
   return (
@@ -265,6 +277,8 @@ export default function ManageLocation() {
         <p className="manage-subtitle">
           Add, edit, and remove official campus locations for students.
         </p>
+
+        {pageMessage && <p className="manage-message">{pageMessage}</p>}
 
         <form className="manage-location-form" onSubmit={handleSubmit}>
           <div className="manage-form-grid">
@@ -367,6 +381,18 @@ export default function ManageLocation() {
             </div>
 
             <div className="field-group">
+              <label>Image URL</label>
+              <input
+                type="text"
+                name="image"
+                placeholder="Paste image URL"
+                value={formData.image}
+                onChange={handleChange}
+              />
+              {errors.image && <p className="field-error">{errors.image}</p>}
+            </div>
+
+            <div className="field-group">
               <label>Status</label>
               <select
                 name="status"
@@ -407,7 +433,9 @@ export default function ManageLocation() {
         <div className="manage-location-list">
           <h2>Saved Locations</h2>
 
-          {locations.length === 0 ? (
+          {loading ? (
+            <p className="empty-text">Loading locations...</p>
+          ) : locations.length === 0 ? (
             <p className="empty-text">No locations available.</p>
           ) : (
             <div className="manage-location-grid">

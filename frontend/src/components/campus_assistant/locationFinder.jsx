@@ -1,146 +1,41 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { getLocations } from "../../services/locationApi";
 import "./locationFinder.css";
 
-import carParkImg from "../../assets/carpark.jpg";
-import newBuildingImg from "../../assets/newbuilding.jpg";
-import libraryImg from "../../assets/library.jpg";
-import labImg from "../../assets/lab.jpg";
-import officeImg from "../../assets/studentaffair.jpeg";
-import medicalCenterImg from "../../assets/medicalCenter.jpg";
-import sportsComplexImg from "../../assets/sportsComplex.jpg";
-import cafeteriaImg from "../../assets/cafeteria.jpg";
-
-
-const dummyLocations = [
-  {
-    _id: "1",
-    name: "SLIIT Car Park",
-    category: "Parking",
-    building: "Near New Building",
-    floor: "Ground Floor",
-    roomNumber: "",
-    nearbyLandmark: "Next to New Building",
-    description: "Main student parking area inside the campus.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Car+Park",
-    image: carParkImg,
-    status: "Available",
-  },
-  {
-    _id: "2",
-    name: "New Building",
-    category: "Lecture Hall",
-    building: "Main Campus",
-    floor: "1",
-    roomNumber: "NB-101",
-    nearbyLandmark: "Near SLIIT Car Park",
-    description:
-      "Main lecture building used for student lectures and academic activities.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+New+Building",
-    image: newBuildingImg,
-    status: "Available",
-  },
-  {
-    _id: "3",
-    name: "Main Library",
-    category: "Library",
-    building: "Block A",
-    floor: "2",
-    roomNumber: "A-201",
-    nearbyLandmark: "Opposite New Building",
-    description: "Library for study, books, references, and learning resources.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Library",
-    image: libraryImg,
-    status: "Available",
-  },
-  {
-    _id: "4",
-    name: "Engineering Lab",
-    category: "Lab",
-    building: "Engineering Block",
-    floor: "3",
-    roomNumber: "E-305",
-    nearbyLandmark: "Near Main Library",
-    description: "Laboratory facility for engineering practical sessions.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Engineering+Lab",
-    image: labImg,
-    status: "Temporarily Closed",
-  },
-  {
-    _id: "5",
-    name: "Student Affairs Office",
-    category: "Office",
-    building: "Admin Block",
-    floor: "1",
-    roomNumber: "ADM-103",
-    nearbyLandmark: "Near Main Entrance",
-    description:
-      "Office for student support, academic letters, and campus-related inquiries.",
-    googleMapsLink:
-      "https://www.google.com/maps/search/SLIIT+Student+Affairs+Office",
-    image: officeImg,
-    status: "Available",
-  },
-  {
-    _id: "6",
-    name: "Campus Cafeteria",
-    category: "Cafeteria",
-    building: "Food Court Area",
-    floor: "Ground Floor",
-    roomNumber: "",
-    nearbyLandmark: "Near New Building",
-    description: "Main campus cafeteria for meals, snacks, and refreshments.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Cafeteria",
-    image: cafeteriaImg,
-    status: "Available",
-  },
-  {
-    _id: "7",
-    name: "Medical Center",
-    category: "Medical",
-    building: "Wellness Block",
-    floor: "Ground Floor",
-    roomNumber: "MC-01",
-    nearbyLandmark: "Near Sports Complex",
-    description: "Medical support center for students and staff.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Medical+Center",
-    image: medicalCenterImg,
-    status: "Available",
-  },
-  {
-    _id: "8",
-    name: "Sports Complex",
-    category: "Sports",
-    building: "Sports Zone",
-    floor: "Ground Floor",
-    roomNumber: "",
-    nearbyLandmark: "Near Medical Center",
-    description:
-      "Campus sports area for practices, matches, and student activities.",
-    googleMapsLink: "https://www.google.com/maps/search/SLIIT+Sports+Complex",
-    image: sportsComplexImg,
-    status: "Available",
-  },
-];
-
 export default function LocationFinder() {
+  const [locations, setLocations] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const locations = useMemo(() => {
-    return dummyLocations.filter((location) => {
-      const matchesSearch =
-        location.name.toLowerCase().includes(search.toLowerCase()) ||
-        location.building.toLowerCase().includes(search.toLowerCase()) ||
-        location.category.toLowerCase().includes(search.toLowerCase());
+  const loadLocations = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-      const matchesCategory = category ? location.category === category : true;
+      const params = {};
+      if (search.trim()) params.search = search.trim();
+      if (category) params.category = category;
 
-      return matchesSearch && matchesCategory;
-    });
+      const data = await getLocations(params);
+      setLocations(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to fetch locations", err);
+      setError(err?.response?.data?.message || "Failed to fetch locations");
+      setLocations([]);
+    } finally {
+      setLoading(false);
+    }
   }, [search, category]);
+
+  useEffect(() => {
+    loadLocations();
+  }, [loadLocations]);
 
   const handleSearch = (e) => {
     e.preventDefault();
+    loadLocations();
   };
 
   return (
@@ -159,7 +54,10 @@ export default function LocationFinder() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
             <option value="">All Categories</option>
             <option value="Lecture Hall">Lecture Hall</option>
             <option value="Lab">Lab</option>
@@ -176,8 +74,12 @@ export default function LocationFinder() {
           <button type="submit">Search</button>
         </form>
 
-        {locations.length === 0 ? (
-          <p>No matching locations found.</p>
+        {loading ? (
+          <p className="finder-message success">Loading locations...</p>
+        ) : error ? (
+          <p className="finder-message error">{error}</p>
+        ) : locations.length === 0 ? (
+          <p className="finder-message success">No matching locations found.</p>
         ) : (
           <div className="finder-grid">
             {locations.map((location) => (

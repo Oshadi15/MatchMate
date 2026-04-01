@@ -65,18 +65,18 @@
   overflow: hidden;
   cursor: pointer;
 
-  /* ✅ base shadow */
+  /* base shadow */
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 
-  /* ✅ remove default button focus/blue */
+ 
   outline: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ✅ keep hover movement only */
+
 .ca-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
@@ -204,7 +204,7 @@
   opacity: 0.7;
 }
 
-/* ✅ FINAL OVERRIDE: FORCE REMOVE ANY BLUE FOCUS / BOOTSTRAP GLOW */
+
 .ca-card,
 .ca-card:hover,
 .ca-card:active,
@@ -227,7 +227,7 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* remove blue text selection highlight inside cards */
+
 .ca-card ::selection {
   background: transparent;
 }
