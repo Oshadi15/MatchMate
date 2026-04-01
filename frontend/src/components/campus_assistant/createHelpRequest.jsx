@@ -2,14 +2,24 @@ import React, { useState } from "react";
 import { createHelpRequest } from "../../services/helpApi";
 import "./createHelpRequest.css";
 
+const initialForm = {
+  supportType: "",
+  title: "",
+  description: "",
+  priority: "MEDIUM",
+  document: null,
+};
+
+const initialErrors = {
+  supportType: "",
+  title: "",
+  description: "",
+  document: "",
+};
+
 export default function CreateHelpRequest() {
-  const [form, setForm] = useState({
-    supportType: "",
-    title: "",
-    description: "",
-    priority: "MEDIUM",
-    document: null,
-  });
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState(initialErrors);
 
   const firstNonSpaceIsLetter = (value) => {
     const trimmedStart = value.replace(/^\s+/, "");
@@ -17,18 +27,69 @@ export default function CreateHelpRequest() {
     return /^[A-Za-z]/.test(trimmedStart);
   };
 
+  const validateField = (name, value, file = null) => {
+    if (name === "supportType") {
+      if (!value.trim()) return "Category is required";
+      return "";
+    }
+
+    if (name === "title") {
+      const titleTrimmed = value.trim();
+
+      if (!titleTrimmed) return "Request subject is required";
+      if (titleTrimmed.length < 5) {
+        return "Request subject must be at least 5 characters";
+      }
+      if (!/^[A-Za-z]/.test(titleTrimmed)) {
+        return "Request subject must start with a letter";
+      }
+      return "";
+    }
+
+    if (name === "description") {
+      const descTrimmed = value.trim();
+
+      if (!descTrimmed) return "Description is required";
+      if (descTrimmed.length < 10) {
+        return "Description must be at least 10 characters";
+      }
+      if (!/^[A-Za-z]/.test(descTrimmed)) {
+        return "Description must start with a letter";
+      }
+      return "";
+    }
+
+    if (name === "document") {
+      if (file && file.size > 10 * 1024 * 1024) {
+        return "Document size must be less than 10 MB";
+      }
+      return "";
+    }
+
+    return "";
+  };
+
   const onChange = (e) => {
     const { name, value, type, files } = e.target;
 
     if (type === "file") {
       const file = files && files[0] ? files[0] : null;
+
       setForm((prev) => ({ ...prev, document: file }));
+      setErrors((prev) => ({
+        ...prev,
+        document: validateField("document", "", file),
+      }));
       return;
     }
 
     if (type !== "checkbox" && (name === "title" || name === "description")) {
       if (value.length === 0) {
         setForm((prev) => ({ ...prev, [name]: "" }));
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateField(name, ""),
+        }));
         return;
       }
 
@@ -41,37 +102,28 @@ export default function CreateHelpRequest() {
       ...prev,
       [name]: value,
     }));
+
+    if (Object.prototype.hasOwnProperty.call(initialErrors, name)) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validateField(name, value),
+      }));
+    }
   };
 
   const setPriority = (p) => setForm((prev) => ({ ...prev, priority: p }));
 
   const validate = () => {
-    const titleTrimmed = form.title.trim();
-    const descTrimmed = form.description.trim();
+    const newErrors = {
+      supportType: validateField("supportType", form.supportType),
+      title: validateField("title", form.title),
+      description: validateField("description", form.description),
+      document: validateField("document", "", form.document),
+    };
 
-    if (!form.supportType) return "Category is required";
+    setErrors(newErrors);
 
-    if (titleTrimmed.length < 5) {
-      return "Request subject must be at least 5 characters";
-    }
-
-    if (!/^[A-Za-z]/.test(titleTrimmed)) {
-      return "Request subject must start with a letter (no numbers/symbols at the beginning)";
-    }
-
-    if (descTrimmed.length < 10) {
-      return "Description must be at least 10 characters";
-    }
-
-    if (!/^[A-Za-z]/.test(descTrimmed)) {
-      return "Description must start with a letter (no numbers/symbols at the beginning)";
-    }
-
-    if (form.document && form.document.size > 10 * 1024 * 1024) {
-      return "Document size must be less than 10 MB";
-    }
-
-    return null;
+    return !Object.values(newErrors).some((error) => error);
   };
 
   const getRequesterKey = () => {
@@ -90,9 +142,8 @@ export default function CreateHelpRequest() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const err = validate();
-    if (err) {
-      alert(err);
+    const isValid = validate();
+    if (!isValid) {
       return;
     }
 
@@ -100,8 +151,8 @@ export default function CreateHelpRequest() {
       const formData = new FormData();
       formData.append("requesterKey", getRequesterKey());
       formData.append("supportType", form.supportType);
-      formData.append("title", form.title);
-      formData.append("description", form.description);
+      formData.append("title", form.title.trim());
+      formData.append("description", form.description.trim());
       formData.append("priority", form.priority);
 
       if (form.document) {
@@ -111,13 +162,8 @@ export default function CreateHelpRequest() {
       await createHelpRequest(formData);
       alert("Support request submitted!");
 
-      setForm({
-        supportType: "",
-        title: "",
-        description: "",
-        priority: "MEDIUM",
-        document: null,
-      });
+      setForm(initialForm);
+      setErrors(initialErrors);
 
       const fileInput = document.getElementById("help-request-document");
       if (fileInput) fileInput.value = "";
@@ -154,6 +200,9 @@ export default function CreateHelpRequest() {
               <option value="CLUBS_EVENTS">Clubs & Events</option>
               <option value="OTHER">Other</option>
             </select>
+            {errors.supportType && (
+              <p className="field-error">{errors.supportType}</p>
+            )}
           </div>
 
           <div className="field">
@@ -166,6 +215,7 @@ export default function CreateHelpRequest() {
               value={form.title}
               onChange={onChange}
             />
+            {errors.title && <p className="field-error">{errors.title}</p>}
           </div>
 
           <div className="field">
@@ -179,6 +229,9 @@ export default function CreateHelpRequest() {
               value={form.description}
               onChange={onChange}
             />
+            {errors.description && (
+              <p className="field-error">{errors.description}</p>
+            )}
           </div>
 
           <div className="field">
@@ -219,6 +272,10 @@ export default function CreateHelpRequest() {
               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
               onChange={onChange}
             />
+
+            {errors.document && (
+              <p className="field-error">{errors.document}</p>
+            )}
 
             {form.document && (
               <div className="file-list">

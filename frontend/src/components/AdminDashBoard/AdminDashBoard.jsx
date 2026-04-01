@@ -62,7 +62,7 @@ function AdminDashboard() {
           {/* ================= ROW 1 ================= */}
           <div className="card-row">
 
-            <Link to={`/displaystock/${stockId}`} className="card">
+            <Link to="/manage-location" className="card">
               <FaWarehouse size={40} />
               <h3>Campus Locations</h3>
               <p>View campus locations</p>

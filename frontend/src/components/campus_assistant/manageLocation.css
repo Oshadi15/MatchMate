@@ -41,6 +41,25 @@
   margin-bottom: 14px;
 }
 
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-group label {
+  margin-bottom: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.required-star {
+  color: #ff4d4f;
+  margin-left: 4px;
+  font-weight: 800;
+  font-size: 13px;
+}
+
 .manage-location-form input,
 .manage-location-form select,
 .manage-location-form textarea {
@@ -74,6 +93,18 @@
 .manage-location-form textarea {
   resize: vertical;
   min-height: 100px;
+}
+
+.full-width-field {
+  margin-top: 6px;
+}
+
+.field-error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #ff7b7b;
+  line-height: 1.4;
+  font-weight: 600;
 }
 
 .manage-form-actions {
@@ -222,5 +253,9 @@
 
   .manage-location-container h1 {
     font-size: 32px;
+  }
+
+  .manage-form-grid {
+    grid-template-columns: 1fr;
   }
 }

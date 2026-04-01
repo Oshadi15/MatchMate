@@ -13,6 +13,16 @@ const initialForm = {
   status: "Available",
 };
 
+const initialErrors = {
+  name: "",
+  building: "",
+  floor: "",
+  roomNumber: "",
+  nearbyLandmark: "",
+  description: "",
+  googleMapsLink: "",
+};
+
 const initialLocations = [
   {
     _id: "1",
@@ -54,34 +64,165 @@ const initialLocations = [
 
 export default function ManageLocation() {
   const [formData, setFormData] = useState(initialForm);
+  const [errors, setErrors] = useState(initialErrors);
   const [locations, setLocations] = useState(initialLocations);
   const [editingId, setEditingId] = useState(null);
 
+  const textOnlyFields = ["name", "building", "nearbyLandmark"];
+
+  const validateField = (name, value) => {
+    const trimmedValue = value.trim();
+
+    switch (name) {
+      case "name":
+        if (!trimmedValue) return "Location name is required";
+        if (trimmedValue.length < 3) {
+          return "Location name must be at least 3 characters";
+        }
+        if (!/^[A-Za-z\s]+$/.test(trimmedValue)) {
+          return "Location name can only contain letters and spaces";
+        }
+        return "";
+
+      case "building":
+        if (!trimmedValue) return "Building is required";
+        if (trimmedValue.length < 2) {
+          return "Building must be at least 2 characters";
+        }
+        if (!/^[A-Za-z\s]+$/.test(trimmedValue)) {
+          return "Building can only contain letters and spaces";
+        }
+        return "";
+
+      case "floor":
+        if (!trimmedValue) return "Floor is required";
+        if (!/^[A-Za-z0-9\s-]+$/.test(trimmedValue)) {
+          return "Floor can only contain letters, numbers, spaces and hyphens";
+        }
+        return "";
+
+      case "roomNumber":
+        if (trimmedValue && !/^[A-Za-z0-9-]+$/.test(trimmedValue)) {
+          return "Room number can only contain letters, numbers and hyphens";
+        }
+        return "";
+
+      case "nearbyLandmark":
+        if (trimmedValue && trimmedValue.length < 3) {
+          return "Nearby landmark must be at least 3 characters";
+        }
+        if (trimmedValue && !/^[A-Za-z\s]+$/.test(trimmedValue)) {
+          return "Nearby landmark can only contain letters and spaces";
+        }
+        return "";
+
+      case "description":
+        if (!trimmedValue) return "Description is required";
+        if (trimmedValue.length < 10) {
+          return "Description must be at least 10 characters";
+        }
+        return "";
+
+      case "googleMapsLink":
+        if (!trimmedValue) return "Google Maps link is required";
+        if (
+          !/^https?:\/\/(www\.)?(google\.com\/maps|www\.google\.com\/maps\/search|goo\.gl\/maps|maps\.app\.goo\.gl)/i.test(
+            trimmedValue
+          )
+        ) {
+          return "Enter a valid Google Maps link";
+        }
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    Object.keys(initialErrors).forEach((key) => {
+      newErrors[key] = validateField(key, formData[key] || "");
+    });
+
+    const duplicateLocation = locations.find((location) => {
+      const sameName =
+        location.name.trim().toLowerCase() === formData.name.trim().toLowerCase();
+      const differentId = location._id !== editingId;
+      return sameName && differentId;
+    });
+
+    if (duplicateLocation) {
+      newErrors.name = "This location name already exists";
+    }
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    let updatedValue = value;
+
+    if (textOnlyFields.includes(name)) {
+      updatedValue = value.replace(/[^A-Za-z\s]/g, "");
+    }
+
+    if (name === "roomNumber") {
+      updatedValue = value.replace(/[^A-Za-z0-9-]/g, "");
+    }
+
+    if (name === "floor") {
+      updatedValue = value.replace(/[^A-Za-z0-9\s-]/g, "");
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: updatedValue,
     }));
+
+    if (Object.prototype.hasOwnProperty.call(initialErrors, name)) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validateField(name, updatedValue),
+      }));
+    }
   };
 
   const resetForm = () => {
     setFormData(initialForm);
+    setErrors(initialErrors);
     setEditingId(null);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!validateForm()) return;
+
+    const cleanedData = {
+      name: formData.name.trim(),
+      category: formData.category.trim(),
+      building: formData.building.trim(),
+      floor: formData.floor.trim(),
+      roomNumber: formData.roomNumber.trim(),
+      nearbyLandmark: formData.nearbyLandmark.trim(),
+      description: formData.description.trim(),
+      googleMapsLink: formData.googleMapsLink.trim(),
+      status: formData.status.trim(),
+    };
+
     if (editingId) {
       const updatedLocations = locations.map((location) =>
-        location._id === editingId ? { ...location, ...formData } : location
+        location._id === editingId ? { ...location, ...cleanedData } : location
       );
       setLocations(updatedLocations);
       alert("Location updated successfully");
     } else {
       const newLocation = {
         _id: Date.now().toString(),
-        ...formData,
+        ...cleanedData,
       };
       setLocations([newLocation, ...locations]);
       alert("Location added successfully");
@@ -103,6 +244,7 @@ export default function ManageLocation() {
       status: location.status || "Available",
     });
 
+    setErrors(initialErrors);
     setEditingId(location._id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -126,93 +268,130 @@ export default function ManageLocation() {
 
         <form className="manage-location-form" onSubmit={handleSubmit}>
           <div className="manage-form-grid">
-            <input
-              type="text"
-              name="name"
-              placeholder="Location Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+            <div className="field-group">
+              <label>Location Name</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter location name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <p className="field-error">{errors.name}</p>}
+            </div>
 
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="Lecture Hall">Lecture Hall</option>
-              <option value="Lab">Lab</option>
-              <option value="Library">Library</option>
-              <option value="Office">Office</option>
-              <option value="Cafeteria">Cafeteria</option>
-              <option value="Parking">Parking</option>
-              <option value="Medical">Medical</option>
-              <option value="Sports">Sports</option>
-              <option value="Washroom">Washroom</option>
-              <option value="Other">Other</option>
-            </select>
+            <div className="field-group">
+              <label>Category</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+              >
+                <option value="Lecture Hall">Lecture Hall</option>
+                <option value="Lab">Lab</option>
+                <option value="Library">Library</option>
+                <option value="Office">Office</option>
+                <option value="Cafeteria">Cafeteria</option>
+                <option value="Parking">Parking</option>
+                <option value="Medical">Medical</option>
+                <option value="Sports">Sports</option>
+                <option value="Washroom">Washroom</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-            <input
-              type="text"
-              name="building"
-              placeholder="Building"
-              value={formData.building}
-              onChange={handleChange}
-              required
-            />
+            <div className="field-group">
+              <label>Building</label>
+              <input
+                type="text"
+                name="building"
+                placeholder="Enter building name"
+                value={formData.building}
+                onChange={handleChange}
+              />
+              {errors.building && <p className="field-error">{errors.building}</p>}
+            </div>
 
-            <input
-              type="text"
-              name="floor"
-              placeholder="Floor"
-              value={formData.floor}
-              onChange={handleChange}
-              required
-            />
+            <div className="field-group">
+              <label>Floor</label>
+              <input
+                type="text"
+                name="floor"
+                placeholder="Enter floor"
+                value={formData.floor}
+                onChange={handleChange}
+              />
+              {errors.floor && <p className="field-error">{errors.floor}</p>}
+            </div>
 
-            <input
-              type="text"
-              name="roomNumber"
-              placeholder="Room Number"
-              value={formData.roomNumber}
-              onChange={handleChange}
-            />
+            <div className="field-group">
+              <label>Room Number</label>
+              <input
+                type="text"
+                name="roomNumber"
+                placeholder="Enter room number"
+                value={formData.roomNumber}
+                onChange={handleChange}
+              />
+              {errors.roomNumber && (
+                <p className="field-error">{errors.roomNumber}</p>
+              )}
+            </div>
 
-            <input
-              type="text"
-              name="nearbyLandmark"
-              placeholder="Nearby Landmark"
-              value={formData.nearbyLandmark}
-              onChange={handleChange}
-            />
+            <div className="field-group">
+              <label>Nearby Landmark</label>
+              <input
+                type="text"
+                name="nearbyLandmark"
+                placeholder="Enter nearby landmark"
+                value={formData.nearbyLandmark}
+                onChange={handleChange}
+              />
+              {errors.nearbyLandmark && (
+                <p className="field-error">{errors.nearbyLandmark}</p>
+              )}
+            </div>
 
-            <input
-              type="url"
-              name="googleMapsLink"
-              placeholder="Google Maps Link"
-              value={formData.googleMapsLink}
-              onChange={handleChange}
-              required
-            />
+            <div className="field-group">
+              <label>Google Maps Link</label>
+              <input
+                type="text"
+                name="googleMapsLink"
+                placeholder="Paste Google Maps link"
+                value={formData.googleMapsLink}
+                onChange={handleChange}
+              />
+              {errors.googleMapsLink && (
+                <p className="field-error">{errors.googleMapsLink}</p>
+              )}
+            </div>
 
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="Available">Available</option>
-              <option value="Temporarily Closed">Temporarily Closed</option>
-            </select>
+            <div className="field-group">
+              <label>Status</label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+              >
+                <option value="Available">Available</option>
+                <option value="Temporarily Closed">Temporarily Closed</option>
+              </select>
+            </div>
           </div>
 
-          <textarea
-            name="description"
-            placeholder="Description"
-            rows="4"
-            value={formData.description}
-            onChange={handleChange}
-          />
+          <div className="field-group full-width-field">
+            <label>Description</label>
+            <textarea
+              name="description"
+              placeholder="Enter location description"
+              rows="4"
+              value={formData.description}
+              onChange={handleChange}
+            />
+            {errors.description && (
+              <p className="field-error">{errors.description}</p>
+            )}
+          </div>
 
           <div className="manage-form-actions">
             <button type="submit" className="save-btn">
