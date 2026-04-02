@@ -98,7 +98,7 @@ function AdminDashboard() {
               <p>Check daily income</p>
             </Link>
 
-            <Link to="/fuel-levels" className="card">
+            <Link to="/adminmatches" className="card">
               <FaOilCan size={40} />
               <h3>Smart Machine</h3>
               <p>Monitor machine status</p>
