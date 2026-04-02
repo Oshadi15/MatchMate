@@ -65,7 +65,7 @@ function AdminDashboard() {
             <Link to="/manage-location" className="card">
               <FaWarehouse size={40} />
               <h3>Campus Locations</h3>
-              <p>View campus locations</p>
+              <p>Manage campus locations</p>
             </Link>
 
             {/* ✅ LOST & FOUND MANAGEMENT */}
