@@ -31,7 +31,7 @@ body {
   text-align: center;
   margin-bottom: 25px;
   font-weight: 600;
-  color: #ffffff;
+  letter-spacing: 0.5px;
 }
 
 /* ===============================
@@ -65,13 +65,20 @@ form textarea {
   box-sizing: border-box;
 }
 
-/* ✅ FIX: dropdown options visible */
-form select option {
-  background-color: #1b263b; /* dark background */
-  color: #ffffff; /* white text */
+/* Placeholder */
+form input::placeholder,
+form textarea::placeholder {
+  color: #9aa7b6;
 }
 
-/* Fix Windows Chrome dropdown rendering */
+/* ===============================
+   SELECT DROPDOWN FIX
+================================*/
+form select option {
+  background-color: #1b263b;
+  color: #ffffff;
+}
+
 form select {
   appearance: none;
   -webkit-appearance: none;
@@ -84,13 +91,9 @@ form select {
   cursor: pointer;
 }
 
-/* Placeholder color */
-form input::placeholder,
-form textarea::placeholder {
-  color: #9aa7b6;
-}
-
-/* Focus glow */
+/* ===============================
+   FOCUS EFFECT
+================================*/
 form input:focus,
 form select:focus,
 form textarea:focus {
@@ -114,19 +117,24 @@ input[type="file"] {
   background: rgba(255, 255, 255, 0.04);
   padding: 10px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 /* ===============================
-   ERROR MESSAGE
+   ERROR MESSAGE (VALIDATION)
 ================================*/
 .error-text {
   color: #ff6b6b;
   font-size: 13px;
   margin-top: 6px;
+  margin-bottom: 2px;
+  font-weight: 500;
 }
 
+/* red border when invalid */
 .input-error {
   border-color: #ff6b6b !important;
+  background: rgba(255, 80, 80, 0.08);
 }
 
 /* ===============================
@@ -145,22 +153,27 @@ button {
 
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
+  letter-spacing: 0.5px;
 
+  cursor: pointer;
   transition: all 0.25s ease;
 }
 
+/* hover animation */
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45);
 }
 
+/* click effect */
 button:active {
   transform: scale(0.97);
 }
 
+/* disabled state */
 button:disabled {
   background: #555;
+  color: #ccc;
   cursor: not-allowed;
   box-shadow: none;
 }
