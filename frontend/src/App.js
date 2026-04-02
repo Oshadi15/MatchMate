@@ -34,6 +34,10 @@ import StudentSignup from "./components/UserManagement/StudentSignup";
 import LostFoundManagement from "./components/AdminDashBoard/LostFoundManagement";
 import FeedbackInsert from "./components/FeedbackInsert/FeedbackInsert";
 import FeedbackDisplay from "./components/FeedbackDisplay/FeedbackDisplay";
+import UserMatches from "./components/Smart_Matching/UserMatches";
+import AdminMatchPanel from "./components/Smart_Matching/AdminMatchPanel";
+import Logout from "./components/Logout/Logout";
+
 
 function App() {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -72,6 +76,9 @@ function App() {
         <Route path="/feedback" element={<FeedbackDisplay />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/adminbrowse" element={<AdminBrowse />} />
+         <Route path='/usermatches' element={<Layout><UserMatches/></Layout>} />
+        <Route path='/adminmatches' element={<AdminMatchPanel/>} />
+        <Route path="/logout" element={<Logout />} />
 
       </Routes>
     </BrowserRouter>
