@@ -1,0 +1,115 @@
+/* ==============================
+   ADMIN LOST & FOUND PAGE
+============================== */
+
+.admin-container {
+  padding: 25px;
+  color: white;
+  width: 100%;
+}
+
+/* Page Title */
+.admin-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ==============================
+   TABLE STYLING
+============================== */
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+}
+
+/* Table Header */
+.admin-table th {
+  background: #1e293b;
+  padding: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Table Cells */
+.admin-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #1e293b;
+}
+
+/* ==============================
+   BUTTON STYLES
+============================== */
+
+/* Edit Button */
+.edit-btn {
+  background: orange;
+  border: none;
+  padding: 6px 12px;
+  margin-right: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+
+/* Delete Button */
+.delete-btn {
+  background: #ef4444;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Approve Button */
+.approve-btn {
+  background: #22c55e;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+
+/* Reject Button */
+.reject-btn {
+  background: #ef4444;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+
+/* ==============================
+   HOVER EFFECTS (Professional UI)
+============================== */
+
+.edit-btn:hover,
+.delete-btn:hover,
+.approve-btn:hover,
+.reject-btn:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+  transition: 0.2s ease;
+}
+
+/* ==============================
+   RESPONSIVE TABLE
+============================== */
+
+@media (max-width: 768px) {
+  .admin-table th,
+  .admin-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}

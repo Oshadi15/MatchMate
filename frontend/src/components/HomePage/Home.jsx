@@ -12,7 +12,7 @@ import feature1 from "../../assets/f6.jpg";
 import feature2 from "../../assets/f7.jpeg";
 import feature3 from "../../assets/f9.webp";
 
-import logoImg from "../../assets/f3.png";
+
 
 const heroImages = [hero1, hero2, hero3];
 
@@ -46,38 +46,7 @@ export default function Home() {
 
       <div className="home-page">
 
-        {/* Navbar */}
-        <header className="home-nav">
-          <div className="brand" onClick={() => navigate("/")}>
-            <img src={logoImg} alt="MatchMate Logo" className="brand-logo" />
-            <div className="brand-text">
-              <h3>MatchMate</h3>
-              <p>Lost & Found System</p>
-            </div>
-          </div>
-
-          <nav className="nav-links">
-            <Link to="/" className="nav-link active">Home</Link>
-            <Link to="/report" className="nav-link">Lost & Found</Link>
-            <Link to="/assistant" className="nav-link">Campus Assistant</Link>
-            <Link to="/contact" className="nav-link">Contact</Link>
-          </nav>
-
-          <div className="nav-actions">
-            <button className="nav-btn ghost" onClick={() => navigate("/login")}>
-              Login
-            </button>
-
-            {/* ✅ FIXED HERE */}
-            <button className="nav-btn primary" onClick={() => navigate("/signup")}>
-              Register
-            </button>
-
-            <button className="nav-btn primary" onClick={() => navigate("/adminlogin")}>
-              Admin Login
-            </button>
-          </div>
-        </header>
+        
 
         {/* Hero Section */}
         <section className="hero-section">
@@ -89,7 +58,7 @@ export default function Home() {
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Lost And Found System</h1>
+                  <h1>Lost And Found Management System</h1>
                   <p>A smart platform to manage lost and found items.</p>
                 </div>
               </div>
@@ -175,7 +144,7 @@ export default function Home() {
                   Browse Lost & Found items
                 </button>
 
-                <button onClick={() => navigate("/assistant")} className="quick-btn">
+                <button onClick={() => navigate("/campus-assistant")} className="quick-btn">
                   Campus Assistant
                 </button>
 

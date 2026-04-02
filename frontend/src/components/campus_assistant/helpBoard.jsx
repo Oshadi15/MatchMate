@@ -42,8 +42,7 @@ export default function HelpBoard() {
     }
   };
 
-  // ✅ NEW: Reply button action (for now just shows a message)
-    const handleReply = (item) => {
+  const handleReply = (item) => {
     navigate(`/help/reply/${item._id}`);
   };
 
@@ -85,10 +84,6 @@ export default function HelpBoard() {
             <option value="CLUBS_EVENTS">CLUBS & EVENTS</option>
             <option value="OTHER">OTHER</option>
           </select>
-
-          <button className="help-board-filter-button" onClick={load}>
-            Filter
-          </button>
         </div>
 
         {loading ? (
@@ -101,7 +96,19 @@ export default function HelpBoard() {
               <div key={x._id} className="help-board-card">
                 <div className="help-board-card-top">
                   <h3 className="help-board-title">{x.title}</h3>
-                  <span className="help-board-status">{x.status}</span>
+                  <span
+                    className={`help-board-status ${
+                      x.status === "OPEN"
+                        ? "open"
+                        : x.status === "IN_PROGRESS"
+                        ? "progress"
+                        : x.status === "RESOLVED"
+                        ? "resolved"
+                        : ""
+                    }`}
+                  >
+                    {x.status}
+                  </span>
                 </div>
 
                 <p className="help-board-meta">
@@ -122,7 +129,6 @@ export default function HelpBoard() {
                 </div>
 
                 <div className="help-board-actions">
-                  {/* ✅ NEW Reply button */}
                   <button
                     className="help-board-reply-button"
                     onClick={() => handleReply(x)}

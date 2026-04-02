@@ -1,9 +1,16 @@
 const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
+
 // CREATE
 exports.createHelpRequest = async (req, res) => {
   try {
-    const item = await HelpRequest.create(req.body);
+    const newHelpRequest = {
+      ...req.body,
+      document: req.file ? `/uploads/${req.file.filename}` : "",
+    };
+
+    const item = await HelpRequest.create(newHelpRequest);
+
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({
@@ -19,7 +26,6 @@ exports.getHelpRequests = async (req, res) => {
     const { status, supportType, q } = req.query;
 
     const filter = {};
-
     if (status) filter.status = status;
     if (supportType) filter.supportType = supportType;
 
@@ -40,15 +46,11 @@ exports.getHelpRequests = async (req, res) => {
   }
 };
 
-// ✅ NEW: GET ONE BY ID (for Reply page)
+// GET ONE BY ID
 exports.getHelpRequestById = async (req, res) => {
   try {
     const item = await HelpRequest.findById(req.params.id);
-
-    if (!item) {
-      return res.status(404).json({ message: "Request not found" });
-    }
-
+    if (!item) return res.status(404).json({ message: "Request not found" });
     res.json(item);
   } catch (error) {
     res.status(500).json({
@@ -75,6 +77,59 @@ exports.getMyHelpRequests = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to fetch student requests",
+      error: error.message,
+    });
+  }
+};
+
+// REPLY (ADMIN)
+exports.replyToHelpRequest = async (req, res) => {
+  try {
+    const { adminReply } = req.body;
+
+    if (!adminReply || adminReply.trim().length < 2) {
+      return res.status(400).json({ message: "adminReply is required" });
+    }
+
+    const updated = await HelpRequest.findByIdAndUpdate(
+      req.params.id,
+      { adminReply: adminReply.trim() },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Request not found" });
+
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({
+      message: "Reply failed",
+      error: error.message,
+    });
+  }
+};
+
+// STATUS UPDATE (ADMIN)
+exports.updateHelpStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const allowed = ["OPEN", "IN_PROGRESS", "RESOLVED"];
+
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const updated = await HelpRequest.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Request not found" });
+
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({
+      message: "Status update failed",
       error: error.message,
     });
   }
