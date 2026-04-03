@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import API from '../../services/api';
 import './AdminMatchPanel.css';
 import { useNavigate } from 'react-router-dom';
+import AdminLayout from '../AdminDashBoard/AdminLayout';
 
 function clamp01(n) {
   if (!Number.isFinite(n)) return null;
@@ -187,8 +188,12 @@ const AdminMatchPanel = () => {
   }, [fetchMatches, isAdmin, navigate]);
 
   return (
-    <div className="admin-panel">
-      <div className="admin-header">
+    <AdminLayout
+      title="Smart Matching"
+      subtitle="Run scoring and manage match results"
+    >
+      <div className="admin-panel">
+        <div className="admin-header">
         <div className="admin-header-left">
           <div className="admin-header-badge">🧠</div>
           <div className="admin-header-text">
@@ -424,7 +429,8 @@ const AdminMatchPanel = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 

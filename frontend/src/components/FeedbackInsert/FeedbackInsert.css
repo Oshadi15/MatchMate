@@ -1,79 +1,61 @@
 .feedback-page {
-  min-height: 100vh;
-  background: rgba(5, 8, 32, 0.9);
-  background-size: cover;
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.feedback-navbar {
-  width: 100%;
-  height: 70px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(5, 8, 32, 0.9);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 50px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.feedback-navbar .nav-title {
-  font-size: 1.5rem;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.feedback-navbar .nav-links a {
-  margin-left: 25px;
-  text-decoration: none;
-  color: #f9f7f7;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.feedback-navbar .nav-links a:hover {
-  color: #007bff;
-}
-
-.feedback-logo {
-  margin-bottom: 20px;
-  width: 120px;
-  height: 120px;
-}
-
-.feedback-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
-  background: rgb(255, 255, 255);
+  padding: 26px 16px 48px;
 }
 
 .feedback-card {
-  background: rgba(30, 45, 76, 0.95);
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  width: 90%;
+  width: min(560px, 96%);
+  background: linear-gradient(180deg, rgba(15, 27, 53, 0.78), rgba(8, 14, 28, 0.62));
+  padding: 24px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--mm-shadow-md);
 }
 
-.feedback-card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 1.8rem;
-  color: #ffffff;
+.feedback-head {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.feedback-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.feedback-mark img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+.feedback-title h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--mm-ink-1);
+  display: flex;
   align-items: center;
   gap: 10px;
+  letter-spacing: -0.02em;
+}
+
+.feedback-title p {
+  margin: 6px 0 0;
+  color: var(--mm-ink-3);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .feedback-card input,
@@ -83,25 +65,38 @@
   padding: 12px 15px;
   margin-bottom: 15px;
   border-radius: 10px;
-  border: 1px solid #fbfafa;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mm-ink-1);
   outline: none;
-  font-size: 1rem;
+  font-size: 14px;
+  font-weight: 700;
   transition: all 0.3s;
 }
 
 .feedback-card input:focus,
 .feedback-card select:focus,
 .feedback-card textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: rgba(245, 164, 0, 0.45);
+  box-shadow: 0 0 0 4px rgba(245, 164, 0, 0.16);
+}
+
+.feedback-card input::placeholder,
+.feedback-card textarea::placeholder {
+  color: rgba(248, 250, 252, 0.50);
+}
+
+.feedback-card select option {
+  background-color: #0b1220;
+  color: rgba(248, 250, 252, 0.92);
 }
 
 .feedback-card button {
   width: 100%;
-  background: #007bff;
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
+  background: var(--mm-amber);
+  color: #0b1220;
+  font-size: 14px;
+  font-weight: 900;
   padding: 12px;
   border: none;
   border-radius: 10px;
@@ -110,21 +105,177 @@
 }
 
 .feedback-card button:hover {
-  background: #0056b3;
+  background: var(--mm-amber-2);
 }
 
 .status-msg {
   text-align: center;
   margin-top: 10px;
-  font-weight: 500;
-  color: green;
+  font-weight: 800;
+  color: rgba(187, 247, 208, 0.95);
+}
+
+.feedback-recent {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.feedback-recent-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.feedback-recent-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--mm-ink-1);
+  letter-spacing: -0.02em;
+}
+
+.feedback-recent-head p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mm-ink-3);
+}
+
+.feedback-recent-meta {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--mm-ink-2);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.feedback-recent-state,
+.feedback-recent-error {
+  margin-top: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--mm-ink-2);
+}
+
+.feedback-recent-error {
+  border-color: rgba(248, 113, 113, 0.30);
+  background: rgba(248, 113, 113, 0.08);
+  color: rgba(254, 226, 226, 0.95);
+}
+
+.feedback-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.fb-item {
+  position: relative;
+  padding: 12px 12px 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+}
+
+.fb-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(245, 164, 0, 0.65);
+}
+
+.fb-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fb-ident {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fb-name {
+  color: var(--mm-ink-1);
+  font-weight: 900;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fb-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(245, 164, 0, 0.12);
+  border: 1px solid rgba(245, 164, 0, 0.25);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.fb-date {
+  color: var(--mm-ink-3);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.fb-message {
+  margin-top: 10px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(248, 250, 252, 0.92);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.fb-message::before {
+  content: "\201C";
+  color: rgba(245, 164, 0, 0.75);
+  font-size: 18px;
+  font-weight: 900;
+  margin-right: 6px;
 }
 
 @media (max-width: 600px) {
-  .feedback-navbar {
-    padding: 10px 20px;
-  }
   .feedback-card {
-    padding: 30px 20px;
+    padding: 20px 16px;
+  }
+
+  .feedback-list {
+    max-height: 520px;
   }
 }

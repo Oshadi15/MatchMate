@@ -70,9 +70,6 @@ export default function Header() {
           >
             Campus Assistant
           </Link>
-          <Link to="/contact" className={`mm-nav-link ${isActive("/contact")}`}>
-            Contact
-          </Link>
         </nav>
 
         {/* Actions */}

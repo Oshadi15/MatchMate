@@ -1,6 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import "./BrowseItems.css";
+
+const getArrayFromResponse = (data, possibleKeys = []) => {
+  if (Array.isArray(data)) return data;
+
+  for (let key of possibleKeys) {
+    if (Array.isArray(data?.[key])) return data[key];
+  }
+
+  return [];
+};
 
 const BrowserItems = () => {
   const [foundItems, setFoundItems] = useState([]);
@@ -11,30 +21,7 @@ const BrowserItems = () => {
   const [searchName, setSearchName] = useState("");
   const [searchDate, setSearchDate] = useState("");
 
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
-  /* ================= CLAIM FUNCTION ================= */
-  // ✅ NEW
-  const handleClaim = (item) => {
-    alert(`Claim request sent for: ${item.itemName}`);
-    
-    // Later you can connect backend here
-    // axios.post("http://localhost:5000/api/claim", { itemId: item._id })
-  };
-
-  const getArrayFromResponse = (data, possibleKeys = []) => {
-    if (Array.isArray(data)) return data;
-
-    for (let key of possibleKeys) {
-      if (Array.isArray(data?.[key])) return data[key];
-    }
-
-    return [];
-  };
-
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -66,7 +53,22 @@ const BrowserItems = () => {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
+  /* ================= CLAIM FUNCTION ================= */
+  // ✅ NEW
+  const handleClaim = (item) => {
+    alert(`Claim request sent for: ${item.itemName}`);
+    
+    // Later you can connect backend here
+    // axios.post("http://localhost:5000/api/claim", { itemId: item._id })
   };
+
+  
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return "No date available";

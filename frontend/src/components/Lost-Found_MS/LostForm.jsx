@@ -75,7 +75,7 @@ const LostForm = () => {
         data.append(key, formData[key]);
       });
 
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:5000/api/lost",
         data,
         {
@@ -106,10 +106,11 @@ const LostForm = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="form-container">
-      <h2>Report Lost Item</h2>
+    <div className="mm-form-page">
+      <div className="form-container">
+        <h2>Report Lost Item</h2>
 
-      <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mm-form">
         {/* Item Name */}
         <label>Item Name</label>
         <input
@@ -198,10 +199,11 @@ const LostForm = () => {
         />
 
         {/* Submit */}
-        <button type="submit" disabled={dateError}>
-          Submit Lost Item
-        </button>
-      </form>
+          <button type="submit" disabled={dateError}>
+            Submit Lost Item
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
