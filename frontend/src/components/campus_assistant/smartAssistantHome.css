@@ -2,14 +2,13 @@
 
 .ca-page {
   min-height: 100vh;
-  background: #0b1220;
-  font-family: Arial, sans-serif;
+  background: var(--mm-bg);
 }
 
 .ca-header {
-  background: rgba(9, 18, 36, 0.72);
+  background: var(--mm-surface);
   backdrop-filter: blur(10px);
-  border-bottom: 3px solid #f59e0b;
+  border-bottom: 2px solid var(--mm-amber);
   padding: 18px 0;
 }
 
@@ -26,15 +25,15 @@
 
 .ca-bot {
   font-size: 44px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-sm);
   padding: 10px 12px;
 }
 
 .ca-title {
   margin: 0;
-  color: #ffffff;
+  color: var(--mm-ink-1);
   font-size: 44px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -57,21 +56,18 @@
 }
 
 .ca-card {
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--mm-border);
   padding: 0;
   text-align: left;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
+  background: var(--mm-surface-2);
+  border-radius: var(--mm-radius-md);
   overflow: hidden;
   cursor: pointer;
 
-  /* base shadow */
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--mm-shadow-md);
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
 
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-
- 
-  outline: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -79,7 +75,13 @@
 
 .ca-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.ca-card:focus-visible {
+  outline: 3px solid rgba(245, 164, 0, 0.35);
+  outline-offset: 3px;
 }
 
 .ca-card-body {
@@ -89,7 +91,7 @@
 
 .ca-card-title {
   margin: 0 0 12px 0;
-  color: #ffffff;
+  color: var(--mm-ink-1);
   font-size: 26px;
   font-weight: 800;
 }
@@ -100,12 +102,12 @@
 }
 
 .ca-card-footer {
-  background: #f59e0b;
-  color: #0b1220;
+  background: var(--mm-amber);
+  color: var(--mm-bg);
   text-align: center;
   padding: 14px 16px;
   font-weight: 800;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  border-top: 1px solid var(--mm-border);
 }
 
 .ca-card-image{
@@ -118,9 +120,9 @@
   width: 100%;
   height: 220px;
   margin-top: 12px;
-  border-radius: 14px;
+  border-radius: var(--mm-radius-sm);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--mm-border);
 }
 
 .ca-card-imageFull{
@@ -133,11 +135,11 @@
 /* --- Notes section + footer --- */
 .ca-notes{
   margin-top: 30px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 18px;
+  background: var(--mm-surface-2);
+  border-radius: var(--mm-radius-md);
   padding: 18px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: var(--mm-shadow-md);
+  border: 1px solid var(--mm-border);
 }
 
 .ca-notes-header{
@@ -152,12 +154,12 @@
   margin: 0;
   font-size: 20px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 .ca-notes-sub{
   font-size: 13px;
-  color: #cbd5e1;
+  color: var(--mm-ink-3);
 }
 
 .ca-notes-grid{
@@ -168,8 +170,8 @@
 
 .ca-note{
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 14px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-sm);
   padding: 12px;
 }
 
@@ -179,12 +181,12 @@
 
 .ca-note-title{
   font-weight: 800;
-  color: #f59e0b;
+  color: var(--mm-amber);
   margin-bottom: 6px;
 }
 
 .ca-note-text{
-  color: #e5e7eb;
+  color: var(--mm-ink-2);
   line-height: 1.5;
   font-size: 14px;
 }
@@ -192,11 +194,11 @@
 .ca-footer{
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  border-top: 1px solid var(--mm-border);
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  color: #9ca3af;
+  color: var(--mm-ink-3);
   font-size: 12px;
 }
 
@@ -204,30 +206,3 @@
   opacity: 0.7;
 }
 
-
-.ca-card,
-.ca-card:hover,
-.ca-card:active,
-.ca-card:focus,
-.ca-card:focus-visible {
-  outline: none !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.10) !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-/* keep shadow stable on focus */
-.ca-card:focus,
-.ca-card:focus-visible {
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35) !important;
-}
-
-/* keep hover shadow */
-.ca-card:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45) !important;
-}
-
-
-.ca-card ::selection {
-  background: transparent;
-}

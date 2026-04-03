@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import API from "../../services/api";
@@ -8,9 +6,6 @@ import logo from "../../assets/f3.png";
 import "./FeedbackInsert.css";
 
 function FeedbackInsertPage() {
-
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: "",
     gmail: "",
@@ -21,16 +16,81 @@ function FeedbackInsertPage() {
 
   const [status, setStatus] = useState("");
 
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [listLoading, setListLoading] = useState(true);
+  const [listError, setListError] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getCreatedAt = (fb) => {
+    if (fb?.createdAt) {
+      const d = new Date(fb.createdAt);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+
+    // Fallback: Mongo ObjectId timestamp (first 4 bytes).
+    const id = fb?._id;
+    if (typeof id === "string" && id.length >= 8) {
+      const seconds = Number.parseInt(id.slice(0, 8), 16);
+      if (Number.isFinite(seconds)) return new Date(seconds * 1000);
+    }
+
+    return null;
+  };
+
+  const formatDate = (d) => {
+    if (!d) return "";
+    try {
+      return d.toLocaleString();
+    } catch {
+      return "";
+    }
+  };
+
+  const fetchFeedbacks = useCallback(async () => {
+    setListLoading(true);
+    setListError("");
+
+    try {
+      const res = await API.get("/api/feedback/");
+      const items = Array.isArray(res.data?.feedbacks) ? res.data.feedbacks : [];
+      setFeedbacks(items);
+    } catch (e) {
+      if (e?.response?.status === 404) {
+        setFeedbacks([]);
+      } else {
+        console.error("Failed to load feedbacks:", e);
+        setListError("Failed to load recent feedback.");
+        setFeedbacks([]);
+      }
+    } finally {
+      setListLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFeedbacks();
+  }, [fetchFeedbacks]);
+
+  const sortedFeedbacks = useMemo(() => {
+    const withDates = feedbacks.map((fb) => ({ fb, d: getCreatedAt(fb) }));
+    withDates.sort((a, b) => {
+      const at = a.d ? a.d.getTime() : 0;
+      const bt = b.d ? b.d.getTime() : 0;
+      return bt - at;
+    });
+    return withDates;
+  }, [feedbacks]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await API.post("/api/feedback/", formData);  
-          setStatus("Feedback submitted successfully!");
+      await API.post("/api/feedback/", formData);
+      setStatus("Feedback submitted successfully!");
       setFormData({
         name: "",
         gmail: "",
@@ -39,11 +99,7 @@ function FeedbackInsertPage() {
         message: "",
       });
 
-       setTimeout(() => {
-        navigate("/");
-      }, 1000);
-
-
+      fetchFeedbacks();
     } catch (error) {
       console.error("Error submitting feedback:", error);
       setStatus("Failed to submit feedback.");
@@ -52,25 +108,19 @@ function FeedbackInsertPage() {
 
   return (
     <div className="feedback-page">
-      <nav className="feedback-navbar">
-        <a href="/" className="nav-title">Lost And Found System</a>
-        <div className="nav-links">
-          <a href="/">Home</a>
-          <a href="/feedback">Feedback</a>
-          <a href="/">Logout</a>
-        </div>
-      </nav>
-
-      <div className="feedback-logo">
-        <img src={logo} alt="Logo" />
-      </div>
-
-      {/* Feedback Form Card */}
       <div className="feedback-card">
-        <h2>
-          <FontAwesomeIcon icon={faCommentDots} className="text-blue-500" />
-          Submit Your Feedback
-        </h2>
+        <div className="feedback-head">
+          <div className="feedback-mark">
+            <img src={logo} alt="MatchMate" />
+          </div>
+          <div className="feedback-title">
+            <h2>
+              <FontAwesomeIcon icon={faCommentDots} />
+              Submit Your Feedback
+            </h2>
+            <p>Tell us what we can improve. We read every message.</p>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="feedback-form">
           <input
@@ -91,17 +141,12 @@ function FeedbackInsertPage() {
             required
           />
 
-          <select
-            name="section"
-            value={formData.section}
-            onChange={handleChange}
-            required
-          >
+          <select name="section" value={formData.section} onChange={handleChange} required>
             <option value="">Select Year</option>
-            <option value=" Section">1st Year</option>
-            <option value=" Section">2nd Year</option>
-             <option value=" Section">3rd Year</option>
-              <option value=" Section">4th Year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
           </select>
 
           <input
@@ -126,6 +171,45 @@ function FeedbackInsertPage() {
         </form>
 
         {status && <p className="status-msg">{status}</p>}
+
+        <div className="feedback-recent">
+          <div className="feedback-recent-head">
+            <div>
+              <h3>Recent feedback</h3>
+              <p>Latest messages shared by students.</p>
+            </div>
+            <span className="feedback-recent-meta">{feedbacks.length} total</span>
+          </div>
+
+          {listError ? <div className="feedback-recent-error">{listError}</div> : null}
+          {listLoading ? <div className="feedback-recent-state">Loading feedback…</div> : null}
+
+          {!listLoading && feedbacks.length === 0 ? (
+            <div className="feedback-recent-state">No feedback yet. Be the first to share one.</div>
+          ) : null}
+
+          {!listLoading && feedbacks.length > 0 ? (
+            <div className="feedback-list" role="list">
+              {sortedFeedbacks.map(({ fb, d }) => {
+                const name = (fb?.name || "Anonymous").trim() || "Anonymous";
+                const sectionLabel = fb?.section ? `${fb.section} Year` : "";
+                return (
+                  <div key={fb._id} className="fb-item" role="listitem">
+                    <div className="fb-top">
+                      <div className="fb-ident">
+                        <span className="fb-name">{name}</span>
+                        {sectionLabel ? <span className="fb-badge">{sectionLabel}</span> : null}
+                      </div>
+                      <span className="fb-date">{formatDate(d)}</span>
+                    </div>
+
+                    <div className="fb-message">{fb?.message || "—"}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

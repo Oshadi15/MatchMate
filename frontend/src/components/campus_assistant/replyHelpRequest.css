@@ -2,7 +2,7 @@
 
 .rhr-page{
   min-height: 100vh;
-  background: #0b1220;               
+  background: var(--mm-bg);
   padding: 28px 18px;
   box-sizing: border-box;
   display: flex;
@@ -19,42 +19,43 @@
   margin: 0 0 6px 0;
   font-size: 26px;
   font-weight: 900;
-  color: #ffffff;                      
+  color: var(--mm-ink-1);
 }
 
 .rhr-sub{
   margin: 0 0 16px 0;
-  color: #cbd5e1;                  
+  color: var(--mm-ink-3);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .rhr-card{
-  background: rgba(255,255,255,0.06);   
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+  box-shadow: var(--mm-shadow-md);
   backdrop-filter: blur(10px);
+  color-scheme: dark;
 }
 
 .rhr-card h3{
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 900;
-  color: #ffffff;                     
+  color: var(--mm-ink-1);
 }
 
 .rhr-meta{
   margin: 0 0 10px 0;
-  color: #cbd5e1;                       
+  color: var(--mm-ink-2);
   font-size: 13px;
   line-height: 1.5;
 }
 
 .rhr-desc{
   margin: 0;
-  color: #e5e7eb;                       
+  color: var(--mm-ink-1);
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -75,28 +76,31 @@
   border-radius: 999px;
   font-weight: 900;
   font-size: 12px;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid var(--mm-border);
   background: rgba(255,255,255,0.06);
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 
 .rhr-badge.open{
-  background: rgba(245,158,11,0.14);    
-  border-color: rgba(245,158,11,0.30);
-  color: #f59e0b;
+  background: var(--mm-amber-dim);
+  color: var(--mm-amber);
 }
 
 .rhr-badge.progress{
-  background: rgba(59,130,246,0.14);     
-  border-color: rgba(59,130,246,0.30);
-  color: #93c5fd;
+  background: rgba(255,255,255,0.04);
+  color: var(--mm-ink-2);
 }
 
 .rhr-badge.resolved{
-  background: rgba(16,185,129,0.14);    
-  border-color: rgba(16,185,129,0.30);
-  color: #34d399;
+  color: var(--mm-success);
+}
+
+@supports (background: color-mix(in srgb, black, white)) {
+  .rhr-badge.resolved{
+    background: color-mix(in srgb, var(--mm-success) 14%, transparent);
+    border-color: color-mix(in srgb, var(--mm-success) 35%, var(--mm-border));
+  }
 }
 
 .rhr-section{
@@ -107,19 +111,43 @@
   display: block;
   font-size: 13px;
   font-weight: 800;
-  color: #e5e7eb;                       
+  color: var(--mm-ink-2);
   margin-bottom: 8px;
+}
+
+.rhr-select{
+  width: 100%;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--mm-border);
+  background: rgba(255,255,255,0.06);
+  color: var(--mm-ink-1);
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.rhr-select option{
+  background: var(--mm-bg);
+  color: var(--mm-ink-1);
+}
+
+.rhr-select:focus{
+  border-color: rgba(245,164,0,0.9);
+  box-shadow: 0 0 0 3px rgba(245,164,0,0.15);
 }
 
 .rhr-textarea{
   width: 100%;
   padding: 12px;
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid var(--mm-border);
   outline: none;
   font-size: 14px;
   line-height: 1.6;
-  color: #ffffff;
+  color: var(--mm-ink-1);
   background: rgba(255,255,255,0.06);   
   resize: vertical;
   min-height: 140px;
@@ -131,8 +159,8 @@
 }
 
 .rhr-textarea:focus{
-  border-color: rgba(245,158,11,0.9);    
-  box-shadow: 0 0 0 4px rgba(245,158,11,0.15);
+  border-color: rgba(245,164,0,0.9);
+  box-shadow: 0 0 0 4px rgba(245,164,0,0.15);
 }
 
 .rhr-actions{
@@ -145,8 +173,8 @@
 .rhr-btn{
   border: none;
   border-radius: 12px;
-  background: #f59e0b;                  
-  color: #0b1220;                       
+  background: var(--mm-amber);
+  color: var(--mm-bg);
   padding: 12px 14px;
   font-weight: 900;
   cursor: pointer;
@@ -154,7 +182,7 @@
 }
 
 .rhr-btn:hover{
-  background: #fb923c;
+  filter: brightness(1.03);
   transform: translateY(-1px);
 }
 
@@ -163,10 +191,10 @@
 }
 
 .rhr-btn-outline{
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid var(--mm-border);
   border-radius: 12px;
   background: rgba(255,255,255,0.06);   
-  color: #ffffff;
+  color: var(--mm-ink-1);
   padding: 12px 14px;
   font-weight: 900;
   cursor: pointer;
@@ -174,18 +202,18 @@
 }
 
 .rhr-btn-outline:hover{
-  border-color: rgba(245,158,11,0.55);  
+  border-color: rgba(245,164,0,0.55);
   transform: translateY(-1px);
 }
 
 .rhr-loading,
 .rhr-empty{
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
   border-radius: 14px;
   padding: 14px;
-  color: #cbd5e1;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+  color: var(--mm-ink-2);
+  box-shadow: var(--mm-shadow-md);
   backdrop-filter: blur(10px);
 }
 
@@ -202,17 +230,17 @@
   padding: 12px 14px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--mm-border);
 }
 
 .rhr-document-text {
   margin: 0 0 8px 0;
-  color: #e5e7eb;
+  color: var(--mm-ink-1);
   font-size: 14px;
 }
 
 .rhr-document-link {
-  color: #38bdf8;
+  color: var(--mm-amber);
   text-decoration: none;
   font-weight: 600;
 }
@@ -220,51 +248,21 @@
 .rhr-document-link:hover {
   text-decoration: underline;
 }
-.rhr-section {
-  margin-top: 18px;
-}
-
-.rhr-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #e5e7eb;
-}
-
-.rhr-select {
-  width: 100%;
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #0f172a;
-  color: #ffffff;
-  padding: 0 14px;
-  font-size: 14px;
-  outline: none;
-  transition: 0.2s ease;
-  margin-bottom: 12px;
-}
-
-.rhr-select:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
-}
 
 .rhr-btn-status {
   height: 42px;
   padding: 0 18px;
-  border: none;
+  border: 1px solid var(--mm-border);
   border-radius: 12px;
-  background: #2563eb;
-  color: #ffffff;
+  background: rgba(255,255,255,0.06);
+  color: var(--mm-ink-1);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
 .rhr-btn-status:hover {
-  background: #1d4ed8;
+  border-color: rgba(245,164,0,0.55);
   transform: translateY(-1px);
 }
