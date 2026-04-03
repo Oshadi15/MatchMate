@@ -80,7 +80,7 @@
   color: #ffffff;
 }
 
-/* ✅ status badge colors to match site theme */
+
 .rhr-badge.open{
   background: rgba(245,158,11,0.14);    
   border-color: rgba(245,158,11,0.30);
@@ -131,7 +131,7 @@
 }
 
 .rhr-textarea:focus{
-  border-color: rgba(245,158,11,0.9);    /* ✅ orange focus */
+  border-color: rgba(245,158,11,0.9);    
   box-shadow: 0 0 0 4px rgba(245,158,11,0.15);
 }
 
@@ -145,8 +145,8 @@
 .rhr-btn{
   border: none;
   border-radius: 12px;
-  background: #f59e0b;                  /* ✅ orange primary */
-  color: #0b1220;                        /* ✅ dark text */
+  background: #f59e0b;                  
+  color: #0b1220;                       
   padding: 12px 14px;
   font-weight: 900;
   cursor: pointer;
@@ -165,7 +165,7 @@
 .rhr-btn-outline{
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 12px;
-  background: rgba(255,255,255,0.06);   /* ✅ glass */
+  background: rgba(255,255,255,0.06);   
   color: #ffffff;
   padding: 12px 14px;
   font-weight: 900;
@@ -174,7 +174,7 @@
 }
 
 .rhr-btn-outline:hover{
-  border-color: rgba(245,158,11,0.55);  /* ✅ orange border hover */
+  border-color: rgba(245,158,11,0.55);  
   transform: translateY(-1px);
 }
 
@@ -196,4 +196,75 @@
   .rhr-card{
     padding: 14px;
   }
+}
+.rhr-document-box {
+  margin: 14px 0 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rhr-document-text {
+  margin: 0 0 8px 0;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.rhr-document-link {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.rhr-document-link:hover {
+  text-decoration: underline;
+}
+.rhr-section {
+  margin-top: 18px;
+}
+
+.rhr-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+.rhr-select {
+  width: 100%;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.rhr-select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.rhr-btn-status {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.rhr-btn-status:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }

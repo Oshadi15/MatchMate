@@ -18,8 +18,6 @@ import {
 
 function AdminDashboard() {
 
-  const stockId = localStorage.getItem("stockId");
-
   /* ================= WHATSAPP SUPPORT ================= */
   const handleSendReport = () => {
     const phoneNumber = "+94766773745";
@@ -62,13 +60,12 @@ function AdminDashboard() {
           {/* ================= ROW 1 ================= */}
           <div className="card-row">
 
-            <Link to={`/displaystock/${stockId}`} className="card">
+            <Link to="/manage-location" className="card">
               <FaWarehouse size={40} />
               <h3>Campus Locations</h3>
-              <p>View campus locations</p>
+              <p>Manage campus locations</p>
             </Link>
 
-            {/* ✅ LOST & FOUND MANAGEMENT */}
             <Link to="/adminbrowse" className="card">
               <FaMoneyBillWave size={40} />
               <h3>Lost & Found</h3>
@@ -98,7 +95,8 @@ function AdminDashboard() {
               <p>Check item status</p>
             </Link>
 
-            <Link to="/-levels" className="card">
+            {/* ✅ FIXED CONFLICT */}
+            <Link to="/adminmatches" className="card">
               <FaOilCan size={40} />
               <h3>Smart Machine</h3>
               <p>Monitor machine status</p>
@@ -115,7 +113,6 @@ function AdminDashboard() {
               <p>Manage student help requests</p>
             </Link>
 
-            {/* ✅ MAIN LOST & FOUND ADMIN ACCESS */}
             <Link to="/admin/lostfound" className="card">
               <FaStar size={40} />
               <h3>Lost & Found Management</h3>

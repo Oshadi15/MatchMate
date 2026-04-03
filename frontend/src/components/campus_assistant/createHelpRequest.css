@@ -1,4 +1,4 @@
-/* createHelpRequest.css (FULL - dropdown fixed) */
+/* createHelpRequest.css */
 
 .create-help-request-page {
   min-height: 100vh;
@@ -41,7 +41,7 @@
   flex-direction: column;
   gap: 12px;
 
-  /* ✅ makes native controls (select dropdown etc.) use dark palette where supported */
+  
   color-scheme: dark;
 }
 
@@ -51,7 +51,7 @@
   gap: 6px;
 }
 
-/* ✅ FIX: your JSX uses normal <label> */
+
 .field label {
   font-size: 13px;
   font-weight: 800;
@@ -60,7 +60,6 @@
   display: block;
 }
 
-/* keep if you ever use field-label class */
 .field-label {
   font-size: 13px;
   font-weight: 800;
@@ -90,7 +89,7 @@
   box-sizing: border-box;
 }
 
-/* ✅ dropdown arrow + native select look */
+/* dropdown arrow + native select look */
 .create-help-request-form select {
   appearance: none;
   -webkit-appearance: none;
@@ -101,13 +100,13 @@
   color: #ffffff;
 }
 
-/* ✅ IMPORTANT: style the dropdown list items (options) */
+
 .create-help-request-form select option {
   background: #0f172a; /* dark option background */
   color: #ffffff;      /* white text */
 }
 
-/* ✅ optional: style selected/hover option in some browsers */
+
 .create-help-request-form select option:checked {
   background: #1f2937;
   color: #f59e0b;

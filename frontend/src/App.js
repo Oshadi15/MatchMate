@@ -10,11 +10,16 @@ import LostForm from './components/Lost-Found_MS/LostForm';
 import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import Home from "./components/HomePage/Home";
+
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+
 // import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
+import ManageLocation from "./components/campus_assistant/manageLocation";
+import LocationFinder from "./components/campus_assistant/locationFinder";
+
 import AdminLogin from "./components/AdminLogin/AdminLogin";
 import Userlogin from "./components/Userlogin/Userlogin";
 
@@ -29,6 +34,10 @@ import StudentSignup from "./components/UserManagement/StudentSignup";
 import LostFoundManagement from "./components/AdminDashBoard/LostFoundManagement";
 import FeedbackInsert from "./components/FeedbackInsert/FeedbackInsert";
 import FeedbackDisplay from "./components/FeedbackDisplay/FeedbackDisplay";
+import UserMatches from "./components/Smart_Matching/UserMatches";
+import AdminMatchPanel from "./components/Smart_Matching/AdminMatchPanel";
+import Logout from "./components/Logout/Logout";
+
 
 function App() {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -41,10 +50,13 @@ function App() {
    
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
+        
         <Route path="/help" element={<Layout><HelpBoard /></Layout>} />
         <Route path="/create" element={<Layout><CreateHelpRequest /></Layout>} />
         <Route path="/campus-assistant" element={<Layout><SmartAssistantHome /></Layout>} />
         <Route path="/help/reply/:id" element={<Layout><ReplyHelpRequest /></Layout>} />
+        <Route path="/manage-location" element={<Layout><ManageLocation /></Layout>} />
+        <Route path="/location-finder" element={<Layout><LocationFinder /></Layout>} />
         
       
         <Route path="/signup" element={<StudentSignup />} />
@@ -64,6 +76,9 @@ function App() {
         <Route path="/feedback" element={<FeedbackDisplay />} />
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/adminbrowse" element={<AdminBrowse />} />
+         <Route path='/usermatches' element={<Layout><UserMatches/></Layout>} />
+        <Route path='/adminmatches' element={<AdminMatchPanel/>} />
+        <Route path="/logout" element={<Logout />} />
 
       </Routes>
     </BrowserRouter>

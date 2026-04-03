@@ -1,31 +1,38 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const path = require("path");
 
 const {
   createHelpRequest,
   getHelpRequests,
-  getMyHelpRequests,
   getHelpRequestById,
-  replyToHelpRequest,      // ✅ ADD
-  updateHelpStatus,        // ✅ ADD (optional, but useful)
+  getMyHelpRequests,
+  replyToHelpRequest,
+  updateHelpStatus,
   deleteHelpRequest,
 } = require("../../controllers/campus_assistant/helpRequest.controller");
 
-router.post("/", createHelpRequest);
+// Multer storage setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + path.extname(file.originalname);
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage });
+
+// Routes
+router.post("/", upload.single("document"), createHelpRequest);
 router.get("/", getHelpRequests);
-
-// ✅ keep BEFORE "/:id"
-router.get("/mine", getMyHelpRequests);
-
-// ✅ GET one
+router.get("/my-requests", getMyHelpRequests);
 router.get("/:id", getHelpRequestById);
-
-// ✅ REPLY
 router.patch("/:id/reply", replyToHelpRequest);
-
-// ✅ STATUS UPDATE (optional)
 router.patch("/:id/status", updateHelpStatus);
-
 router.delete("/:id", deleteHelpRequest);
 
 module.exports = router;

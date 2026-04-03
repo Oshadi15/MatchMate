@@ -1,9 +1,16 @@
 const HelpRequest = require("../../models/campus_assistant/helpRequest.model");
 
+
 // CREATE
 exports.createHelpRequest = async (req, res) => {
   try {
-    const item = await HelpRequest.create(req.body);
+    const newHelpRequest = {
+      ...req.body,
+      document: req.file ? `/uploads/${req.file.filename}` : "",
+    };
+
+    const item = await HelpRequest.create(newHelpRequest);
+
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({
@@ -75,7 +82,7 @@ exports.getMyHelpRequests = async (req, res) => {
   }
 };
 
-// ✅ REPLY (ADMIN)
+// REPLY (ADMIN)
 exports.replyToHelpRequest = async (req, res) => {
   try {
     const { adminReply } = req.body;
@@ -101,7 +108,7 @@ exports.replyToHelpRequest = async (req, res) => {
   }
 };
 
-// ✅ STATUS UPDATE (ADMIN)
+// STATUS UPDATE (ADMIN)
 exports.updateHelpStatus = async (req, res) => {
   try {
     const { status } = req.body;
