@@ -2,26 +2,57 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import API from '../../services/api';
 import './AdminMatchPanel.css';
 import { useNavigate } from 'react-router-dom';
-import AdminLayout from '../AdminDashBoard/AdminLayout';
 
+/**
+ * VALIDATION: Clamp a number to range [0, 1]
+ * Ensures a ratio/percentage (0-1) is within valid bounds
+ * Returns null if input is not a valid finite number
+ * Used for: Image similarity scores (0.0 to 1.0)
+ * @param {number} n - Input number to clamp
+ * @returns {number|null} - Clamped value [0, 1] or null if invalid
+ */
 function clamp01(n) {
+  // VALIDATION: Check if number is valid and finite
   if (!Number.isFinite(n)) return null;
+  // VALIDATION: Clamp to valid range [0, 1]
   return Math.max(0, Math.min(1, n));
 }
 
+/**
+ * VALIDATION & MAPPING: Convert AI status code to display pill info
+ * Maps backend imageAiStatus values to UI-friendly labels and CSS classes
+ * Used to display visual indicators for AI scoring status
+ * 
+ * Valid statuses:
+ *   - 'scored': AI has calculated image similarity (green)
+ *   - 'pending_ai': Waiting for admin to run AI check (blue)
+ *   - 'missing_image': No image(s) to compare (gray)
+ *   - 'file_not_found', 'image_url_error': Image loading failed (gray)
+ *   - 'hf_error': AI model error (red)
+ *   - Other/unknown: Placeholder (muted)
+ * 
+ * @param {string} status - AI status from match object
+ * @returns {Object} - { label: string, cls: string } for display
+ */
 function getAiStatusPill(status) {
   switch (status) {
+    // VALIDATION: AI successfully scored images
     case 'scored':
       return { label: 'Scored', cls: 'ai-pill ai-pill--ok' };
+    // VALIDATION: Waiting for admin to run AI scoring
     case 'pending_ai':
       return { label: 'Pending', cls: 'ai-pill ai-pill--pending' };
+    // VALIDATION: No image(s) available for comparison
     case 'missing_image':
       return { label: 'No photo', cls: 'ai-pill ai-pill--skip' };
+    // VALIDATION: Image file not found or URL error
     case 'file_not_found':
     case 'image_url_error':
       return { label: 'Image issue', cls: 'ai-pill ai-pill--skip' };
+    // VALIDATION: AI model/Hugging Face API error
     case 'hf_error':
       return { label: 'AI error', cls: 'ai-pill ai-pill--err' };
+    // VALIDATION: Unknown or unmapped status
     default:
       return { label: '—', cls: 'ai-pill ai-pill--muted' };
   }
@@ -105,29 +136,64 @@ const AdminMatchPanel = () => {
     fetchMatches();
   };
 
+  /**
+   * VALIDATION & HANDLER: Notify lost item owner about a match
+   * 
+   * Process:
+   *   1. Get match ID and find corresponding row in matches array
+   *   2. Check if lost item already has email on file
+   *   3. If no email: prompt admin to enter owner's email
+   *   4. VALIDATE email is not empty (required)
+   *   5. Send notification request to backend
+   *   6. Refresh matches list to show updated status
+   * 
+   * @param {string} id - Match ID to notify
+   */
   const handleNotify = async (id) => {
+    // VALIDATION: Convert ID to string for consistent comparison
     const matchId = String(id);
+    
+    // Query: Find the match row by ID
     const row = matches.find((m) => String(m._id) === matchId);
+    
+    // VALIDATION: Check if lost item already has email on file
     const existingEmail = (row?.lostItemId?.userEmail || '').trim();
     let email = existingEmail;
+    
     if (!email) {
+      // VALIDATION: No existing email - prompt admin to enter owner's email
       const entered = window.prompt(
         'This lost report has no email on file. Enter the owner account email so they can see this in Smart Matches:',
         ''
       );
+      
+      // VALIDATION: User cancelled prompt
       if (entered == null) return;
+      
+      // VALIDATION: Trim whitespace from entered email
       email = String(entered).trim();
+      
+      // VALIDATION: Email cannot be empty
       if (!email) {
         alert('A valid email is required so the owner can see matches in Smart Matches.');
         return;
       }
     }
+    
     try {
+      // PAYLOAD: Only send email if we're overriding (no existing email)
       const payload = existingEmail ? {} : { email };
+      
+      // API: Send notification request to backend
       await API.post(`/api/smart-match/notify/${matchId}`, payload);
+      
+      // SUCCESS: User will see match in their Smart Matches dashboard
       alert('User will see this on their Smart Matches page.');
+      
+      // REFRESH: Update matches list to reflect notified status
       fetchMatches();
     } catch (e) {
+      // ERROR HANDLING: Show backend error message or fallback error
       const msg =
         e?.response?.data?.message ||
         e?.response?.data?.error ||
@@ -137,32 +203,86 @@ const AdminMatchPanel = () => {
     }
   };
 
+  /**
+   * HANDLER: Open item details modal
+   * VALIDATION: Ensure item exists before opening
+   * @param {Object} item - Lost or found item to display
+   * @param {string} type - Item type: 'Lost Item' or 'Found Item'
+   */
   const openItemDetails = (item, type) => {
+    // VALIDATION: Must have item object before opening
     if (!item) return;
     setSelectedItem(item);
     setSelectedItemType(type);
   };
 
+  /**
+   * HANDLER: Close item details modal
+   */
   const closeItemDetails = () => {
     setSelectedItem(null);
     setSelectedItemType('');
   };
 
+  /**
+   * VALIDATION: Resolve image path to full URL
+   * Handles multiple image source formats:
+   *   - Full URL (http/https): use as-is
+   *   - Server path (/uploads/...): prepend API base URL
+   *   - Relative path (uploads/...): prepend API base URL with /
+   *   - No path: return empty string
+   * 
+   * @param {string} imagePath - Image path from database
+   * @returns {string} - Full resolvable URL or empty string
+   */
   const resolveImageSrc = (imagePath) => {
+    // VALIDATION: No path returns empty string
     if (!imagePath) return '';
+    
+    // VALIDATION: Already a full URL - use as-is
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+    
+    // VALIDATION: Server path with leading slash
     if (imagePath.startsWith('/uploads/')) return `${apiBaseUrl}${imagePath}`;
+    
+    // VALIDATION: Relative path without leading slash
     if (imagePath.startsWith('uploads/')) return `${apiBaseUrl}/${imagePath}`;
+    
+    // VALIDATION: Fallback - assume path is filename only, prepend full uploads path
     return `${apiBaseUrl}/uploads/${imagePath}`;
   };
 
+  /**
+   * VALIDATION & FILTERING: Filter and sort matches based on user selections
+   * 
+   * Filters applied:
+   *   - Search text: match item names or categories (case-insensitive)
+   *   - Status filter: pending, notified, resolved
+   *   - AI filter: AI scored, pending AI, AI issues
+   *   - Owner response filter: no answer, claimed (that's mine), rejected (not mine)
+   * 
+   * Sort options:
+   *   - Overall score: high to low (default)
+   *   - Input score: high to low
+   *   - Image score: high to low
+   *   - Latest updated: newest first
+   */
   const filteredMatches = useMemo(() => {
+    // VALIDATION: Search text - normalize to lowercase and trim
     const q = searchText.trim().toLowerCase();
+    
+    // FILTERING: Apply all selected filters
     let out = matches.filter((m) => {
+      // VALIDATION: Status filter - must match selected status
       if (statusFilter !== 'all' && m.status !== statusFilter) return false;
+      
+      // VALIDATION: AI status filter - check image AI scoring status
       if (aiFilter !== 'all') {
+        // VALIDATION: Filter for scored AI (image similarity calculated)
         if (aiFilter === 'scored' && m.imageAiStatus !== 'scored') return false;
+        // VALIDATION: Filter for pending AI (not yet scored)
         if (aiFilter === 'pending' && m.imageAiStatus !== 'pending_ai') return false;
+        // VALIDATION: Filter for AI issues (errors or missing images)
         if (
           aiFilter === 'issue' &&
           !['hf_error', 'file_not_found', 'image_url_error', 'missing_image'].includes(m.imageAiStatus)
@@ -170,34 +290,59 @@ const AdminMatchPanel = () => {
           return false;
         }
       }
+      
+      // VALIDATION: Owner response filter - check how (if) owner responded
       if (ownerFilter !== 'all') {
         const r = m.lostOwnerResponse || 'none';
         if (ownerFilter !== r) return false;
       }
+      
+      // VALIDATION: If no search text provided, match passes all filters
       if (!q) return true;
+      
+      // VALIDATION: Search text matching - case-insensitive
+      // Search across: lost item name, found item name, lost category, found category
       const lostName = (m?.lostItemId?.itemName || '').toLowerCase();
       const foundName = (m?.foundItemId?.itemName || '').toLowerCase();
       const lostCat = (m?.lostItemId?.category || '').toLowerCase();
       const foundCat = (m?.foundItemId?.category || '').toLowerCase();
+      
+      // Return true if search query is found in ANY of the fields
       return [lostName, foundName, lostCat, foundCat].some((v) => v.includes(q));
     });
 
+    // SORTING: Create copy and sort by selected criteria
     out = [...out].sort((a, b) => {
+      // VALIDATION: Extract scores with fallbacks for backward compatibility
+      // Overall score (newest field)
       const aOverall = Number(a.overallScore ?? a.matchScore ?? 0);
       const bOverall = Number(b.overallScore ?? b.matchScore ?? 0);
+      
+      // Input score (form fields only)
       const aInput = Number(a.inputScore ?? a.ruleScore ?? 0);
       const bInput = Number(b.inputScore ?? b.ruleScore ?? 0);
+      
+      // Image score (AI similarity)
       const aImg = Number(a.imageScore ?? 0);
       const bImg = Number(b.imageScore ?? 0);
+      
+      // Timestamp for sorting by recency
       const aT = new Date(a.updatedAt || a.createdAt || 0).getTime();
       const bT = new Date(b.updatedAt || b.createdAt || 0).getTime();
 
+      // VALIDATION: Sort by selected criteria
       switch (sortBy) {
+        // SORT: Overall score ascending (low to high)
         case 'overall_asc': return aOverall - bOverall;
+        // SORT: Overall score descending (high to low) - default
         case 'overall_desc': return bOverall - aOverall;
+        // SORT: Input score descending (form fields, high to low)
         case 'input_desc': return bInput - aInput;
+        // SORT: Image score descending (AI, high to low)
         case 'image_desc': return bImg - aImg;
+        // SORT: Latest updated matches first (newest first)
         case 'latest': return bT - aT;
+        // DEFAULT: Overall score descending
         default: return bOverall - aOverall;
       }
     });
@@ -205,17 +350,33 @@ const AdminMatchPanel = () => {
     return out;
   }, [matches, searchText, statusFilter, aiFilter, sortBy, ownerFilter]);
 
+  /**
+   * EFFECT: Verify user is admin and has permission to view admin panel
+   * Redirects non-admin users to their dashboard
+   * Loads matches on component mount
+   */
   useEffect(() => {
-    // Only admin should be allowed to view all matches.
+    // VALIDATION: Check if current user is admin
+    // Only admin should be allowed to view all matches
     if (!isAdmin) {
       navigate('/dashboard', { replace: true });
       return;
     }
+    
+    // LOAD: Fetch matches from backend
     fetchMatches();
   }, [fetchMatches, isAdmin, navigate]);
 
+  /**
+   * EFFECT: Set up live refresh interval for real-time updates
+   * Auto-refreshes match list every 20 seconds for admin panel
+   * Only runs if user is admin
+   */
   useEffect(() => {
+    // VALIDATION: Only set interval if user is admin
     if (!isAdmin) return;
+    
+    // REFRESH: Auto-fetch matches every 20 seconds (20000ms) for live updates
     const t = window.setInterval(() => {
       fetchMatches();
     }, 20000);
