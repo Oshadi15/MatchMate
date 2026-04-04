@@ -30,13 +30,18 @@ export default function AdminLogin() {
       form.username === hardcodedUsername &&
       form.password === hardcodedPassword
     ) {
+      const adminUser = {
+        username: hardcodedUsername,
+        role: "admin",
+      };
+
       localStorage.setItem(
         "admin",
-        JSON.stringify({
-          username: hardcodedUsername,
-          role: "admin",
-        })
+        JSON.stringify(adminUser)
       );
+
+      // Keep compatibility with pages that read `user` from localStorage.
+      localStorage.setItem("user", JSON.stringify(adminUser));
 
       navigate("/admin");
     } else {

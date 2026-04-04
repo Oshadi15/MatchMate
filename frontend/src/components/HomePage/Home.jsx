@@ -20,12 +20,17 @@ export default function Home() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showAuth, setShowAuth] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
     }, 4500);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(Boolean(localStorage.getItem("user")));
   }, []);
 
   return (
@@ -58,7 +63,7 @@ export default function Home() {
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Lost And Found System</h1>
+                  <h1>Lost And Found Management System</h1>
                   <p>A smart platform to manage lost and found items.</p>
                 </div>
               </div>
@@ -82,7 +87,7 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/BrowseItems")}
+            onClick={() => navigate("/browseitems")}
             style={{ cursor: "pointer" }}
           >
             <img src={feature1} alt="Browse Items" />
@@ -92,7 +97,7 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate(isLoggedIn ? "/campus-assistant" : "/login")}
             style={{ cursor: "pointer" }}
           >
             <img src={feature2} alt="Campus Assistant" />
@@ -102,7 +107,7 @@ export default function Home() {
 
           <div 
             className="feature-card"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate(isLoggedIn ? "/feedback" : "/login")}
             style={{ cursor: "pointer" }}
           >
             <img src={feature3} alt="Feedback" />
@@ -140,7 +145,7 @@ export default function Home() {
               <div className="auth-box">
                 <h3>Quick Links</h3>
 
-                <button onClick={() => navigate("/BrowseItems")} className="quick-btn">
+                <button onClick={() => navigate("/browseitems")} className="quick-btn">
                   Browse Lost & Found items
                 </button>
 
@@ -166,7 +171,7 @@ export default function Home() {
               <h4>Quick Links</h4>
               <ul>
                 <li><Link to="/report">Lost & Found</Link></li>
-                <li><Link to="/assistant">Campus Assistant</Link></li>
+                <li><Link to="/campus-assistant">Campus Assistant</Link></li>
                 <li><Link to="/login">Login</Link></li>
               </ul>
             </div>

@@ -12,6 +12,7 @@ const LostForm = () => {
     dateTime: "",
     location: "",
     description: "",
+    userEmail: "",
     image: null,
   });
 
@@ -32,6 +33,17 @@ const LostForm = () => {
       ...prev,
       dateTime: getCurrentDateTime(),
     }));
+  }, []);
+
+  useEffect(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("user") || "{}");
+      if (u.email) {
+        setFormData((prev) => ({ ...prev, userEmail: u.email }));
+      }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   /* ================= HANDLE CHANGE ================= */
@@ -140,6 +152,15 @@ const LostForm = () => {
       alert("Lost Item Submitted Successfully!");
 
       // reset form
+      // Reset form
+      const savedEmail = (() => {
+        try {
+          const u = JSON.parse(localStorage.getItem("user") || "{}");
+          return u.email || "";
+        } catch {
+          return "";
+        }
+      })();
       setFormData({
         itemName: "",
         category: "",
@@ -147,6 +168,7 @@ const LostForm = () => {
         dateTime: getCurrentDateTime(),
         location: "",
         description: "",
+        userEmail: savedEmail,
         image: null,
       });
 
@@ -161,11 +183,13 @@ const LostForm = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="form-container">
-      <h2>Report Lost Item</h2>
+    <div className="mm-form-page">
+      <div className="form-container">
+        <h2>Report Lost Item</h2>
 
       <form onSubmit={handleSubmit}>
 
+        <form onSubmit={handleSubmit} className="mm-form">
         {/* Item Name */}
         <label>Item Name</label>
         <input
@@ -177,6 +201,16 @@ const LostForm = () => {
         {errors.itemName && (
           <p className="error">{errors.itemName}</p>
         )}
+
+        <label>Contact email (for match notifications)</label>
+        <input
+          type="email"
+          name="userEmail"
+          placeholder="your.email@example.com"
+          value={formData.userEmail}
+          onChange={handleChange}
+          required
+        />
 
         {/* Category */}
         <label>Category</label>
@@ -264,6 +298,12 @@ const LostForm = () => {
         </button>
 
       </form>
+        {/* Submit */}
+          <button type="submit" disabled={dateError}>
+            Submit Lost Item
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

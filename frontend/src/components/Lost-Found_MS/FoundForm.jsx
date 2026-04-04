@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FoundForm.css";
 
@@ -23,11 +23,22 @@ const FoundForm = () => {
     dateTime: getLocalDateTime(),
     location: "",
     description: "",
+    userEmail: "",
     image: null,
   });
 
   const [errors, setErrors] = useState({});
   const [fileKey, setFileKey] = useState(Date.now());
+  useEffect(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("user") || "{}");
+      if (u.email) {
+        setFormData((prev) => ({ ...prev, userEmail: u.email }));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   /* =========================
      HANDLE CHANGE
@@ -136,6 +147,15 @@ const FoundForm = () => {
       alert(res.data.message || "Found item submitted!");
 
       // reset
+      // ✅ Reset form
+      const savedEmail = (() => {
+        try {
+          const u = JSON.parse(localStorage.getItem("user") || "{}");
+          return u.email || "";
+        } catch {
+          return "";
+        }
+      })();
       setFormData({
         itemName: "",
         category: "",
@@ -143,6 +163,7 @@ const FoundForm = () => {
         dateTime: getLocalDateTime(),
         location: "",
         description: "",
+        userEmail: savedEmail,
         image: null,
       });
 
@@ -159,10 +180,11 @@ const FoundForm = () => {
      UI
   ========================= */
   return (
-    <div className="form-container">
-      <h2>Report Found Item</h2>
+    <div className="mm-form-page">
+      <div className="form-container">
+        <h2>Report Found Item</h2>
 
-      <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mm-form">
 
         {/* ITEM NAME */}
         <label>Item Name</label>
@@ -177,6 +199,16 @@ const FoundForm = () => {
         )}
 
         {/* CATEGORY */}
+        <label>Your email (same as your login — so you get Smart Match updates)</label>
+        <input
+          type="email"
+          name="userEmail"
+          placeholder="you@example.com"
+          value={formData.userEmail}
+          onChange={handleChange}
+          required
+        />
+
         <label>Category</label>
         <select name="category" value={formData.category} onChange={handleChange}>
           <option value="">Select Category</option>
@@ -244,9 +276,10 @@ const FoundForm = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit Found Item</button>
+          <button type="submit">Submit Found Item</button>
 
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,149 +1,64 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./AdminDashBoard.css";
-
 import {
-  FaUsers,
-  FaWarehouse,
-  FaMoneyBillWave,
-  FaTruck,
-  FaFileInvoiceDollar,
-  FaMoneyBill,
-  FaOilCan,
-  FaStar,
+  FaChartLine,
+  FaSearch,
+  FaTasks,
+  FaRobot,
   FaCommentDots,
-  FaComments,
-  FaWhatsapp,
 } from "react-icons/fa";
 
+import AdminLayout from "./AdminLayout";
+import "./AdminDashBoard.css";
+
 function AdminDashboard() {
-
-  const stockId = localStorage.getItem("stockId");
-
-  /* ================= WHATSAPP SUPPORT ================= */
-  const handleSendReport = () => {
-    const phoneNumber = "+94766773745";
-    const message = `Hello, I need support regarding the Lost and Found system.`;
-    const WhatsAppUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(WhatsAppUrl, "_blank");
-  };
-
   return (
-    <div className="admin-dashboard">
-      <div className="admin-overlay"></div>
-
-      {/* ================= NAVBAR ================= */}
-      <nav className="dashboard-nav">
-        <div className="nav-logo-section">
-          <h2>Lost and Found System</h2>
-        </div>
-
-        <div className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/adminlogin">Logout</Link>
-        </div>
-
-        <div className="whatsapp-btn-container">
-          <button className="whatsapp-btn" onClick={handleSendReport}>
-            <FaWhatsapp /> WhatsApp Support
-          </button>
-        </div>
-      </nav>
-
-      {/* ================= CONTENT ================= */}
-      <div className="dashboard-content">
-        <h1>Welcome, Admin</h1>
-        <p className="dashboard-sub">Manage everything from one place</p>
-
-        <div className="dashboard-cards">
-
-          {/* ================= ROW 1 ================= */}
-          <div className="card-row">
-
-            <Link to={`/displaystock/${stockId}`} className="card">
-              <FaWarehouse size={40} />
-              <h3>Campus Locations</h3>
-              <p>View campus locations</p>
-            </Link>
-
-            {/* ✅ LOST & FOUND MANAGEMENT */}
-            <Link to="/adminbrowse" className="card">
-              <FaMoneyBillWave size={40} />
-              <h3>Lost & Found</h3>
-              <p>Manage lost & found items</p>
-            </Link>
-
-            <Link to="/recordsale" className="card">
-              <FaTruck size={40} />
-              <h3>Claim Requests</h3>
-              <p>Manage claim requests</p>
-            </Link>
-
+    <AdminLayout
+      title="Dashboard"
+      subtitle="Navigate using the sidebar to manage MatchMate"
+    >
+      <div className="admin-home-grid">
+        <Link to="/admin/analysis" className="admin-home-card">
+          <div className="admin-home-icn"><FaChartLine /></div>
+          <div>
+            <h3>Analysis</h3>
+            <p>View KPIs and insights across modules</p>
           </div>
+        </Link>
 
-          {/* ================= ROW 2 ================= */}
-          <div className="card-row">
-
-            <Link to="/sales" className="card">
-              <FaFileInvoiceDollar size={40} />
-              <h3>User Management</h3>
-              <p>Manage system users</p>
-            </Link>
-
-            <Link to="/summary" className="card">
-              <FaMoneyBill size={40} />
-              <h3>Income</h3>
-              <p>Check daily income</p>
-            </Link>
-
-            <Link to="/fuel-levels" className="card">
-              <FaOilCan size={40} />
-              <h3>Smart Machine</h3>
-              <p>Monitor machine status</p>
-            </Link>
-
+        <Link to="/adminbrowse" className="admin-home-card">
+          <div className="admin-home-icn"><FaSearch /></div>
+          <div>
+            <h3>Items (Browse)</h3>
+            <p>Review reported lost & found items</p>
           </div>
+        </Link>
 
-          {/* ================= ROW 3 ================= */}
-          <div className="card-row">
-
-            <Link to="/help" className="card">
-              <FaUsers size={40} />
-              <h3>Help Board</h3>
-              <p>Manage student help requests</p>
-            </Link>
-
-            {/* ✅ MAIN LOST & FOUND ADMIN ACCESS */}
-            <Link to="/admin/lostfound" className="card">
-              <FaStar size={40} />
-              <h3>Lost & Found Management</h3>
-              <p>Edit, delete & manage item status</p>
-            </Link>
-
-            <Link to="/feedback" className="card">
-              <FaCommentDots size={40} />
-              <h3>Feedbacks</h3>
-              <p>View student feedback</p>
-            </Link>
-
+        <Link to="/admin/lostfound" className="admin-home-card">
+          <div className="admin-home-icn"><FaTasks /></div>
+          <div>
+            <h3>Items (Manage)</h3>
+            <p>Edit, approve, reject, or remove items</p>
           </div>
+        </Link>
 
-          {/* ================= ROW 4 ================= */}
-          <div className="card-row">
-
-            <Link to="/adminchat" className="card">
-              <FaComments size={40} />
-              <h3>Student Chat</h3>
-              <p>View conversations</p>
-            </Link>
-
+        <Link to="/adminmatches" className="admin-home-card">
+          <div className="admin-home-icn"><FaRobot /></div>
+          <div>
+            <h3>Smart Matching</h3>
+            <p>Run scoring and review AI match results</p>
           </div>
+        </Link>
 
-        </div>
+        <Link to="/admin/feedback" className="admin-home-card">
+          <div className="admin-home-icn"><FaCommentDots /></div>
+          <div>
+            <h3>Feedback</h3>
+            <p>View and manage student feedback</p>
+          </div>
+        </Link>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 
