@@ -29,6 +29,11 @@ const LostItemSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    userEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
   },
   { timestamps: true }
 );

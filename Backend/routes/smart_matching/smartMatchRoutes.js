@@ -5,6 +5,9 @@ const smartMatchController = require('../../controllers/smart_matching/smartMatc
 router.post('/run-match', smartMatchController.findMatches);
 router.post('/run-image-ai', smartMatchController.runImageAiForMatches);
 router.get('/all-matches', smartMatchController.getMatches);
+router.get('/user-matches', smartMatchController.getUserMatches);
+router.post('/claim/:id', smartMatchController.claimMatch);
+router.post('/reject/:id', smartMatchController.rejectMatchByOwner);
 
 // Delete one match by ID
 router.delete('/:id', smartMatchController.deleteMatch);
