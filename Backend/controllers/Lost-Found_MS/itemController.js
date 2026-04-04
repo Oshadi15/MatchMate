@@ -134,9 +134,36 @@ const createFoundItem = async (req, res) => {
   }
 };
 
+
+const getMyLostItems = async (req, res) => {
+  const email = req.query.email;
+  
+  console.log("Searching for items reported by:", email);
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: "User email is required in query params" });
+    }
+
+    // This searches the 'reportedBy' field in your Item model
+    const items = await Item.find({ 
+      reportedBy: email, 
+      type: "lost" 
+    }).sort({ createdAt: -1 });
+
+    console.log(`Found ${items.length} items for ${email}`);
+    
+    res.status(200).json(items);
+  } catch (error) {
+    console.error("Error in getMyLostItems:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getLostItems,
   getFoundItems,
   createLostItem,
   createFoundItem,
+  getMyLostItems,
 };
