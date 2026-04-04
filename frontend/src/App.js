@@ -7,6 +7,7 @@ import Layout from "./components/common/Layout";
 // Components
 import FoundForm from './components/Lost-Found_MS/FoundForm';
 import LostForm from './components/Lost-Found_MS/LostForm';
+import ClaimForm from "./components/Lost-Found_MS/ClaimForm";
 import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReportSelection from './components/Lost-Found_MS/Report';
 import Home from "./components/HomePage/Home";
@@ -76,6 +77,7 @@ function App() {
         <Route path="/lost" element={<Layout><LostForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
         <Route path="/report" element={<Layout><ReportSelection /> </Layout>} />
         <Route path="/browseitems" element={<Layout><BrowseItems refreshFlag={refreshFlag} /></Layout>} />
+        <Route path="/claim/:id" element={<ClaimForm />} />
         <Route path="/feedback" element={<Layout><FeedbackInsert /></Layout>} />
         <Route path="/admin/feedback" element={<FeedbackDisplay />} />
         <Route path="/dashboard" element={<Layout><UserDashboard /></Layout>} />

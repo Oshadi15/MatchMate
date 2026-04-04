@@ -24,7 +24,7 @@ const foundRoutes = require("./routes/Lost-Found_MS/foundRoutes");
 const itemRoutes = require("./routes/Lost-Found_MS/itemRoutes");
 const userRoutes = require("./routes/userManagement/userRoutes");
 const LostFoundManagement = require("./routes/Lost-Found_MS/LostFoundManagement");
-
+const claimRoutes = require("./routes/Lost-Found_MS/ClaimRoutes");
 const smartMatchRoutes = require("./routes/smart_matching/smartMatchRoutes");
 
 //MIDDLEWARE
@@ -52,6 +52,7 @@ app.use("/api/found", foundRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/lostfound", LostFoundManagement);
+app.use("/api/claims", claimRoutes);
 
 //DATABASE CONNECTION
 
