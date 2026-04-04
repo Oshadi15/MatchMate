@@ -35,6 +35,7 @@ const AdminMatchPanel = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [aiFilter, setAiFilter] = useState('all');
   const [sortBy, setSortBy] = useState('overall_desc');
+  const [ownerFilter, setOwnerFilter] = useState('all');
 
   const navigate = useNavigate();
   const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -47,14 +48,14 @@ const AdminMatchPanel = () => {
   const awaitingAiCount = useMemo(() => matches.filter((m) => m.imageAiStatus === 'pending_ai').length, [matches]);
 
   const fetchMatches = useCallback(async () => {
-    const res = await API.get('http://localhost:5000/api/smart-match/all-matches');
+    const res = await API.get('/api/smart-match/all-matches');
     setMatches(Array.isArray(res.data) ? res.data : []);
   }, []);
 
   const runMatching = async () => {
     setStats({ loading: true, msg: 'Scoring local input data (0–100%)…' });
     try {
-      const res = await API.post('http://localhost:5000/api/smart-match/run-match');
+      const res = await API.post('/api/smart-match/run-match');
       setStats({
         loading: false,
         msg: `✓ Input scoring saved. ${res.data.matchesFound || 0} new, ${res.data.matchesUpdated || 0} updated.`,
@@ -70,7 +71,7 @@ const AdminMatchPanel = () => {
   const runAiImageCheck = async () => {
     setStats({ loading: true, msg: 'Running AI image check (0–100%)…' });
     try {
-      const res = await API.post('http://localhost:5000/api/smart-match/run-image-ai');
+      const res = await API.post('/api/smart-match/run-image-ai');
       setStats({
         loading: false,
         msg: `✓ AI done. Processed ${res.data.processed || 0}, scored ${res.data.aiScoredOk || 0}.`,
@@ -88,7 +89,7 @@ const AdminMatchPanel = () => {
     if (!ok) return;
     setStats({ loading: true, msg: 'Deleting all matches…' });
     try {
-      await API.delete('http://localhost:5000/api/smart-match/delete/all');
+      await API.delete('/api/smart-match/delete/all');
       setStats({ loading: false, msg: '✓ All matches deleted.' });
       fetchMatches();
     } catch (e) {
@@ -99,17 +100,39 @@ const AdminMatchPanel = () => {
   };
 
   const deleteMatch = async (id) => {
-    await API.delete(`http://localhost:5000/api/smart-match/${id}`);
+    await API.delete(`/api/smart-match/${id}`);
     fetchMatches();
   };
 
   const handleNotify = async (id) => {
+    const matchId = String(id);
+    const row = matches.find((m) => String(m._id) === matchId);
+    const existingEmail = (row?.lostItemId?.userEmail || '').trim();
+    let email = existingEmail;
+    if (!email) {
+      const entered = window.prompt(
+        'This lost report has no email on file. Enter the owner account email so they can see this in Smart Matches:',
+        ''
+      );
+      if (entered == null) return;
+      email = String(entered).trim();
+      if (!email) {
+        alert('A valid email is required so the owner can see matches in Smart Matches.');
+        return;
+      }
+    }
     try {
-      await API.post(`http://localhost:5000/api/smart-match/notify/${id}`);
-      alert('Notification sent to user!');
+      const payload = existingEmail ? {} : { email };
+      await API.post(`/api/smart-match/notify/${matchId}`, payload);
+      alert('User will see this on their Smart Matches page.');
       fetchMatches();
-    } catch {
-      alert('Failed to send notification');
+    } catch (e) {
+      const msg =
+        e?.response?.data?.message ||
+        e?.response?.data?.error ||
+        e?.message ||
+        'Failed to send notification';
+      alert(msg);
     }
   };
 
@@ -146,6 +169,10 @@ const AdminMatchPanel = () => {
           return false;
         }
       }
+      if (ownerFilter !== 'all') {
+        const r = m.lostOwnerResponse || 'none';
+        if (ownerFilter !== r) return false;
+      }
       if (!q) return true;
       const lostName = (m?.lostItemId?.itemName || '').toLowerCase();
       const foundName = (m?.foundItemId?.itemName || '').toLowerCase();
@@ -175,7 +202,7 @@ const AdminMatchPanel = () => {
     });
 
     return out;
-  }, [matches, searchText, statusFilter, aiFilter, sortBy]);
+  }, [matches, searchText, statusFilter, aiFilter, sortBy, ownerFilter]);
 
   useEffect(() => {
     // Only admin should be allowed to view all matches.
@@ -186,75 +213,96 @@ const AdminMatchPanel = () => {
     fetchMatches();
   }, [fetchMatches, isAdmin, navigate]);
 
+  useEffect(() => {
+    if (!isAdmin) return;
+    const t = window.setInterval(() => {
+      fetchMatches();
+    }, 20000);
+    return () => window.clearInterval(t);
+  }, [isAdmin, fetchMatches]);
+
   return (
     <div className="admin-panel">
-      <div className="admin-header">
+      <div className="admin-panel-inner">
+      <header className="admin-header">
         <div className="admin-header-left">
-          <div className="admin-header-badge">🧠</div>
+          <div className="admin-header-badge" aria-hidden="true">
+            <span className="admin-header-badge-icon" />
+          </div>
           <div className="admin-header-text">
-            <h2>Smart Matching Control Center</h2>
-            <p>Overall = (Input x 0.6) + (AI Image x 0.4), shown as percentage.</p>
+            <span className="admin-header-kicker">Admin · Smart matching</span>
+            <h1 className="admin-header-title">Matching control center</h1>
+            <p className="admin-header-desc">
+              Overall score = (Input × 0.6) + (AI image × 0.4). Run scoring, then AI review, then notify owners.
+            </p>
           </div>
         </div>
 
         <div className="header-actions">
-          <button onClick={runMatching} disabled={stats.loading} className="run-btn">
-            {stats.loading ? <><div className="run-btn-spinner" /> Processing…</> : <><span>①</span> Run Input Scoring</>}
+          <span className="admin-sync-pill" title="List refreshes automatically every 20 seconds">
+            <span className="admin-sync-dot" /> Live sync
+          </span>
+          <button type="button" onClick={runMatching} disabled={stats.loading} className="run-btn">
+            {stats.loading ? <><div className="run-btn-spinner" /> Processing…</> : <>Run input scoring</>}
           </button>
-          <button onClick={runAiImageCheck} disabled={stats.loading} className="ai-image-btn">
-            <span>②</span> Run AI Image Check
+          <button type="button" onClick={runAiImageCheck} disabled={stats.loading} className="ai-image-btn">
+            AI image check
           </button>
-          <button onClick={deleteAllMatches} disabled={stats.loading} className="delete-all-btn">
-            Delete All
+          <button type="button" onClick={deleteAllMatches} disabled={stats.loading} className="delete-all-btn">
+            Clear all
           </button>
         </div>
-      </div>
+      </header>
 
-      <div className="admin-metrics admin-metrics-4">
-        <div className="metric-card">
+      <section className="admin-metrics admin-metrics-4" aria-label="Match statistics">
+        <div className="metric-card metric-card--total">
           <div className="metric-card-top">
-            <span className="metric-card-label">Total Matches</span>
-            <div className="metric-card-icon total">📊</div>
+            <span className="metric-card-label">Total matches</span>
+            <div className="metric-card-icon total" aria-hidden="true" />
           </div>
           <strong>{matches.length}</strong>
           <div className="metric-card-accent total" />
         </div>
-        <div className="metric-card">
+        <div className="metric-card metric-card--pending">
           <div className="metric-card-top">
-            <span className="metric-card-label">Pending Alerts</span>
-            <div className="metric-card-icon pending">⏳</div>
+            <span className="metric-card-label">Pending</span>
+            <div className="metric-card-icon pending" aria-hidden="true" />
           </div>
           <strong>{pendingCount}</strong>
           <div className="metric-card-accent pending" />
         </div>
-        <div className="metric-card">
+        <div className="metric-card metric-card--aiwait">
           <div className="metric-card-top">
             <span className="metric-card-label">Awaiting AI</span>
-            <div className="metric-card-icon aiwait">◎</div>
+            <div className="metric-card-icon aiwait" aria-hidden="true" />
           </div>
           <strong>{awaitingAiCount}</strong>
           <div className="metric-card-accent aiwait" />
         </div>
-        <div className="metric-card">
+        <div className="metric-card metric-card--notified">
           <div className="metric-card-top">
             <span className="metric-card-label">Notified</span>
-            <div className="metric-card-icon notified">✅</div>
+            <div className="metric-card-icon notified" aria-hidden="true" />
           </div>
           <strong>{notifiedCount}</strong>
           <div className="metric-card-accent notified" />
         </div>
-      </div>
+      </section>
 
       <div className="admin-actions">
-        {stats.msg && <p className="status-msg">{stats.msg}</p>}
+        {stats.msg && <p className="status-msg" role="status">{stats.msg}</p>}
       </div>
 
+      <div className="table-section">
       <div className="table-toolbar">
-        <h3 className="table-toolbar-title">Match results</h3>
-        <span className="table-toolbar-meta">{filteredMatches.length} / {matches.length} rows</span>
+        <div className="table-toolbar-left">
+          <h2 className="table-toolbar-title">Match results</h2>
+          <p className="table-toolbar-sub">Filter, sort, and review owner responses.</p>
+        </div>
+        <span className="table-toolbar-meta">{filteredMatches.length} of {matches.length} shown</span>
       </div>
 
-      <div className="table-filters">
+      <div className="table-filters" role="search">
         <input
           type="text"
           className="table-filter-input"
@@ -281,11 +329,17 @@ const AdminMatchPanel = () => {
           <option value="image_desc">Sort: image high → low</option>
           <option value="latest">Sort: latest updated</option>
         </select>
+        <select className="table-filter-select" value={ownerFilter} onChange={(e) => setOwnerFilter(e.target.value)}>
+          <option value="all">Owner: any</option>
+          <option value="none">Owner: no answer yet</option>
+          <option value="claimed">Owner: claimed (that's mine)</option>
+          <option value="rejected">Owner: not mine</option>
+        </select>
       </div>
 
       <div className="table-wrap table-wrap-scroll">
         <table className="match-table">
-          <thead>
+          <thead className="match-table-head">
             <tr>
               <th>Lost</th>
               <th>Found</th>
@@ -294,16 +348,18 @@ const AdminMatchPanel = () => {
               <th>Overall</th>
               <th>Photos / AI</th>
               <th>Status</th>
+              <th>Lost owner</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredMatches.length === 0 ? (
               <tr className="empty-row">
-                <td colSpan="8">
+                <td colSpan="9">
                   <div className="empty-row-inner">
-                    <div className="empty-row-icon">🔭</div>
-                    <span>No matches (check filters or run scoring).</span>
+                    <div className="empty-row-icon" aria-hidden="true" />
+                    <span className="empty-row-title">No rows match</span>
+                    <span className="empty-row-hint">Adjust filters or run input scoring to populate results.</span>
                   </div>
                 </td>
               </tr>
@@ -320,6 +376,17 @@ const AdminMatchPanel = () => {
                 const found = m.foundItemId || null;
                 const lostSrc = lost?.image ? resolveImageSrc(lost.image) : '';
                 const foundSrc = found?.image ? resolveImageSrc(found.image) : '';
+                const ownerResp = m.lostOwnerResponse || 'none';
+                const oc = m.lostOwnerContact || {};
+                const ownerPill =
+                  ownerResp === 'claimed'
+                    ? { cls: 'owner-pill owner-pill--claimed', label: 'Claimed' }
+                    : ownerResp === 'rejected'
+                      ? { cls: 'owner-pill owner-pill--rejected', label: 'Not mine' }
+                      : { cls: 'owner-pill owner-pill--none', label: 'No answer' };
+                const ownerWhen = m.lostOwnerRespondedAt
+                  ? new Date(m.lostOwnerRespondedAt).toLocaleString()
+                  : null;
 
                 return (
                   <tr key={m._id}>
@@ -363,11 +430,27 @@ const AdminMatchPanel = () => {
                     <td>
                       <span className={`status ${m.status}`}>{m.status}</span>
                     </td>
-                    <td>
-                      {m.status === 'pending' && (
-                        <button onClick={() => handleNotify(m._id)} className="notify-btn">Notify</button>
+                    <td className="owner-cell">
+                      <span className={ownerPill.cls}>{ownerPill.label}</span>
+                      {(ownerResp === 'claimed' || ownerResp === 'rejected') && (
+                        <div className="owner-contact-line">
+                          {[oc.name, oc.email, oc.phone].filter(Boolean).join(' · ') || '—'}
+                          {ownerWhen && (
+                            <>
+                              <br />
+                              <span className="row-sub">{ownerWhen}</span>
+                            </>
+                          )}
+                        </div>
                       )}
-                      <button onClick={() => deleteMatch(m._id)} className="del-btn">Remove</button>
+                    </td>
+                    <td>
+                      <div className="action-cell">
+                      {m.status === 'pending' && (
+                        <button type="button" onClick={() => handleNotify(m._id)} className="notify-btn">Notify</button>
+                      )}
+                      <button type="button" onClick={() => deleteMatch(m._id)} className="del-btn">Remove</button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -376,19 +459,20 @@ const AdminMatchPanel = () => {
           </tbody>
         </table>
       </div>
+      </div>
 
       {selectedItem && (
-        <div className="item-modal-overlay" onClick={closeItemDetails}>
-          <div className="item-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="item-modal-overlay" onClick={closeItemDetails} role="presentation">
+          <div className="item-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
             <div className="item-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <h3>Item Details</h3>
-                <span className="item-modal-type-pill">
-                  {selectedItemType === 'Lost Item' ? '🔴' : '🟢'} {selectedItemType}
+              <div className="item-modal-header-main">
+                <h3 id="item-modal-title">Item details</h3>
+                <span className={`item-modal-type-pill item-modal-type-pill--${selectedItemType === 'Lost Item' ? 'lost' : 'found'}`}>
+                  {selectedItemType}
                 </span>
               </div>
-              <button type="button" className="item-modal-close" onClick={closeItemDetails}>
-                ✕
+              <button type="button" className="item-modal-close" onClick={closeItemDetails} aria-label="Close">
+                <span aria-hidden="true">×</span>
               </button>
             </div>
 
@@ -424,6 +508,7 @@ const AdminMatchPanel = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

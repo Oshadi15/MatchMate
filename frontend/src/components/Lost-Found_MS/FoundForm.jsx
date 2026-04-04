@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FoundForm.css";
 
@@ -11,8 +11,20 @@ const FoundForm = () => {
     dateTime: "",
     location: "",
     description: "",
+    userEmail: "",
     image: null,
   });
+
+  useEffect(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("user") || "{}");
+      if (u.email) {
+        setFormData((prev) => ({ ...prev, userEmail: u.email }));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   /* =========================
      HANDLE INPUT CHANGE
@@ -69,6 +81,14 @@ const FoundForm = () => {
       alert(res.data.message || "Found item submitted successfully!");
 
       // ✅ Reset form
+      const savedEmail = (() => {
+        try {
+          const u = JSON.parse(localStorage.getItem("user") || "{}");
+          return u.email || "";
+        } catch {
+          return "";
+        }
+      })();
       setFormData({
         itemName: "",
         category: "",
@@ -76,6 +96,7 @@ const FoundForm = () => {
         dateTime: "",
         location: "",
         description: "",
+        userEmail: savedEmail,
         image: null,
       });
 
@@ -109,6 +130,16 @@ const FoundForm = () => {
           name="itemName"
           placeholder="What did you find?"
           value={formData.itemName}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Your email (same as your login — so you get Smart Match updates)</label>
+        <input
+          type="email"
+          name="userEmail"
+          placeholder="you@example.com"
+          value={formData.userEmail}
           onChange={handleChange}
           required
         />
