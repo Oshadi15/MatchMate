@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createHelpRequest } from "../../services/helpApi";
 import "./createHelpRequest.css";
 
@@ -20,6 +21,8 @@ const initialErrors = {
 export default function CreateHelpRequest() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState(initialErrors);
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
   const firstNonSpaceIsLetter = (value) => {
     const trimmedStart = value.replace(/^\s+/, "");
@@ -122,34 +125,33 @@ export default function CreateHelpRequest() {
     };
 
     setErrors(newErrors);
-
     return !Object.values(newErrors).some((error) => error);
-  };
-
-  const getRequesterKey = () => {
-    let requesterKey = localStorage.getItem("studentRequesterKey");
-
-    if (!requesterKey) {
-      requesterKey = `student_${Date.now()}_${Math.random()
-        .toString(36)
-        .slice(2, 10)}`;
-      localStorage.setItem("studentRequesterKey", requesterKey);
-    }
-
-    return requesterKey;
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage("");
 
     const isValid = validate();
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) {
+        alert("Please login first");
+        return;
+      }
+
+      const requesterKey = user._id || user.email;
+
+      if (!requesterKey) {
+        alert("Logged user information is missing");
+        return;
+      }
+
       const formData = new FormData();
-      formData.append("requesterKey", getRequesterKey());
+      formData.append("requesterKey", requesterKey);
       formData.append("supportType", form.supportType);
       formData.append("title", form.title.trim());
       formData.append("description", form.description.trim());
@@ -160,7 +162,10 @@ export default function CreateHelpRequest() {
       }
 
       await createHelpRequest(formData);
-      alert("Support request submitted!");
+
+      setSuccessMessage(
+        "Support request submitted successfully. You can now track its status and admin reply in My Help Requests."
+      );
 
       setForm(initialForm);
       setErrors(initialErrors);
@@ -291,6 +296,19 @@ export default function CreateHelpRequest() {
           <button className="create-help-request-button" type="submit">
             Submit Request
           </button>
+
+          {successMessage && (
+            <div className="success-box">
+              <p>{successMessage}</p>
+              <button
+                type="button"
+                className="view-requests-btn"
+                onClick={() => navigate("/my-help-requests")}
+              >
+                View My Requests
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>

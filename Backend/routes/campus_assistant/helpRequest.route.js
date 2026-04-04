@@ -26,13 +26,30 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Routes
+// STUDENT ROUTES
+
+// Create help request
 router.post("/", upload.single("document"), createHelpRequest);
-router.get("/", getHelpRequests);
+
+// Get only logged/requester student's own requests
 router.get("/my-requests", getMyHelpRequests);
+
+// Get one request by ID
 router.get("/:id", getHelpRequestById);
+
+
+// ADMIN ROUTES
+
+// Get all help requests
+router.get("/", getHelpRequests);
+
+// Reply to a help request
 router.patch("/:id/reply", replyToHelpRequest);
+
+// Update request status
 router.patch("/:id/status", updateHelpStatus);
+
+// Delete help request
 router.delete("/:id", deleteHelpRequest);
 
 module.exports = router;

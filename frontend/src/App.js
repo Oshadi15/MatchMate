@@ -14,6 +14,7 @@ import Home from "./components/HomePage/Home";
 import HelpBoard from "./components/campus_assistant/helpBoard";
 import CreateHelpRequest from "./components/campus_assistant/createHelpRequest";
 import SmartAssistantHome from "./components/campus_assistant/smartAssistantHome";
+import MyHelpRequests from "./components/campus_assistant/myHelpRequest";
 
 // import BrowseItems from './components/Lost-Found_MS/BrowseItems';
 import ReplyHelpRequest from "./components/campus_assistant/replyHelpRequest";
@@ -53,6 +54,7 @@ function App() {
         <Route path="/help/reply/:id" element={<Layout><ReplyHelpRequest /></Layout>} />
         <Route path="/manage-location" element={<Layout><ManageLocation /></Layout>} />
         <Route path="/location-finder" element={<Layout><LocationFinder /></Layout>} />
+        <Route path="/my-help-requests" element={<MyHelpRequests />} />
         
       
         <Route path="/signup" element={<StudentSignup />} />
