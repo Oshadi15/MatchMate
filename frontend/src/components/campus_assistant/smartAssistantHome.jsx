@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./smartAssistantHome.css";
 import locationImg from "../../assets/location.jpg";
 import helpBoardImg from "../../assets/helpboard.jpg";
+import myRequestsImg from "../../assets/my-help.jpg";
 
 export default function CampusAssistantHome() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function CampusAssistantHome() {
         <div className="ca-cards">
           <button
             className="ca-card"
-           onClick={() => navigate("/location-finder")}
+            onClick={() => navigate("/location-finder")}
             type="button"
           >
             <div className="ca-card-body">
@@ -57,12 +58,32 @@ export default function CampusAssistantHome() {
             </div>
             <div className="ca-card-footer">Request help or assistance</div>
           </button>
+
+          <button
+            className="ca-card"
+            onClick={() => navigate("/my-help-requests")}
+            type="button"
+          >
+            <div className="ca-card-body">
+              <h2 className="ca-card-title">My Help Requests</h2>
+              <div className="ca-card-imageWrap">
+                <img
+                  src={myRequestsImg}
+                  alt="My Help Requests"
+                  className="ca-card-imageFull"
+                />
+              </div>
+            </div>
+            <div className="ca-card-footer">View your previous requests and replies</div>
+          </button>
         </div>
 
         <div className="ca-notes">
           <div className="ca-notes-header">
             <h3 className="ca-notes-title">Guidelines</h3>
-            <span className="ca-notes-sub">Please read before submitting a request</span>
+            <span className="ca-notes-sub">
+              Please read before submitting a request
+            </span>
           </div>
 
           <div className="ca-notes-grid">
