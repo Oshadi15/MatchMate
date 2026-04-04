@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import "./AdminBrowse.css";
+import AdminLayout from "../AdminDashBoard/AdminLayout";
+
+const getArrayFromResponse = (data, keys = []) => {
+  if (Array.isArray(data)) return data;
+  for (let key of keys) {
+    if (Array.isArray(data?.[key])) return data[key];
+  }
+  return [];
+};
 
 const AdminBrowse = () => {
   const [foundItems, setFoundItems] = useState([]);
@@ -11,20 +20,8 @@ const AdminBrowse = () => {
   const [searchName, setSearchName] = useState("");
   const [searchDate, setSearchDate] = useState("");
 
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
   /* ================= FETCH ITEMS ================= */
-  const getArrayFromResponse = (data, keys = []) => {
-    if (Array.isArray(data)) return data;
-    for (let key of keys) {
-      if (Array.isArray(data?.[key])) return data[key];
-    }
-    return [];
-  };
-
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -46,7 +43,11 @@ const AdminBrowse = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   /* ================= DELETE ITEM ================= */
   const deleteItem = async (id, type) => {
@@ -103,93 +104,121 @@ const AdminBrowse = () => {
     if (!items.length) return <p className="empty-text">{emptyMsg}</p>;
 
     return (
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Color</th>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Description</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {items.map((item) => (
-            <tr key={item._id}>
-              <td>
-                {item.image ? (
-                  <img
-                    src={`http://localhost:5000/uploads/${item.image}`}
-                    alt="item"
-                    className="table-img"
-                  />
-                ) : (
-                  "No Image"
-                )}
-              </td>
-
-              <td>{item.itemName || "N/A"}</td>
-              <td>{item.category || "N/A"}</td>
-              <td>{item.color || "N/A"}</td>
-              <td>{formatDateTime(item.dateTime)}</td>
-              <td>{item.location || "N/A"}</td>
-              <td>{item.description || "—"}</td>
-
-              <td>
-                <button
-                  className="delete-btn"
-                  onClick={() => deleteItem(item._id, type)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Color</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th style={{ width: 120 }}>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {items.map((item) => (
+              <tr key={item._id}>
+                <td>
+                  {item.image ? (
+                    <img
+                      src={`http://localhost:5000/uploads/${item.image}`}
+                      alt="item"
+                      className="table-img"
+                    />
+                  ) : (
+                    "No Image"
+                  )}
+                </td>
+
+                <td>{item.itemName || "N/A"}</td>
+                <td>{item.category || "N/A"}</td>
+                <td>{item.color || "N/A"}</td>
+                <td>{formatDateTime(item.dateTime)}</td>
+                <td>{item.location || "N/A"}</td>
+                <td>{item.description || "—"}</td>
+
+                <td>
+                  <button
+                    className="admin-btn admin-btn--danger"
+                    onClick={() => deleteItem(item._id, type)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   };
 
-  if (loading) return <p className="loading-text">Loading items...</p>;
-
   return (
-    <div className="browse-items-page">
-      <div className="browse-items-container">
-
-        <h1 className="browse-title">Admin Item Management</h1>
-
-        {/* SEARCH BAR */}
-        <div className="search-bar-card">
-          <input
-            type="date"
-            value={searchDate}
-            onChange={(e) => setSearchDate(e.target.value)}
-          />
-
-          <input
-            type="text"
-            placeholder="Search by item name"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-          />
-
-          <button onClick={fetchItems}>Refresh</button>
+    <AdminLayout
+      title="Items (Browse)"
+      subtitle="Review lost and found reports and keep the list clean"
+      actions={
+        <button className="admin-btn admin-btn--primary" onClick={fetchItems}>
+          Refresh
+        </button>
+      }
+    >
+      <div className="admin-card">
+        <div className="admin-card-header">
+          <h3 className="admin-card-title">Search</h3>
         </div>
+        <div className="admin-card-body">
+          <div className="ab-filters">
+            <input
+              className="ab-input"
+              type="date"
+              value={searchDate}
+              onChange={(e) => setSearchDate(e.target.value)}
+            />
 
-        {error && <p className="error-text">{error}</p>}
+            <input
+              className="ab-input"
+              type="text"
+              placeholder="Search by item name"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
 
-        <h2 className="section-title lost-title">Lost Items</h2>
-        {renderTable(filteredLost, "lost", "No lost items found.")}
+            <button className="admin-btn" onClick={() => { setSearchName(""); setSearchDate(""); }}>
+              Clear
+            </button>
+          </div>
 
-        <h2 className="section-title found-title">Found Items</h2>
-        {renderTable(filteredFound, "found", "No found items found.")}
-
+          {error ? <p className="ab-error">{error}</p> : null}
+        </div>
       </div>
-    </div>
+
+      {loading ? (
+        <p className="loading-text">Loading items…</p>
+      ) : (
+        <>
+          <div className="ab-section">
+            <div className="ab-section-head">
+              <h3 className="ab-section-title">Lost Items</h3>
+              <span className="ab-section-meta">{filteredLost.length} items</span>
+            </div>
+            <div className="ab-table">{renderTable(filteredLost, "lost", "No lost items found.")}</div>
+          </div>
+
+          <div className="ab-section">
+            <div className="ab-section-head">
+              <h3 className="ab-section-title">Found Items</h3>
+              <span className="ab-section-meta">{filteredFound.length} items</span>
+            </div>
+            <div className="ab-table">{renderTable(filteredFound, "found", "No found items found.")}</div>
+          </div>
+        </>
+      )}
+    </AdminLayout>
   );
 };
 

@@ -2,7 +2,7 @@
 
 .create-help-request-page {
   min-height: 100vh;
-  background: #0b1220; /* dark navy */
+  background: var(--mm-bg);
   padding: 24px 14px;
   box-sizing: border-box;
   display: flex;
@@ -13,11 +13,11 @@
 .create-help-request-card {
   width: 100%;
   max-width: 620px;
-  background: rgba(255, 255, 255, 0.06); /* glass */
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
   border-radius: 16px;
   padding: 18px 16px;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--mm-shadow-md);
   box-sizing: border-box;
   backdrop-filter: blur(10px);
 }
@@ -26,12 +26,12 @@
   margin: 0 0 6px 0;
   font-size: 22px;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 .create-help-request-subtitle {
   margin: 0 0 14px 0;
-  color: #cbd5e1;
+  color: var(--mm-ink-3);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -51,11 +51,40 @@
   gap: 6px;
 }
 
+.field-error {
+  margin: 0;
+  color: var(--mm-danger);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.file-list {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-item {
+  max-width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--mm-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mm-ink-2);
+  font-size: 12px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 .field label {
   font-size: 13px;
   font-weight: 800;
-  color: #e5e7eb;
+  color: var(--mm-ink-2);
   opacity: 1;
   display: block;
 }
@@ -63,13 +92,13 @@
 .field-label {
   font-size: 13px;
   font-weight: 800;
-  color: #e5e7eb !important;
+  color: var(--mm-ink-2) !important;
   opacity: 1 !important;
   display: block;
 }
 
 .req {
-  color: #f59e0b; /* orange */
+  color: var(--mm-amber);
   margin-left: 3px;
   font-weight: 900;
 }
@@ -80,9 +109,9 @@
   width: 100%;
   padding: 10px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--mm-border);
   background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  color: var(--mm-ink-1);
   font-size: 13px;
   outline: none;
   transition: 0.18s ease;
@@ -97,19 +126,19 @@
 
   /* keep background dark and readable */
   background-color: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 
 .create-help-request-form select option {
-  background: #0f172a; /* dark option background */
-  color: #ffffff;      /* white text */
+  background: var(--mm-bg);
+  color: var(--mm-ink-1);
 }
 
 
 .create-help-request-form select option:checked {
-  background: #1f2937;
-  color: #f59e0b;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--mm-amber);
 }
 
 .create-help-request-form input::placeholder,
@@ -120,8 +149,8 @@
 .create-help-request-form input:focus,
 .create-help-request-form select:focus,
 .create-help-request-form textarea:focus {
-  border-color: rgba(245, 158, 11, 0.9);
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 164, 0, 0.9);
+  box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.15);
 }
 
 .create-help-request-form textarea {
@@ -138,9 +167,9 @@
 .seg-btn {
   padding: 10px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--mm-border);
   background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  color: var(--mm-ink-1);
   font-weight: 800;
   font-size: 12px;
   cursor: pointer;
@@ -151,19 +180,19 @@
 
 .seg-btn:hover {
   transform: translateY(-1px);
-  border-color: rgba(245, 158, 11, 0.7);
+  border-color: rgba(245, 164, 0, 0.55);
 }
 
 .seg-btn.active {
-  background: rgba(245, 158, 11, 0.18);
-  border-color: rgba(245, 158, 11, 0.85);
-  color: #f59e0b;
+  background: var(--mm-amber-dim);
+  border-color: rgba(245, 164, 0, 0.55);
+  color: var(--mm-amber);
 }
 
 .hint {
   margin-top: 6px;
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--mm-ink-3);
 }
 
 .create-help-request-button {
@@ -171,8 +200,8 @@
   padding: 12px 14px;
   border: none;
   border-radius: 12px;
-  background: #f59e0b;
-  color: #0b1220;
+  background: var(--mm-amber);
+  color: var(--mm-bg);
   font-size: 14px;
   font-weight: 900;
   cursor: pointer;
@@ -181,7 +210,7 @@
 }
 
 .create-help-request-button:hover {
-  background: #fb923c;
+  filter: brightness(1.03);
   transform: translateY(-1px);
 }
 

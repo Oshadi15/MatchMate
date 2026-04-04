@@ -119,10 +119,11 @@ const FoundForm = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2>Report Found Item</h2>
+    <div className="mm-form-page">
+      <div className="form-container">
+        <h2>Report Found Item</h2>
 
-      <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mm-form">
 
         <label>Item Name</label>
         <input
@@ -213,9 +214,10 @@ const FoundForm = () => {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit Found Item</button>
+          <button type="submit">Submit Found Item</button>
 
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

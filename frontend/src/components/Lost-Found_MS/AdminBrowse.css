@@ -1,196 +1,90 @@
-/* =====================================
-   PAGE BACKGROUND
-===================================== */
-.browse-items-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0b1324, #0f1c34);
-  padding: 40px 20px;
-  color: #ffffff;
-  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+.ab-filters {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 10px;
+  align-items: center;
 }
 
-/* =====================================
-   MAIN CONTAINER
-===================================== */
-.browse-items-container {
-  max-width: 1200px;
-  margin: auto;
-}
-
-/* =====================================
-   TITLE
-===================================== */
-.browse-title {
-  text-align: center;
-  margin-bottom: 25px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* =====================================
-   SEARCH BAR CARD
-===================================== */
-.search-bar-card {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  padding: 18px;
-  margin-bottom: 30px;
-
+.ab-input {
+  padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* SEARCH INPUTS */
-.search-bar-card input {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
-
-  background: rgba(255,255,255,0.06);
-  color: white;
-  font-size: 14px;
-}
-
-.search-bar-card input:focus {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(248, 250, 252, 0.86);
+  font-size: 13px;
+  min-width: 0;
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
 }
 
-/* REFRESH BUTTON */
-.search-bar-card button {
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: none;
-
-  background: linear-gradient(135deg, #f59e0b, #ffb020);
-  color: #111827;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s;
+.ab-input:focus {
+  border-color: rgba(245, 164, 0, 0.45);
+  box-shadow: 0 0 0 4px rgba(245, 164, 0, 0.16);
 }
 
-.search-bar-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+.ab-input::placeholder {
+  color: rgba(248, 250, 252, 0.50);
 }
 
-/* =====================================
-   SECTION TITLES
-===================================== */
-.section-title {
-  margin-top: 30px;
-  margin-bottom: 12px;
-  font-weight: 600;
+.ab-error {
+  margin: 10px 0 0;
+  color: #fecaca;
+  font-weight: 800;
 }
 
-.lost-title {
-  color: #ff6b6b;
+.ab-section {
+  margin-top: 14px;
 }
 
-.found-title {
-  color: #22c55e;
+.ab-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 10px 2px;
 }
 
-/* =====================================
-   ADMIN TABLE
-===================================== */
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
+.ab-section-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: rgba(248, 250, 252, 0.92);
+}
+
+.ab-section-meta {
+  color: rgba(248, 250, 252, 0.60);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ab-table {
+  background: rgba(15, 27, 53, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  border-radius: 12px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-
-  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
 }
 
-/* TABLE HEADER */
-.admin-table thead {
-  background: rgba(255,255,255,0.08);
+.ab-table .admin-table-wrap {
+  border-radius: 16px;
 }
 
-.admin-table th {
-  padding: 14px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 14px;
-  color: #e5e7eb;
-}
-
-/* TABLE ROWS */
-.admin-table td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-size: 14px;
-}
-
-/* HOVER EFFECT */
-.admin-table tbody tr:hover {
-  background: rgba(255,255,255,0.06);
-  transition: 0.2s;
-}
-
-/* =====================================
-   IMAGE INSIDE TABLE
-===================================== */
 .table-img {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-/* =====================================
-   DELETE BUTTON
-===================================== */
-.delete-btn {
-  background: #ef4444;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
-  transform: scale(1.05);
-}
-
-/* =====================================
-   TEXT STATES
-===================================== */
 .loading-text,
-.empty-text,
-.error-text {
-  text-align: center;
-  margin-top: 20px;
+.empty-text {
+  margin: 0;
+  padding: 16px;
+  color: rgba(248, 250, 252, 0.60);
+  font-weight: 700;
 }
 
-.error-text {
-  color: #ff6b6b;
-}
-
-/* =====================================
-   RESPONSIVE TABLE
-===================================== */
-@media (max-width: 900px) {
-
-  .admin-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+@media (max-width: 720px) {
+  .ab-filters {
+    grid-template-columns: 1fr;
   }
-
 }

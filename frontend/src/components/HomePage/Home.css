@@ -1,8 +1,8 @@
 /* ===== Base ===== */
 .home-page {
-  font-family: Arial, sans-serif;
-  background: #0b1020;
-  color: #fff;
+  font-family: inherit;
+  background: transparent;
+  color: var(--mm-ink-1);
   min-height: 100vh;
 }
 
@@ -86,7 +86,7 @@
   position: fixed;
   bottom: 18px;
   right: 18px;
-  background: #dd5810;
+  background: var(--mm-amber);
   border: none;
   color: #fff;
   border-radius: 999px;
@@ -96,7 +96,7 @@
   z-index: 80;
   display: grid;
   place-items: center;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
 }
 .chat-button:hover {
   opacity: 0.95;
@@ -131,10 +131,10 @@
   height: 100%;
   width: 100%;
   background: linear-gradient(
-    to right,
-    rgba(11, 16, 32, 0.88),
-    rgba(11, 16, 32, 0.25)
-  );
+      to right,
+      rgba(11, 18, 32, 0.92),
+      rgba(11, 18, 32, 0.30)
+    );
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -144,12 +144,13 @@
   margin: 0;
   font-size: 46px;
   max-width: 720px;
+  letter-spacing: -0.03em;
 }
 .slide-overlay p {
   margin: 12px 0 0;
   max-width: 720px;
   font-size: 16px;
-  color: #c7d2fe;
+  color: var(--mm-ink-3);
   line-height: 1.6;
 }
 
@@ -164,14 +165,16 @@
   padding: 12px 18px;
   border-radius: 14px;
   border: 1px solid transparent;
-  background: #dd5810;
-  color: #fff;
+  background: var(--mm-amber);
+  color: #0b1220;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 800;
 }
 .cta-button.outline {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.22);
+  color: var(--mm-ink-1);
 }
 .cta-button:hover {
   opacity: 0.95;
@@ -208,11 +211,19 @@
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--mm-surface);
+  border: 1px solid var(--mm-border);
   border-radius: 18px;
   padding: 18px;
   backdrop-filter: blur(10px);
+  box-shadow: var(--mm-shadow-sm);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--mm-shadow-md);
+  border-color: rgba(245, 164, 0, 0.30);
 }
 .feature-card img {
   width: 100%;
@@ -225,7 +236,7 @@
 }
 .feature-card p {
   margin: 0;
-  color: #c7d2fe;
+  color: var(--mm-ink-3);
   line-height: 1.5;
   font-size: 13px;
 }
@@ -245,8 +256,8 @@
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: var(--mm-surface);
+  border: 1px solid var(--mm-border);
   border-radius: 18px;
   padding: 18px;
 }
@@ -256,7 +267,7 @@
 }
 .auth-left p {
   margin: 0;
-  color: #c7d2fe;
+  color: var(--mm-ink-3);
   line-height: 1.6;
 }
 
@@ -271,13 +282,15 @@
   padding: 12px 16px;
   border-radius: 14px;
   border: 1px solid transparent;
-  background: #dd5810;
-  color: #fff;
+  background: var(--mm-amber);
+  color: #0b1220;
   cursor: pointer;
+  font-weight: 800;
 }
 .action-button.outline {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.22);
+  color: var(--mm-ink-1);
 }
 .close-auth {
   padding: 12px 16px;
@@ -289,8 +302,8 @@
 }
 
 .auth-box {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 16px;
   padding: 16px;
 }

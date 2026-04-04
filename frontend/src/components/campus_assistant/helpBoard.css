@@ -1,6 +1,6 @@
 .help-board-page {
   min-height: 100vh;
-  background: #0b1220;
+  background: var(--mm-bg);
   padding: 40px 20px;
   box-sizing: border-box;
 }
@@ -19,46 +19,47 @@
   margin: 0 0 10px;
   font-size: 30px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 .help-board-subtitle {
   margin: 0;
-  color: #cbd5e1;
+  color: var(--mm-ink-3);
   font-size: 15px;
   line-height: 1.6;
 }
 
 .help-board-filters {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-md);
   padding: 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--mm-shadow-md);
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr auto;
   gap: 14px;
   margin-bottom: 24px;
   backdrop-filter: blur(10px);
+  color-scheme: dark;
 }
 
 .help-board-filters input,
 .help-board-filters select {
   width: 100%;
   padding: 13px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-sm);
   font-size: 15px;
   background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  color: var(--mm-ink-1);
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
 .help-board-filters select option {
-  background: #0f172a;
-  color: #ffffff;
+  background: var(--mm-bg);
+  color: var(--mm-ink-1);
 }
 
 .help-board-filters input::placeholder {
@@ -67,40 +68,18 @@
 
 .help-board-filters input:focus,
 .help-board-filters select:focus {
-  border-color: rgba(245, 158, 11, 0.9);
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
-}
-
-.help-board-filter-button {
-  border: none;
-  border-radius: 12px;
-  padding: 13px 18px;
-  background: #f59e0b;
-  color: #0b1220;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 110px;
-}
-
-.help-board-filter-button:hover {
-  background: #fb923c;
-  transform: translateY(-1px);
-}
-
-.help-board-filter-button:active {
-  transform: translateY(0);
+  border-color: rgba(245, 164, 0, 0.9);
+  box-shadow: 0 0 0 4px rgba(245, 164, 0, 0.15);
 }
 
 .help-board-message {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-md);
   padding: 24px;
   text-align: center;
-  color: #cbd5e1;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  color: var(--mm-ink-2);
+  box-shadow: var(--mm-shadow-md);
   backdrop-filter: blur(10px);
 }
 
@@ -110,11 +89,11 @@
 }
 
 .help-board-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-md);
   padding: 20px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--mm-shadow-md);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   backdrop-filter: blur(10px);
 }
@@ -135,7 +114,7 @@
 .help-board-title {
   margin: 0;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 
@@ -145,25 +124,34 @@
   font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
-  border: 1px solid transparent;
+  border: 1px solid var(--mm-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--mm-ink-2);
 }
 
 .help-board-status.open {
-  background: rgba(59, 130, 246, 0.18);
-  color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--mm-ink-2);
 }
 
 .help-board-status.progress {
-  background: rgba(245, 158, 11, 0.18);
-  color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.35);
+  background: var(--mm-amber-dim);
+  color: var(--mm-amber);
 }
 
 .help-board-status.resolved {
-  background: rgba(34, 197, 94, 0.18);
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.35);
+  color: var(--mm-success);
+}
+
+@supports (background: color-mix(in srgb, black, white)) {
+  .help-board-status.progress {
+    border-color: color-mix(in srgb, var(--mm-amber) 35%, var(--mm-border));
+  }
+
+  .help-board-status.resolved {
+    background: color-mix(in srgb, var(--mm-success) 14%, transparent);
+    border-color: color-mix(in srgb, var(--mm-success) 35%, var(--mm-border));
+  }
 }
 
 
@@ -180,8 +168,8 @@
   border: none;
   border-radius: 8px;
   padding: 5px 9px;
-  background: #f59e0b;
-  color: #0b1220;
+  background: var(--mm-amber);
+  color: var(--mm-bg);
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
@@ -190,7 +178,7 @@
 }
 
 .help-board-reply-button:hover {
-  background: #fb923c;
+  filter: brightness(1.03);
   transform: translateY(-1px);
 }
 
@@ -199,8 +187,8 @@
   border: none;
   border-radius: 8px;
   padding: 5px 9px;
-  background: #ef4444;
-  color: #ffffff;
+  background: var(--mm-danger);
+  color: var(--mm-ink-1);
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
@@ -209,27 +197,27 @@
 }
 
 .help-board-delete-button:hover {
-  background: #dc2626;
+  filter: brightness(1.05);
   transform: translateY(-1px);
 }
 
 .help-board-meta {
   margin: 0 0 10px;
-  color: #cbd5e1;
+  color: var(--mm-ink-2);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .help-board-description {
   margin: 0 0 12px;
-  color: #e5e7eb;
+  color: var(--mm-ink-1);
   font-size: 15px;
   line-height: 1.7;
 }
 
 .help-board-contact {
   font-size: 13px;
-  color: #9ca3af;
+  color: var(--mm-ink-3);
   line-height: 1.6;
   margin-bottom: 14px;
 }
@@ -278,25 +266,10 @@
 
 .help-board-reply-button,
 .help-board-delete-button {
-  padding: 6px 10px !important;
-  font-size: 12px !important;
-  border-radius: 8px !important;
-  min-width: auto !important;
-  width: auto !important;
-  line-height: 1 !important;
-}
-
-
-.help-board-reply-button {
-  border: none;
-  background: #f59e0b;
-  color: #0b1220;
-  font-weight: 800;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.help-board-reply-button:hover {
-  background: #fb923c;
-  transform: translateY(-1px);
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  min-width: auto;
+  width: auto;
+  line-height: 1;
 }

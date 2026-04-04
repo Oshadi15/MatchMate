@@ -1,6 +1,6 @@
 .manage-location-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #03112f 0%, #051633 45%, #04101f 100%);
+  background: var(--mm-bg);
   padding: 32px 16px 50px;
   box-sizing: border-box;
 }
@@ -14,13 +14,13 @@
   margin: 0;
   font-size: 42px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--mm-ink-1);
   letter-spacing: 0.3px;
 }
 
 .manage-subtitle {
   margin: 10px 0 26px;
-  color: #d7e3ff;
+  color: var(--mm-ink-3);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -28,21 +28,22 @@
 .manage-message {
   margin: 0 0 18px;
   padding: 14px 16px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #d7e3ff;
+  border-radius: var(--mm-radius-md);
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  color: var(--mm-ink-2);
   font-size: 14px;
   font-weight: 600;
 }
 
 .manage-location-form {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 22px;
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-lg);
   padding: 20px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--mm-shadow-md);
   margin-bottom: 30px;
+  color-scheme: dark;
 }
 
 .manage-form-grid {
@@ -59,7 +60,7 @@
 
 .field-group label {
   margin-bottom: 6px;
-  color: #ffffff;
+  color: var(--mm-ink-2);
   font-size: 14px;
   font-weight: 700;
 }
@@ -76,29 +77,30 @@
 .manage-location-form textarea {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--mm-border);
   border-radius: 14px;
   outline: none;
   font-size: 14px;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--mm-ink-1);
 }
 
 .manage-location-form input::placeholder,
 .manage-location-form textarea::placeholder {
-  color: #b7c6e6;
+  color: var(--mm-ink-3);
 }
 
 .manage-location-form select option {
-  color: #000000;
+  background: var(--mm-bg);
+  color: var(--mm-ink-1);
 }
 
 .manage-location-form input:focus,
 .manage-location-form select:focus,
 .manage-location-form textarea:focus {
-  border-color: #f7a600;
-  box-shadow: 0 0 0 3px rgba(247, 166, 0, 0.15);
+  border-color: rgba(245, 164, 0, 0.9);
+  box-shadow: 0 0 0 3px rgba(245, 164, 0, 0.15);
 }
 
 .manage-location-form textarea {
@@ -113,7 +115,7 @@
 .field-error {
   margin: 6px 0 0;
   font-size: 13px;
-  color: #ff7b7b;
+  color: var(--mm-danger);
   line-height: 1.4;
   font-weight: 600;
 }
@@ -130,7 +132,7 @@
 .edit-btn,
 .delete-btn,
 .map-btn {
-  border: none;
+  border: 1px solid transparent;
   border-radius: 12px;
   padding: 12px 16px;
   font-weight: 800;
@@ -141,25 +143,26 @@
 }
 
 .save-btn {
-  background: #f7a600;
-  color: #04142f;
+  background: var(--mm-amber);
+  color: var(--mm-bg);
 }
 
 .save-btn:hover {
-  background: #ffb31f;
+  filter: brightness(1.03);
 }
 
 .clear-btn {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--mm-border);
+  color: var(--mm-ink-1);
 }
 
 .clear-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(245, 164, 0, 0.55);
 }
 
 .manage-location-list h2 {
-  color: #ffffff;
+  color: var(--mm-ink-1);
   margin-bottom: 16px;
   font-size: 28px;
 }
@@ -171,11 +174,11 @@
 }
 
 .manage-location-card {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--mm-surface-2);
+  border: 1px solid var(--mm-border);
   border-radius: 24px;
   padding: 20px;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--mm-shadow-md);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -186,20 +189,20 @@
 
 .manage-location-card h3 {
   margin: 0 0 12px;
-  color: #ffffff;
+  color: var(--mm-ink-1);
   font-size: 24px;
   font-weight: 800;
 }
 
 .manage-location-card p {
   margin: 7px 0;
-  color: #d7e3ff;
+  color: var(--mm-ink-2);
   font-size: 14px;
   line-height: 1.55;
 }
 
 .manage-location-card strong {
-  color: #ffffff;
+  color: var(--mm-ink-1);
 }
 
 .manage-card-actions {
@@ -210,50 +213,51 @@
 }
 
 .edit-btn {
-  background: #2563eb;
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--mm-border);
+  color: var(--mm-ink-1);
   padding: 8px 12px;
   font-size: 13px;
   border-radius: 10px;
 }
 
 .edit-btn:hover {
-  background: #1d4ed8;
+  border-color: rgba(245, 164, 0, 0.55);
 }
 
 .delete-btn {
-  background: #dc2626;
-  color: #ffffff;
+  background: var(--mm-danger);
+  color: var(--mm-ink-1);
   padding: 8px 12px;
   font-size: 13px;
   border-radius: 10px;
 }
 
 .delete-btn:hover {
-  background: #b91c1c;
+  filter: brightness(1.05);
 }
 
 .map-btn {
-  background: #f7a600;
-  color: #04142f;
+  background: var(--mm-amber);
+  color: var(--mm-bg);
 }
 
 .map-btn:hover {
-  background: #ffb31f;
+  filter: brightness(1.03);
 }
 
 .status-available {
-  color: #4ade80;
+  color: var(--mm-success);
   font-weight: 800;
 }
 
 .status-closed {
-  color: #f87171;
+  color: var(--mm-danger);
   font-weight: 800;
 }
 
 .empty-text {
-  color: #d7e3ff;
+  color: var(--mm-ink-2);
   font-size: 16px;
 }
 

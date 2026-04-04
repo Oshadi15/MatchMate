@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import API from '../../services/api';
 import './AdminMatchPanel.css';
 import { useNavigate } from 'react-router-dom';
+import AdminLayout from '../AdminDashBoard/AdminLayout';
 
 function clamp01(n) {
   if (!Number.isFinite(n)) return null;

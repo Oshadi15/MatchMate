@@ -6,7 +6,7 @@ import "./Userlogin.css";
 const Login = () => {
   const navigate = useNavigate();
 
-  /* ================= STATE ================= */
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -14,7 +14,7 @@ const Login = () => {
 
   const [error, setError] = useState("");
 
-  /* ================= HANDLE CHANGE ================= */
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -27,9 +27,8 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    /* ==========================================
-       ✅ HARD CODED ADMIN LOGIN
-    ========================================== */
+  
+        
 
     const adminEmail = "admin@gmail.com";
     const adminPassword = "admin123";
@@ -52,9 +51,7 @@ const Login = () => {
       return;
     }
 
-    /* ==========================================
-       ✅ NORMAL USER LOGIN (BACKEND)
-    ========================================== */
+    
 
     try {
       const res = await axios.post(
@@ -107,7 +104,7 @@ const Login = () => {
         <button type="submit">Login</button>
 
         <p>
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account? <Link to="/signup">Register</Link>
         </p>
       </form>
     </div>

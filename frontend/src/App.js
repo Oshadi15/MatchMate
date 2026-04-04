@@ -37,6 +37,7 @@ import FeedbackDisplay from "./components/FeedbackDisplay/FeedbackDisplay";
 import UserMatches from "./components/Smart_Matching/UserMatches";
 import AdminMatchPanel from "./components/Smart_Matching/AdminMatchPanel";
 import Logout from "./components/Logout/Logout";
+import AdminAnalysis from "./components/AdminDashBoard/AdminAnalysis";
 
 
 function App() {
@@ -62,19 +63,20 @@ function App() {
         <Route path="/signup" element={<StudentSignup />} />
         <Route path="/login" element={<Userlogin />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/analysis" element={<AdminAnalysis />} />
         {/* <Route path='/found' element={<FoundForm/>} />
          <Route path='/lost' element={<LostForm/>} />
          <Route path='/report' element={<ReportSelection/>} /> */}
          <Route path="/adminlogin" element={<AdminLogin />} />
          <Route path="/admin/lostfound" element={<LostFoundManagement />} />
 
-        <Route path="/found" element={<FoundForm onSubmitSuccess={handleFormSubmit} />} />
-        <Route path="/lost" element={<LostForm onSubmitSuccess={handleFormSubmit} />} />
+        <Route path="/found" element={<Layout><FoundForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
+        <Route path="/lost" element={<Layout><LostForm onSubmitSuccess={handleFormSubmit} /></Layout>} />
         <Route path="/report" element={<Layout><ReportSelection /> </Layout>} />
-        <Route path="/browseitems" element={<BrowseItems refreshFlag={refreshFlag} />} />
-        <Route path="/feedback" element={<FeedbackInsert />} />
-        <Route path="/feedback" element={<FeedbackDisplay />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/browseitems" element={<Layout><BrowseItems refreshFlag={refreshFlag} /></Layout>} />
+        <Route path="/feedback" element={<Layout><FeedbackInsert /></Layout>} />
+        <Route path="/admin/feedback" element={<FeedbackDisplay />} />
+        <Route path="/dashboard" element={<Layout><UserDashboard /></Layout>} />
         <Route path="/adminbrowse" element={<AdminBrowse />} />
          <Route path='/usermatches' element={<Layout><UserMatches/></Layout>} />
         <Route path='/adminmatches' element={<AdminMatchPanel/>} />
