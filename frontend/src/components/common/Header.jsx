@@ -53,23 +53,25 @@ export default function Header() {
           <Link to="/" className={`mm-nav-link ${isActive("/")}`}>
             Home
           </Link>
-          <Link to="/report" className={`mm-nav-link ${isActive("/report")}`}>
-            Lost &amp; Found
-          </Link>
           {isLoggedIn && (
-            <Link
-              to="/usermatches"
-              className={`mm-nav-link ${isActive("/usermatches")}`}
-            >
-              My Matches
-            </Link>
+            <>
+              <Link to="/report" className={`mm-nav-link ${isActive("/report")}`}>
+                Lost &amp; Found
+              </Link>
+              <Link
+                to="/usermatches"
+                className={`mm-nav-link ${isActive("/usermatches")}`}
+              >
+                My Matches
+              </Link>
+              <Link
+                to="/campus-assistant"
+                className={`mm-nav-link ${isActive("/campus-assistant")}`}
+              >
+                Campus Assistant
+              </Link>
+            </>
           )}
-          <Link
-            to="/campus-assistant"
-            className={`mm-nav-link ${isActive("/campus-assistant")}`}
-          >
-            Campus Assistant
-          </Link>
         </nav>
 
         {/* Actions */}
