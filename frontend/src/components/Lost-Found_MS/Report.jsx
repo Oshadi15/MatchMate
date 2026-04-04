@@ -53,7 +53,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/lost")}>
             <h2>Report Lost Item</h2>
             <img
-              src="https://t3.ftcdn.net/jpg/05/16/15/92/360_F_516159243_MLDfrTZHcCRoyEfs8zUUUQ7tJS5k7oCL.jpg"
+              src="https://www.repoapp.com/wp-content/uploads/2015/11/shms-lost-and-found.jpg"
               alt="Report Lost Item"
             />
             <div className="report-card-footer lost-card-footer">
@@ -64,7 +64,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/found")}>
             <h2>Report Found Item</h2>
             <img
-              src="https://media.istockphoto.com/vectors/lost-and-found-vector-id874626438?k=20&m=874626438&s=612x612&w=0&h=IWxtd50nG-CdU00wVtFx7ltBejB2jB8ejojnQQVOnfQ="
+              src="https://providencebayfair.ca/wp-content/uploads/2022/08/bigstock-Phrase-Lost-And-Found-Written-457495793.jpg"
               alt="Report Found Item"
             />
             <div className="report-card-footer found-card-footer">
@@ -75,7 +75,7 @@ const Report = () => {
           <div className="report-card" onClick={() => navigate("/browseitems")}>
             <h2>Browse Items</h2>
             <img
-              src="https://i.pinimg.com/736x/74/02/4a/74024aaf1a63f9ff793f1a10055b43fc.jpg"
+              src="https://chyoa.com/data/covers/l/56/56107.jpg?1692366862"
               alt="Browse Items"
             />
             <div className="report-card-footer browse-card-footer">

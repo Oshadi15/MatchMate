@@ -42,6 +42,23 @@ function AdminDashboard() {
           </div>
         </Link>
 
+         <Link to="/help" className="admin-home-card">
+          <div className="admin-home-icn"><FaTasks /></div>
+          <div>
+            <h3>Help Board</h3>
+            <p>Reply to help requests from users</p>
+          </div>
+        </Link>
+
+         <Link to="/manage-location" className="admin-home-card">
+          <div className="admin-home-icn"><FaTasks /></div>
+          <div>
+            <h3>Manage Location</h3>
+            <p>Admin can manage locations so students can easily find important places inside the university.</p>
+          </div>
+        </Link>
+
+
         <Link to="/adminmatches" className="admin-home-card">
           <div className="admin-home-icn"><FaRobot /></div>
           <div>
