@@ -28,6 +28,11 @@ const FoundItemSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  userEmail: {
+    type: String,
+    trim: true,
+    lowercase: true,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model("FoundItem", FoundItemSchema);

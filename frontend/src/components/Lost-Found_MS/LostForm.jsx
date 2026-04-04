@@ -12,6 +12,7 @@ const LostForm = () => {
     dateTime: "",
     location: "",
     description: "",
+    userEmail: "",
     image: null,
   });
 
@@ -31,6 +32,17 @@ const LostForm = () => {
       ...prev,
       dateTime: getCurrentDateTime(),
     }));
+  }, []);
+
+  useEffect(() => {
+    try {
+      const u = JSON.parse(localStorage.getItem("user") || "{}");
+      if (u.email) {
+        setFormData((prev) => ({ ...prev, userEmail: u.email }));
+      }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   /* ================= HANDLE CHANGE ================= */
@@ -88,6 +100,14 @@ const LostForm = () => {
       alert("✅ Lost Item Submitted Successfully!");
 
       // Reset form
+      const savedEmail = (() => {
+        try {
+          const u = JSON.parse(localStorage.getItem("user") || "{}");
+          return u.email || "";
+        } catch {
+          return "";
+        }
+      })();
       setFormData({
         itemName: "",
         category: "",
@@ -95,6 +115,7 @@ const LostForm = () => {
         dateTime: getCurrentDateTime(),
         location: "",
         description: "",
+        userEmail: savedEmail,
         image: null,
       });
 
@@ -117,6 +138,16 @@ const LostForm = () => {
           type="text"
           name="itemName"
           value={formData.itemName}
+          onChange={handleChange}
+          required
+        />
+
+        <label>Contact email (for match notifications)</label>
+        <input
+          type="email"
+          name="userEmail"
+          placeholder="your.email@example.com"
+          value={formData.userEmail}
           onChange={handleChange}
           required
         />

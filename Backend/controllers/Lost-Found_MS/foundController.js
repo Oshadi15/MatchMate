@@ -13,6 +13,7 @@ exports.createFoundItem = async (req, res) => {
       dateTime,
       location,
       description,
+      userEmail,
     } = req.body;
 
     const newItem = new FoundItem({
@@ -22,6 +23,7 @@ exports.createFoundItem = async (req, res) => {
       dateTime,
       location,
       description,
+      userEmail,
       image: req.file ? req.file.filename : null,
     });
 

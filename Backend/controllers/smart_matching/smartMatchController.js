@@ -1,7 +1,6 @@
 const Match = require('../../models/smart_matching/Match');
 const LostItem = require('../../models/Lost-Found_MS/LostItem');
 const FoundItem = require('../../models/Lost-Found_MS/FoundItem');
-const nodemailer = require('nodemailer');
 const { compareLostFoundImages, normalizeStoredImage } = require('../../services/hfClip');
 
 // ── Smart matching scoring (weighted percent) ──
@@ -134,21 +133,27 @@ function toWeightedOverallPercent(inputPercent, imagePercent) {
     return Math.round((inPct * INPUT_WEIGHT) + (imgPct * IMAGE_WEIGHT));
 }
 
-// Shared mail transporter used for user notifications.
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
-// (imageScore max is 40 per spec; defined above)
-
 const lostPopulateSelect =
     'itemName category color dateTime location description image userEmail';
 const foundPopulateSelect =
-    'itemName category color dateTime location description image';
+    'itemName category color dateTime location description image userEmail';
+
+function sameEmail(a, b) {
+    return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+}
+
+function baseUserMatchFilter(m) {
+    if (!m?.lostItemId || !m?.foundItemId) return false;
+    if (!pairPassesRequiredValidation(m.lostItemId, m.foundItemId)) return false;
+    const inputScore =
+        typeof m?.inputScore === 'number'
+            ? m.inputScore
+            : typeof m?.ruleScore === 'number'
+              ? m.ruleScore
+              : 0;
+    if (inputScore < INPUT_SCORE_MIN_TO_SAVE || inputScore > 100) return false;
+    return true;
+}
 
 /**
  * Step 1 — Form data only. Saves only if: same category, credible item-name link,
@@ -328,23 +333,42 @@ exports.getMatches = async (req, res) => {
         // - invalid refs
         // - date order violation (lost > found)
         // - non-matching names
-        const matches = allMatches.filter((m) => {
-            if (!m?.lostItemId || !m?.foundItemId) return false;
-            if (!pairPassesRequiredValidation(m.lostItemId, m.foundItemId)) return false;
-
-            // Show in Admin panel only when local/input score is within 60..100%.
-            const inputScore =
-                typeof m?.inputScore === 'number'
-                    ? m.inputScore
-                    : typeof m?.ruleScore === 'number'
-                      ? m.ruleScore
-                      : 0;
-            if (inputScore < INPUT_SCORE_MIN_TO_SAVE || inputScore > 100) return false;
-
-            return true;
-        });
+        const matches = allMatches.filter((m) => baseUserMatchFilter(m));
 
         res.status(200).json(matches);
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// Logged-in user: matches where they own the lost item, or they reported the found item and someone claimed it.
+exports.getUserMatches = async (req, res) => {
+    try {
+        const email = String(req.query.email || '').trim();
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'email query required' });
+        }
+
+        const allMatches = await Match.find()
+            .populate('lostItemId', lostPopulateSelect)
+            .populate('foundItemId', foundPopulateSelect);
+
+        const asLostOwner = allMatches.filter(
+            (m) =>
+                baseUserMatchFilter(m) &&
+                sameEmail(m.lostItemId?.userEmail, email) &&
+                (m.lostOwnerResponse || 'none') !== 'rejected'
+        );
+
+        const asFoundOwner = allMatches.filter(
+            (m) =>
+                baseUserMatchFilter(m) &&
+                m.lostUserClaimed &&
+                (m.lostOwnerResponse || 'none') === 'claimed' &&
+                sameEmail(m.foundItemId?.userEmail, email)
+        );
+
+        res.status(200).json({ asLostOwner, asFoundOwner });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
@@ -394,45 +418,192 @@ exports.deleteAllMatches = async (req, res) => {
     }
 };
 
-// Build and send a match-notification email to one user.
-exports.sendMatchNotification = async (userEmail, lostItemName, matchScore) => {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: userEmail,
-        subject: 'Good News! A potential match for your lost item was found',
-        html: `
-            <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
-                <h2 style="color: #28a745;">Potential Match Found!</h2>
-                <p>Hello,</p>
-                <p>Our smart matching system found a match for your lost item: <strong>${lostItemName}</strong>.</p>
-                <p><strong>Match Confidence:</strong> ${matchScore}%</p>
-                <p>Please log in to your dashboard to view the details and claim your item.</p>
-                <br>
-                <p>Best regards,<br>Lost & Found Team</p>
-            </div>
-        `
-    };
-
-    return transporter.sendMail(mailOptions);
-};
-
-// Trigger notification flow for one match and mark it as notified.
+// Admin marks match as notified — in-app only (Smart Matches page); no email is sent.
 exports.notifyUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const match = await Match.findById(id).populate('lostItemId');
+        const overrideEmail = String(req.body?.email || '').trim().toLowerCase();
+        const match = await Match.findById(id).populate('lostItemId', lostPopulateSelect);
 
         if (!match) return res.status(404).json({ message: "Match not found" });
 
-        const userEmail = match.lostItemId.userEmail;
+        const lost = match.lostItemId;
+        if (!lost) {
+            return res.status(400).json({
+                success: false,
+                message: 'This match is missing the linked lost item. Remove the row or restore the lost record.',
+            });
+        }
 
-        await exports.sendMatchNotification(userEmail, match.lostItemId.itemName, match.matchScore);
+        let contactEmail = String(lost.userEmail || '').trim().toLowerCase();
+        if (overrideEmail) {
+            contactEmail = overrideEmail;
+        }
+
+        if (!contactEmail) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    'This lost report has no contact email. Add it on the lost report or enter it when you click Notify so the owner can see matches in Smart Matches.',
+            });
+        }
+
+        if (!lost.userEmail && overrideEmail) {
+            lost.userEmail = overrideEmail;
+            await lost.save();
+        }
 
         match.status = 'notified';
         await match.save();
 
-        res.status(200).json({ success: true, message: "Notification sent successfully" });
+        res.status(200).json({
+            success: true,
+            message: 'The user will see this on their Smart Matches page.',
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({
+            success: false,
+            message: error.message || 'Failed to update notification',
+        });
+    }
+};
+
+function normalizeOwnerContactBody(body) {
+    const email = String(body?.email || '').trim().toLowerCase();
+    const ownerName = String(body?.ownerName || '').trim();
+    const ownerPhone = String(body?.ownerPhone || '').trim();
+    return { email, ownerName, ownerPhone };
+}
+
+// Lost-item owner confirms the match after admin notification ("That's mine").
+exports.claimMatch = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ownerName, ownerPhone, email } = normalizeOwnerContactBody(req.body);
+
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'email required in body' });
+        }
+        if (ownerName.length < 2) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide your full name (at least 2 characters) for the finder and admin.',
+            });
+        }
+
+        const match = await Match.findById(id)
+            .populate('lostItemId', lostPopulateSelect)
+            .populate('foundItemId', foundPopulateSelect);
+
+        if (!match) return res.status(404).json({ success: false, message: 'Match not found' });
+
+        if (match.status !== 'notified') {
+            return res.status(400).json({
+                success: false,
+                message: 'You can confirm only after the office has notified you.',
+            });
+        }
+
+        if (!sameEmail(match.lostItemId?.userEmail, email)) {
+            return res.status(403).json({
+                success: false,
+                message: 'This match is not linked to your email.',
+            });
+        }
+
+        if ((match.lostOwnerResponse || 'none') === 'rejected') {
+            return res.status(400).json({
+                success: false,
+                message: 'You already declined this match.',
+            });
+        }
+
+        if (match.lostUserClaimed) {
+            return res.status(400).json({ success: false, message: 'Already confirmed.' });
+        }
+
+        match.lostUserClaimed = true;
+        match.lostUserClaimedAt = new Date();
+        match.lostOwnerResponse = 'claimed';
+        match.lostOwnerContact = {
+            name: ownerName,
+            email,
+            phone: ownerPhone,
+        };
+        match.lostOwnerRespondedAt = new Date();
+        match.status = 'resolved';
+        await match.save();
+
+        const found = match.foundItemId;
+        const hasFinderEmail = Boolean(String(found?.userEmail || '').trim());
+
+        res.status(200).json({
+            success: true,
+            message: hasFinderEmail
+                ? 'Confirmation recorded. The finder will see your contact details under “Items you reported as found” on Smart Matches.'
+                : 'Confirmation recorded. This found report has no finder email on file, so they will not get an in-app alert. Ask the finder to use their login email on found reports.',
+            match,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// Lost-item owner says this is not their item — record decline + contact for admin; stays on admin panel.
+exports.rejectMatchByOwner = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ownerName, ownerPhone, email } = normalizeOwnerContactBody(req.body);
+
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'email required in body' });
+        }
+        if (ownerName.length < 2) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide your name so admin can follow up if needed.',
+            });
+        }
+
+        const match = await Match.findById(id).populate('lostItemId', lostPopulateSelect);
+
+        if (!match) return res.status(404).json({ success: false, message: 'Match not found' });
+
+        if (!sameEmail(match.lostItemId?.userEmail, email)) {
+            return res.status(403).json({
+                success: false,
+                message: 'This match is not linked to your email.',
+            });
+        }
+
+        if ((match.lostOwnerResponse || 'none') === 'rejected') {
+            return res.status(400).json({ success: false, message: 'You already declined this match.' });
+        }
+
+        if (match.lostUserClaimed) {
+            return res.status(400).json({
+                success: false,
+                message: 'You already confirmed this match. Contact admin if this was a mistake.',
+            });
+        }
+
+        match.lostOwnerResponse = 'rejected';
+        match.lostOwnerContact = {
+            name: ownerName,
+            email,
+            phone: ownerPhone,
+        };
+        match.lostOwnerRespondedAt = new Date();
+        match.lostUserClaimed = false;
+        match.status = 'resolved';
+        await match.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Recorded. Admin can see that you declined this match.',
+            match,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     }
 };
