@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./BrowseItems.css";
 
 const getArrayFromResponse = (data, possibleKeys = []) => {
@@ -13,6 +14,8 @@ const getArrayFromResponse = (data, possibleKeys = []) => {
 };
 
 const BrowserItems = () => {
+  const navigate = useNavigate();
+
   const [foundItems, setFoundItems] = useState([]);
   const [lostItems, setLostItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,15 +63,9 @@ const BrowserItems = () => {
   }, [fetchItems]);
 
   /* ================= CLAIM FUNCTION ================= */
-  // ✅ NEW
   const handleClaim = (item) => {
-    alert(`Claim request sent for: ${item.itemName}`);
-    
-    // Later you can connect backend here
-    // axios.post("http://localhost:5000/api/claim", { itemId: item._id })
+    navigate(`/claim/${item._id}`);
   };
-
-  
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return "No date available";
@@ -141,14 +138,12 @@ const BrowserItems = () => {
                 <p><span>Description:</span> {item.description || "No description"}</p>
               </div>
 
-              {/* ✅ CLAIM BUTTON ADDED */}
               <button
                 className="claim-btn"
                 onClick={() => handleClaim(item)}
               >
                 Claim
               </button>
-
             </div>
           </div>
         ))}
