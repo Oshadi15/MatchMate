@@ -105,21 +105,25 @@ export default function MyHelpRequests() {
                     : "N/A"}
                 </p>
 
-                <div className="admin-reply-box">
-                  <h4>Admin Reply</h4>
-                  {request.adminReply ? (
-                    <>
-                      <p>{request.adminReply}</p>
-                      {request.repliedAt && (
-                        <span className="reply-time">
-                          Replied on: {new Date(request.repliedAt).toLocaleString()}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    <p className="no-reply-text">No reply yet from admin.</p>
-                  )}
-                </div>
+                <div
+  className={`admin-reply-box ${
+    request.adminReply ? "has-reply" : "no-reply-box"
+  }`}
+>
+  <h4>Admin Reply</h4>
+  {request.adminReply ? (
+    <>
+      <p className="reply-text">{request.adminReply}</p>
+      {request.repliedAt && (
+        <span className="reply-time">
+          Replied on: {new Date(request.repliedAt).toLocaleString()}
+        </span>
+      )}
+    </>
+  ) : (
+    <p className="no-reply-text">No reply yet from admin.</p>
+  )}
+</div>
               </div>
             ))}
           </div>

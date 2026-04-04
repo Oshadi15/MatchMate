@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FaRobot } from "react-icons/fa";
+import { FaRobot, FaBoxOpen, FaUniversity, FaStar, FaUsers, FaCheck } from "react-icons/fa";
 import "./Home.css";
 
 // Images
@@ -12,14 +12,11 @@ import feature1 from "../../assets/f6.jpg";
 import feature2 from "../../assets/f7.jpeg";
 import feature3 from "../../assets/f9.webp";
 
-
-
 const heroImages = [hero1, hero2, hero3];
 
 export default function Home() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showAuth, setShowAuth] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -35,24 +32,12 @@ export default function Home() {
 
   return (
     <>
-    {/* <HomeNav /> */}
-{/*chat */}
-{/* <button 
-  className="chat-button"
-  onClick={() => history("/enterpin")}
->
-  <FaRobot size={38} />
-</button> */}
-
       {/* Chat Button */}
       <button className="chat-button" onClick={() => navigate("/help")}>
         <FaRobot size={34} />
       </button>
 
       <div className="home-page">
-
-        
-
         {/* Hero Section */}
         <section className="hero-section">
           <div className="hero-slideshow">
@@ -63,8 +48,25 @@ export default function Home() {
                 style={{ backgroundImage: `url(${img})` }}
               >
                 <div className="slide-overlay">
-                  <h1>Lost And Found Management System</h1>
-                  <p>A smart platform to manage lost and found items.</p>
+                  <div className="hero-content">
+                    <h1>Smart Lost & Found Platform</h1>
+                    <p>Find lost items, connect with the community, and get support - all in one place</p>
+                    
+                    <div className="hero-buttons">
+                      <button 
+                        className="cta-button"
+                        onClick={() => navigate("/browseitems")}
+                      >
+                        Browse Items
+                      </button>
+                      <button 
+                        className="cta-button outline"
+                        onClick={() => navigate(isLoggedIn ? "/report" : "/login")}
+                      >
+                        {isLoggedIn ? "Report Item" : "Sign In"}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -82,95 +84,177 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features */}
+        {/* Stats Section */}
+        <section className="stats-section">
+          <div className="stats-container">
+            <div className="stat-card">
+              <div className="stat-icon">
+                <FaBoxOpen />
+              </div>
+              <div className="stat-content">
+                <h4>10,000+</h4>
+                <p>Items Listed</p>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon">
+                <FaUsers />
+              </div>
+              <div className="stat-content">
+                <h4>5,000+</h4>
+                <p>Active Users</p>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon">
+                <FaCheck />
+              </div>
+              <div className="stat-content">
+                <h4>95%</h4>
+                <p>Recovery Rate</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
         <section className="features-section">
-
-          <div 
-            className="feature-card"
-            onClick={() => navigate("/browseitems")}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={feature1} alt="Browse Items" />
-            <h3>Browse Items</h3>
-            <p>Smart lost and found system.</p>
+          <div className="features-header">
+            <h2>Our Key Features</h2>
+            <p>Everything you need to find and recover lost items</p>
           </div>
 
-          <div 
-            className="feature-card"
-            onClick={() => navigate(isLoggedIn ? "/campus-assistant" : "/login")}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={feature2} alt="Campus Assistant" />
-            <h3>Campus Assistant</h3>
-            <p>Connecting students with campus resources easily.</p>
-          </div>
+          <div className="features-grid">
+            <div 
+              className="feature-card"
+              onClick={() => navigate("/browseitems")}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="feature-img-wrapper">
+                <img src={feature1} alt="Browse Items" />
+                <div className="feature-overlay">
+                  <FaBoxOpen size={28} />
+                </div>
+              </div>
+              <h3>Browse Items</h3>
+              <p>Smart lost and found system with advanced search capabilities</p>
+              <span className="feature-learn-more">Learn more →</span>
+            </div>
 
-          <div 
-            className="feature-card"
-            onClick={() => navigate(isLoggedIn ? "/feedback" : "/login")}
-            style={{ cursor: "pointer" }}
-          >
-            <img src={feature3} alt="Feedback" />
-            <h3>Feedback</h3>
-            <p>Help us improve with your feedback.</p>
-          </div>
+            <div 
+              className="feature-card"
+              onClick={() => navigate(isLoggedIn ? "/campus-assistant" : "/login")}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="feature-img-wrapper">
+                <img src={feature2} alt="Campus Assistant" />
+                <div className="feature-overlay">
+                  <FaUniversity size={28} />
+                </div>
+              </div>
+              <h3>Campus Assistant</h3>
+              <p>Connecting students with campus resources and support services</p>
+              <span className="feature-learn-more">Learn more →</span>
+            </div>
 
+            <div 
+              className="feature-card"
+              onClick={() => navigate(isLoggedIn ? "/feedback" : "/login")}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="feature-img-wrapper">
+                <img src={feature3} alt="Community Support" />
+                <div className="feature-overlay">
+                  <FaStar size={28} />
+                </div>
+              </div>
+              <h3>Community Feedback</h3>
+              <p>Help us grow and improve with your valuable feedback</p>
+              <span className="feature-learn-more">Learn more →</span>
+            </div>
+          </div>
         </section>
 
-        {/* Auth Section */}
-        <section className={`auth-section ${showAuth ? "show-auth" : ""}`}>
-          <div className="auth-container">
+        {/* Smart Matching Section */}
+        <section className="matching-section">
+          <div className="matching-container">
+            <div className="matching-content">
+              <h2>Smart Matching Technology</h2>
+              <p>Our AI-powered system intelligently matches lost items with found items based on description, location, and other factors.</p>
+              
+              <div className="matching-benefits">
+                <div className="benefit-item">
+                  <FaCheck className="benefit-icon" />
+                  <span>Automatic item matching</span>
+                </div>
+                <div className="benefit-item">
+                  <FaCheck className="benefit-icon" />
+                  <span>Real-time notifications</span>
+                </div>
+                <div className="benefit-item">
+                  <FaCheck className="benefit-icon" />
+                  <span>Secure communication</span>
+                </div>
+                <div className="benefit-item">
+                  <FaCheck className="benefit-icon" />
+                  <span>Community support</span>
+                </div>
+              </div>
 
-            <div className="auth-left">
-              <h2>Welcome to MatchMate</h2>
-              <p>Login to access your dashboard.</p>
-
-              <div className="auth-actions">
-                <button className="action-button" onClick={() => navigate("/login")}>
-                  Login
+              {isLoggedIn && (
+                <button 
+                  className="cta-button"
+                  onClick={() => navigate("/usermatches")}
+                >
+                  View Your Matches
                 </button>
+              )}
+            </div>
 
-                {/* ✅ FIXED HERE ALSO */}
-                <button className="action-button outline" onClick={() => navigate("/signup")}>
-                  Register
+            <div className="matching-visual">
+              <div className="matching-circle"></div>
+              <div className="matching-circle-small"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        {!isLoggedIn && (
+          <section className="cta-section">
+            <div className="cta-content">
+              <h2>Join MatchMate Today</h2>
+              <p>Register for free and unlock powerful tools to find lost items and help others</p>
+              
+              <div className="cta-buttons">
+                <button 
+                  className="cta-button"
+                  onClick={() => navigate("/signup")}
+                >
+                  Create Account
                 </button>
-
-                <button className="close-auth" onClick={() => setShowAuth(false)}>
-                  Close
+                <button 
+                  className="cta-button outline"
+                  onClick={() => navigate("/login")}
+                >
+                  Sign In
                 </button>
               </div>
             </div>
-
-            <div className="auth-right">
-              <div className="auth-box">
-                <h3>Quick Links</h3>
-
-                <button onClick={() => navigate("/browseitems")} className="quick-btn">
-                  Browse Lost & Found items
-                </button>
-
-                <button onClick={() => navigate("/campus-assistant")} className="quick-btn">
-                  Campus Assistant
-                </button>
-
-                <button onClick={() => navigate("/feedback")} className="quick-btn">
-                  Give Feedback
-                </button>
-
-              </div>
-            </div>
-
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Footer */}
         <footer className="modern-home-footer">
           <div className="home-footer-content">
-
             <div className="home-footer-section">
               <h4>Quick Links</h4>
               <ul>
-                <li><Link to="/report">Lost & Found</Link></li>
+                <li><Link to="/browseitems">Browse Items</Link></li>
                 <li><Link to="/campus-assistant">Campus Assistant</Link></li>
                 <li><Link to="/login">Login</Link></li>
               </ul>
@@ -183,13 +267,20 @@ export default function Home() {
               <p>Email: support@matchmate.com</p>
             </div>
 
+            <div className="home-footer-section">
+              <h4>About</h4>
+              <ul>
+                <li><Link to="/">Home</Link></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#privacy">Privacy</a></li>
+              </ul>
+            </div>
           </div>
 
           <div className="home-footer-bottom">
             <p>© {new Date().getFullYear()} MatchMate. All Rights Reserved.</p>
           </div>
         </footer>
-
       </div>
     </>
   );

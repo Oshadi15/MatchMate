@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  FaChartLine,
-  FaSearch,
-  FaTasks,
-  FaRobot,
-  FaCommentDots,
+  FaChartBar,
+  FaList,
+  FaEdit,
+  FaHeadset,
+  FaMapMarkerAlt,
+  FaMagic,
+  FaStar,
 } from "react-icons/fa";
 
 import AdminLayout from "./AdminLayout";
@@ -19,7 +21,7 @@ function AdminDashboard() {
     >
       <div className="admin-home-grid">
         <Link to="/admin/analysis" className="admin-home-card">
-          <div className="admin-home-icn"><FaChartLine /></div>
+          <div className="admin-home-icn"><FaChartBar /></div>
           <div>
             <h3>Analysis</h3>
             <p>View KPIs and insights across modules</p>
@@ -27,7 +29,7 @@ function AdminDashboard() {
         </Link>
 
         <Link to="/adminbrowse" className="admin-home-card">
-          <div className="admin-home-icn"><FaSearch /></div>
+          <div className="admin-home-icn"><FaList /></div>
           <div>
             <h3>Items (Browse)</h3>
             <p>Review reported lost & found items</p>
@@ -35,15 +37,32 @@ function AdminDashboard() {
         </Link>
 
         <Link to="/admin/lostfound" className="admin-home-card">
-          <div className="admin-home-icn"><FaTasks /></div>
+          <div className="admin-home-icn"><FaEdit /></div>
           <div>
             <h3>Items (Manage)</h3>
             <p>Edit, approve, reject, or remove items</p>
           </div>
         </Link>
 
+         <Link to="/help" className="admin-home-card">
+          <div className="admin-home-icn"><FaHeadset /></div>
+          <div>
+            <h3>Help Board</h3>
+            <p>Reply to help requests from users</p>
+          </div>
+        </Link>
+
+         <Link to="/manage-location" className="admin-home-card">
+          <div className="admin-home-icn"><FaMapMarkerAlt /></div>
+          <div>
+            <h3>Manage Location</h3>
+            <p>Admin can manage locations so students can easily find important places inside the university.</p>
+          </div>
+        </Link>
+
+
         <Link to="/adminmatches" className="admin-home-card">
-          <div className="admin-home-icn"><FaRobot /></div>
+          <div className="admin-home-icn"><FaMagic /></div>
           <div>
             <h3>Smart Matching</h3>
             <p>Run scoring and review AI match results</p>
@@ -51,7 +70,7 @@ function AdminDashboard() {
         </Link>
 
         <Link to="/admin/feedback" className="admin-home-card">
-          <div className="admin-home-icn"><FaCommentDots /></div>
+          <div className="admin-home-icn"><FaStar /></div>
           <div>
             <h3>Feedback</h3>
             <p>View and manage student feedback</p>
