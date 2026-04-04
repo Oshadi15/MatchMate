@@ -82,6 +82,17 @@ const Report = () => {
               View lost &amp; found inventory
             </div>
           </div>
+
+          <div className="report-card" onClick={() => navigate("/browseitems")}>
+            <h2>View Lost Items</h2>
+            <img
+              src="https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?q=80&w=500&auto=format&fit=crop"
+              alt="View Lost Items"
+            />
+            <div className="report-card-footer browse-card-footer">
+              View my  lost items
+            </div>
+          </div>
         </div>
 
         {/* Recent items section */}
