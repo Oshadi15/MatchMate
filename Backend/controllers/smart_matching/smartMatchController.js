@@ -23,14 +23,8 @@ const LOCATION_SCORE = 15;
 const DATE_SCORE = 15;
 const MIN_TEXT_LEN = 2;
 
-/**
- * VALIDATION: Basic text field validation
- * Ensures text values are strings, have minimum length, and contain alphanumeric characters
- * Used for: itemName, category, color, location, description
- * @param {*} value - The value to validate
- * @param {number} minLen - Minimum length required (default: 2)
- * @returns {boolean} - True if valid, false otherwise
- */
+
+
 function isValidBasicText(value, minLen = MIN_TEXT_LEN) {
     // Check if value is a string
     if (typeof value !== 'string') return false;
@@ -131,6 +125,8 @@ function scoreTitle(lostTitle, foundTitle) {
  * @param {string|Date} foundDateTime - Date when item was found
  * @returns {boolean} - True if lostDateTime <= foundDateTime
  */
+
+//- item can't be found before it was los
 function isValidLostFoundDateOrder(lostDateTime, foundDateTime) {
     // VALIDATION: Parse both dates
     const lostDate = new Date(lostDateTime);
@@ -259,9 +255,6 @@ function toInputPercent(inputPoints) {
  * VALIDATION: Calculate weighted overall score from input and image scores
  * Formula: overallScore = (inputPercent × 0.6) + (imagePercent × 0.4)
  * Input (form fields) weighted at 60%, image (AI) weighted at 40%
- * @param {number} inputPercent - Input score as percentage (0..100)
- * @param {number} imagePercent - Image similarity score as percentage (0..100)
- * @returns {number} - Weighted overall score (0..100)
  */
 function toWeightedOverallPercent(inputPercent, imagePercent) {
     // VALIDATION: Clamp both inputs to valid percentage range
