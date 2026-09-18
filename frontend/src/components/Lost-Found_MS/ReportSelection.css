@@ -53,11 +53,11 @@
   padding: 34px 20px 0;
 }
 
-/* Top action cards */
+/* Top action cards - UPDATED TO 4 COLUMNS */
 .report-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
+  grid-template-columns: repeat(4, 1fr); /* Changed from 3 to 4 */
+  gap: 20px; /* Reduced gap slightly to fit 4 cards better */
   margin-bottom: 34px;
 }
 
@@ -69,6 +69,8 @@
   cursor: pointer;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
   transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .report-card:hover {
@@ -79,28 +81,30 @@
 
 .report-card h2 {
   margin: 0;
-  padding: 18px 18px 12px;
+  padding: 18px 12px 12px;
   color: #ffffff;
-  font-size: 24px;
+  font-size: 18px; /* Slightly smaller font to fit 4-column layout */
   font-weight: 800;
+  text-align: center;
 }
 
 .report-card img {
-  height: 180px;
+  width: 90%; /* Ensure image fits container */
+  height: 140px; /* Reduced height to maintain proportions in 4-col */
   object-fit: cover;
   display: block;
-  margin: 0 auto 12px;   /* ✅ centers horizontally */
-  border-radius: 18px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
   background: #0f172a;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
 }
 
 .report-card-footer {
-  margin: 0 12px 12px;
+  margin: auto 12px 12px;
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 10px 12px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: #ffffff;
 }
@@ -215,7 +219,7 @@
   }
 
   .report-card:last-child {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
 
   .recent-wrapper {
@@ -236,10 +240,6 @@
 
   .report-cards {
     grid-template-columns: 1fr;
-  }
-
-  .report-card:last-child {
-    grid-column: auto;
   }
 
   .recent-items-grid {
